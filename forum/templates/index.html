@@ -3,13 +3,134 @@
 {% load static %}
 {% block title %}Форум хуерум{% endblock %}
 
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
 {% endblock %}
 
 {% block content %}
+<div class="row">
+        <div class="col s12">
+            <h5 class="grey-text text-darken-2 forum-category-heading">Категории</h5>
+            <div class="carousel" id="forum-carousel">
+                {% for cat in categories %}
+                    <div class="carousel-item card hoverable white black-text">
+                        <div class="category-card-inner">
+                            <div class="category-icon-wrapper">
+                                {% if cat.icon %}
+                                    <img src="{{ cat.icon.url }}" alt="{{ cat.title }}">
+                                {% else %}
+                                    <i class="material-icons large grey-text text-lighten-1">folder</i>
+                                {% endif %}
+                            </div>
+                            <span class="card-title category-card-title">{{ cat.title }}</span>
+                            <p class="grey-text text-darken-1 category-card-desc">
+                                {{ cat.description|truncatechars:60 }}
+                            </p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="center-align grey-text">Категории отсутствуют</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
+   <div class="row">
+        <div class="col s12 m8">
+            <h5 class="grey-text text-darken-2">Обсуждения</h5>
+            
+            {% for topic in topics %}
+                <div class="card flat hoverable topic-card {% if topic.is_pinned %}pinned-topic grey lighten-5{% endif %}">
+                    <div class="card-content">
+                        {% if topic.is_pinned %}
+                            <span class="chip orange white-text topic-pinned-chip">
+                                Закреплено
+                            </span>
+                        {% endif %}
+                        
+                        <span class="blue-text text-darken-2 topic-category-name">
+                            {{ topic.category.title }}
+                        </span>
+                        
+                        <span class="card-title topic-title-wrapper">
+                            {% comment %} <a href="{{ topic.get_absolute_url }}" class="black-text topic-title-link"> {% endcomment %}
+                                {{ topic.title }}
+                            </a>
+                        </span>
+                        
+                        <p class="grey-text topic-activity-text">
+                            Активность: {{ topic.last_active|timesince }} назад
+                        </p>
+                    </div>
+                    
+                    <div class="card-action topic-meta-icons grey-text text-darken-1 topic-meta-action">
+                        <span><i class="material-icons">visibility</i>{{ topic.views_count }}</span>
+                        <span><i class="material-icons">chat_bubble_outline</i>{{ topic.replies_count }}</span>
+                        
+                        {% if topic.is_closed %}
+                            <span class="right red-text text-darken-1"><i class="material-icons">lock_outline</i>Закрыто</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="card-panel center-align grey lighten-4">
+                    <p class="grey-text">В этой секции еще нет тем для обсуждения</p>
+                </div>
+            {% endfor %}
+
+            {% if is_paginated %}
+                <ul class="pagination center-align topic-pagination">
+                    
+                    {% if page_obj.has_previous %}
+                        <li class="waves-effect">
+                            <a href="?page={{ page_obj.previous_page_number }}"><i class="material-icons">chevron_left</i></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <a href="#!"><i class="material-icons">chevron_left</i></a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="active blue darken-1"><a href="#!">{{ num }}</a></li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="waves-effect"><a href="?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="waves-effect">
+                            <a href="?page={{ page_obj.next_page_number }}"><i class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <a href="#!"><i class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% endif %}
+                    
+                </ul>
+            {% endif %}
+
+        </div>
+
+        <div class="col s12 m4">
+            <div class="card-panel blue darken-1 white-text center-align">
+                <h5>Начать обсуждение</h5>
+                <p class="create-discussion-text">У вас есть вопрос или интересная тема? Поделитесь с сообществом прямо сейчас.</p>
+                {% if user.is_authenticated %}
+                    {% comment %} <a href="{% url 'category_create' %}" class="btn white blue-text text-darken-2 waves-effect waves-light create-discussion-btn"> {% endcomment %}
+                        Создать
+                    </a>
+                {% else %}
+                    {% comment %} <a href="{% url 'register' %}" class="btn white blue-text text-darken-2 waves-effect waves-light create-discussion-btn"> {% endcomment %}
+                        Создать
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}

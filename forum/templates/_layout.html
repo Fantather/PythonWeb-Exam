@@ -1,80 +1,90 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
+        
     {% block extra_css %}
     {% endblock %}
+    
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
 
-<nav>
-  <div class="nav-wrapper light-blue darken-3">
-    <a href="{% url 'index' %}" class="brand-logo">
-      <img class="logo" style="margin: 0.5rem; height: 3rem;" src="{% static 'favicon.ico' %}" alt="Logo">
-    </a>
-    
-    <ul class="right hide-on-med-and-down">
-    <li><a href="{% url 'index' %}">Главная</a></li>
-    <li class=""><a href="badges.html"> <i class="material-icons">login</i></a></li>
+<header>
+    <nav>
+        <div class="nav-wrapper light-blue darken-3">
+            
+            <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            
+            <ul class="left hide-on-med-and-down">
+                <li><a href="#" id="desktop-toggle"><i class="material-icons">menu_open</i></a></li>
+            </ul>
+            
+            <a href="{% url 'index' %}" class="brand-logo center">
+                <img class="logo" style="margin: 0.5rem; height: 3rem;" src="{% static 'favicon.ico' %}" alt="Logo">
+            </a>
+            
+            <ul class="right hide-on-med-and-down">
+                <li><a href="{% url 'index' %}">Главная</a></li>
+                <li class=""><a href="badges.html"> <i class="material-icons">login</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <ul id="slide-out" class="sidenav sidenav-fixed">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="{% static 'assets/catto.jpg' %}" alt="bg">
+                </div>
+                {% comment %}
+                ссылки сюда    
+                {% endcomment %}
+            </div>
+        </li>
+        <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+        <li><a href="#!">Second Link</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="subheader">Subheader</a></li>
+        <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
     </ul>
-  </div>
-</nav>
- <nav> <!-- navbar content here  --> </nav>
-
-  <ul id="slide-out" class="sidenav">
-    <li><div class="user-view">
-      <div class="background">
-        <img src="{% static 'images/catto.jpg' %}">
-      </div>
-      <a href="#user"><img class="circle" src="{% static 'images/yuna.jpg' %}"></a>
-      <a href="#name"><span class="white-text name">John Doe</span></a>
-      <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
-    </div></li>
-    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-    <li><a href="#!">Second Link</a></li>
-    <li><div class="divider"></div></li>
-    <li><a class="subheader">Subheader</a></li>
-    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-  </ul>
-  <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+</header>
   
-<main class = "container" style="background-image: url({% static 'assets/image.png' %}); background-size: cover; height: 100%; width: 100%; padding: 2rem;">
-
+<main class="container" style="background-image: url('{% static 'assets/image.png' %}'); background-size: cover; height: 100%; width: 100%; padding: 2rem;">
     {% block content %}
     {% endblock %}
-    
 </main>    
     
-    <footer class="page-footer light-blue darken-4">
-        <div class="container">
+<footer class="page-footer light-blue darken-4">
+    <div class="container">
         <div class="row">
             <div class="col l6 s12">
-            <h5 class="white-text">Форум имени императора</h5>
-            <p class="grey-text text-lighten-4">Записывайтесь в армию императора.</p>
+                <h5 class="white-text">Форум имени императора</h5>
+                <p class="grey-text text-lighten-4">Записывайтесь в армию императора.</p>
             </div>
             <div class="col l4 offset-l2 s12">
             </div>
         </div>
-        </div>
-        <div class="footer-copyright">
+    </div>
+    <div class="footer-copyright">
         <div class="container">
-        © {% now "Y" %} форум наше название леша впиши
-        <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            © {% now "Y" %} форум наше название леша впиши
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
         </div>
-        </div>
-    </footer>
-    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
-    {% block extra_js %}
-    {% endblock %}
+    </div>
+</footer>
+
+<script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+
+{% block extra_js %}
+{% endblock %}
 </body>
 </html>

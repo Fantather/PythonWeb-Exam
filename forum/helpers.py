@@ -8,16 +8,18 @@ def seedCategories():
         {
             "title": f"Категория {i}",
             "description": f"Описание категории {i}",
-            "image": "https://placehold.co/600x400",
-            "slug": f"category-{i}"
+            # Убедитесь, что передача URL строкой не вызовет отдельную 
+            # ошибку валидации FileField при сохранении.
         }
         for i in range(1, 10)
     ]   
     
     if not Category.objects.exists():
-        # Оптимизация: создание записей одним SQL-запросом
-        Category.objects.bulk_create([Category(**data) for data in categ_data])
-    
+        # Используем add_root вместо bulk_create для корректной генерации полей MP_Node
+        for data in categ_data:
+            Category.add_root(**data)
+
+            
 def clearCategories():
     '''
     Временная функция для очистки базы от данных
@@ -36,9 +38,6 @@ def seedTopics():
     topic_data = [
         {
             "title": f"Топик {i}",
-            "description": f"Описание топика {i}",
-            "image": "https://placehold.co/600x400",
-            "slug": f"topic-{i}",
             "category": first_category
         }
         for i in range(1, 10)
@@ -63,21 +62,10 @@ def seedPosts():
         print("Ошибка: Нет ни одного топика. Сначала выполните seedTopics()")
         return
 
-    post_data = [
-        {
-            "content": f"Содержимое поста {i}",
-            "image": "https://placehold.co/600x400",
-            "topic": first_topic
-        }
-        for i in range(1, 10)
-    ]
-    
-    if not Post.objects.exists():
-        Post.objects.bulk_create([Post(**data) for data in post_data])
+    pass
 
 def clearPosts():
     '''
     Временная функция для очистки базы от данных
     '''
     Post.objects.all().delete()
-    
