@@ -1,31 +1,26 @@
-document.addEventListener('DOMContentLoaded', ()=> {
+document.addEventListener('DOMContentLoaded', function() {
+    var sidenavElems = document.querySelectorAll('.sidenav');
+    M.Sidenav.init(sidenavElems, {});
+
+    console.log('Sidenav initialized');
     
-    // var elems = document.querySelectorAll('select');
-    // var options = document.querySelectorAll('option');
-    // var instances = M.FormSelect.init(elems, options);
-
+    var desktopToggle = document.getElementById('desktop-toggle');
     
-    // const myButton = document.getElementById('myButton');
-    // if (myButton) {
-    //     myButton.addEventListener('click', ()=> {
-    //         alert('Clicked!');
-    //     });
-    // }
-    
+    if (desktopToggle) {
+        var toggleIcon = desktopToggle.querySelector('i');
+        
+        desktopToggle.addEventListener('click', function(e) {
 
-    var elems = document.querySelectorAll('.sidenav');
-    var instances = M.Sidenav.init(elems, options);
-    });
+            e.preventDefault(); 
+            
+            document.body.classList.toggle('sidebar-collapsed');
+            
 
-    // Initialize collapsible (uncomment the lines below if you use the dropdown variation)
-    // var collapsibleElem = document.querySelector('.collapsible');
-    // var collapsibleInstance = M.Collapsible.init(collapsibleElem, options);
-    // Or with jQuery
-    $(document).ready(function(){
-    $('.sidenav').sidenav();
-    });
-
-    
-
-
-console.log("Hello from index.js!");
+            if (document.body.classList.contains('sidebar-collapsed')) {
+                toggleIcon.textContent = 'menu'; 
+            } else {
+                toggleIcon.textContent = 'menu_open';
+            }
+        });
+    }
+});

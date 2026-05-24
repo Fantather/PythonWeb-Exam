@@ -6,4 +6,40 @@ body {
 
 main {
   flex: 1 0 auto;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+/* анимация */
+header, main, footer, .sidenav.sidenav-fixed {
+  transition: padding-left 0.3s ease, transform 0.3s ease !important;
+}
+
+
+
+/* адаптация пк */
+@media only screen and (min-width : 993px) {
+  /* изначально открыта */
+  header, main, footer {
+  padding-left: 300px;
+}
+
+  /* закрыта */
+  body.sidebar-collapsed header, 
+  body.sidebar-collapsed main, 
+  body.sidebar-collapsed footer {
+  padding-left: 0;
+}
+
+/* панель налево ушла  */
+body.sidebar-collapsed .sidenav.sidenav-fixed {
+  transform: translateX(-105%) !important;
+}
+}
+
+/* без дефолтной кнопки */
+@media only screen and (min-width: 993px) {
+  .sidenav-trigger {
+  display: none;
+}
 }
