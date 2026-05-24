@@ -8,6 +8,8 @@ from core.models import TimeStampedModel
 from treebeard.mp_tree import MP_Node
 from django.utils.text import slugify
 
+from forum.managers import PostQuerySet, TopicQuerySet
+
 
 class Category(MP_Node, TimeStampedModel):
     '''
@@ -91,6 +93,7 @@ class Topic(TimeStampedModel):
     replies_count = models.IntegerField(default=0)
     last_active = models.DateTimeField(auto_now_add=True)
     
+    objects = TopicQuerySet.as_manager()
 
     class Meta(TimeStampedModel.Meta):
         verbose_name = "Topic"
@@ -162,6 +165,8 @@ class Post(TimeStampedModel):
         upload_to="posts/images/%Y/%m/%d/",
         blank=True,
     )
+
+    objects = PostQuerySet.as_manager()
 
     class Meta(TimeStampedModel.Meta):
         ordering = ['-created_at']
