@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+<nav>
+  <div class="nav-wrapper light-blue darken-3">
+    <a href="{% url 'index' %}" class="brand-logo">
+      <img class="logo" style="margin: 0.5rem; height: 3rem;" src="{% static 'favicon.ico' %}" alt="Logo">
+    </a>
+    
+    <ul class="right hide-on-med-and-down">
+    <li><a href="{% url 'index' %}">Главная</a></li>
+    <li class=""><a href="badges.html"> <i class="material-icons">login</i></a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class = "container">
+
+    {% block content %}
+    {% endblock %}
+    
+</main>    
+    
+    <footer class="page-footer light-blue darken-4">
+        <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+            <h5 class="white-text">Форум имени императора</h5>
+            <p class="grey-text text-lighten-4">Записывайтесь в армию императора.</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+            </div>
+        </div>
+        </div>
+        <div class="footer-copyright">
+        <div class="container">
+        © {% now "Y" %} форум наше название леша впиши
+        <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+        </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+</body>
+</html>

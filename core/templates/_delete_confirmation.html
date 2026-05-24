@@ -1,0 +1,15 @@
+<a class="waves-effect waves-light btn red modal-trigger" href="#delete-modal-{{ object_id }}">Удалить</a>
+
+<div id="delete-modal-{{ object_id }}" class="modal">
+    <div class="modal-content">
+        <h4>Удаление {{ delete_type }}</h4>
+        <p>Вы уверены, что хотите безвозвратно удалить "{{ item_name }}"?</p>
+    </div>
+    <div class="modal-footer">
+        <form action="{{ delete_url }}" method="POST" style="display: inline-block;">
+            {% csrf_token %}
+            <button type="submit" class="waves-effect waves-red btn-flat red-text">Да, удалить</button>
+        </form>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Отмена</a>
+    </div>
+</div>
