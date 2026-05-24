@@ -82,7 +82,7 @@ django-treebeard - для построения эффективных вложе
 
 ### Ольга Пухаленко [[[EllinaMao](https://github.com/EllinaMao)]]
 
-- [https://www.figma.com/design/uQPo3xSXV0nqpySm9KqAVi/Forum-Design-web--Community-?node-id=22-4&p=f&t=KNv9X4kYskqtIW5i-0]
+- [[фигма для ориентировки](https://www.figma.com/design/uQPo3xSXV0nqpySm9KqAVi/Forum-Design-web--Community-?node-id=22-4&p=f&t=KNv9X4kYskqtIW5i-0)]
 пусть тут лежит, что будто это ктото читает?
 
 - добавила модульное окно на удаление, чего либо в core ("продуктивность")
