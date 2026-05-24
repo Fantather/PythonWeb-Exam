@@ -9,6 +9,13 @@ from django.utils.text import slugify
 
 
 class Category(MP_Node, TimeStampedModel):
+    '''
+    Модели:
+    title - название категории
+    slug - уникальный идентификатор для URL
+    description - описание категории
+    node_order_by - порядок сортировки узлов (по названию)
+    '''
     title = models.CharField(max_length=255)
     slug = models.SlugField(
         max_length=255,
@@ -45,6 +52,17 @@ class Category(MP_Node, TimeStampedModel):
         super().save(*args, **kwargs)
 
 class Topic(TimeStampedModel):
+    '''
+    Модель:
+    category - категория, к которой относится топик
+    title - название топика
+    is_closed - флаг, указывающий, закрыт ли топик для новых сообщений
+    is_pinned - флаг, указывающий, закреплен ли топик в категории. По задумке, админы могут закреплять темы (Topics). Они будут обходить стандартную фильтрацию по дате последней активности и выводиться в самом верху
+    views_count - количество просмотров топика
+    replies_count - количество ответов в топике
+    last_active - дата и время последней активности в топике (создание или обновление поста)
+
+    '''
     category = models.ForeignKey(
         "forum.category",
         on_delete=models.CASCADE,
@@ -67,6 +85,14 @@ class Topic(TimeStampedModel):
 
 
     def get_absolute_url(self):
+        '''
+        Потому что тем может быть много и потенциально их будут переименовывать
+        Так что использовать slug для поиска объекта не стоит, значит в БД он не нужен
+        
+        Но мы можем перегрузить этот метод и в самой ссылке slug будет, для того же SEO
+        Просто мы им пользоваться не будем
+        Ща, покажу как это будет работать со встроенными методами того же django
+        '''
         slug_text = slugify(unidecode(self.title)) or "topic"
         return reverse("topic_detail", kwargs={
             "topic_id": self.pk,
@@ -77,6 +103,16 @@ class Topic(TimeStampedModel):
 
 
 class Post(TimeStampedModel):
+    '''
+    Модель:
+    topic - тема, к которой относится пост
+    author - автор поста
+    parent - родительский пост (если это ответ)
+    content - содержимое поста
+    liked_by - пользователи, которым понравился пост
+    likes_count - количество лайков
+    image - изображение, прикрепленное к посту
+    '''
     topic = models.ForeignKey(
         "forum.Topic",
         on_delete=models.CASCADE,
