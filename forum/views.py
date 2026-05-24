@@ -4,7 +4,8 @@ from .models import Category, Topic, Post
 from .helpers import *
 ###temp
 
-
+# seedCategories()
+# seedTopics()
 
 # Create your views here.
 
@@ -15,13 +16,15 @@ class ForumIndexView(ListView):
     model = Topic
     template_name = "index.html"
     context_object_name = "topics"
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
+        context["categories"] = Category.get_root_nodes().order_by("title")
         return context
     
     def get_queryset(self):
+        #леша это не шарп, тут нет еще запроса. ListView видит paginate_by = 5 и будет кастрировать запрос
         return Topic.objects.all().select_related("category").order_by("-is_pinned", "-last_active")
 
 
@@ -41,22 +44,22 @@ class CategoryCreateView(CreateView):
     '''
     model = Category
     template_name = "forum/category_form.html"
-    fields = ["name", "description"]
+    fields = ["title", "description"]
 
 class CategoryUpdateView(UpdateView):
     '''
     редактирование категории
     '''
     model = Category
-    template_name = "forum/category_form.html"
-    fields = ["name", "description"]
+    template_name = "category_form.html"
+    fields = ["title", "description"]
 
 class CategoryDeleteView(DeleteView):
     '''
     удаление категории
     '''
     model = Category
-    template_name = "forum/category_confirm_delete.html"
+    template_name = "category_confirm_delete.html"
     success_url = "/"
 
 ##############################Topic Views ##############################
@@ -69,7 +72,7 @@ class TopicListView(ListView):
 
     '''
     model = Topic
-    template_name = "forum/topic_list.html"
+    template_name = "topic_list.html"
     context_object_name = "topics"
 
     def get_queryset(self):
@@ -81,7 +84,7 @@ class TopicDetailView(DetailView):
     отображение топика и всех его постов
     '''
     model = Topic
-    template_name = "forum/topic_detail.html"
+    template_name = "topic_detail.html"
     context_object_name = "topic"
 
     def get_context_data(self, **kwargs):
@@ -96,7 +99,7 @@ class PostCreateView(CreateView):
     создание нового поста в топике
     '''
     model = Post
-    template_name = "forum/post_form.html"
+    template_name = "post_form.html"
     fields = ["content", "image"]
 
 
