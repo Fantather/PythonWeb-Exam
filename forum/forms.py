@@ -3,6 +3,20 @@ from django import forms
 from forum.models import Category
 
 
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ["title", "description", "icon"]
+
+        widgets = {
+        'title': forms.TextInput(attrs={'class': 'validate'}),
+        'description': forms.Textarea(attrs={'class': 'materialize-textarea'}),
+        'icon': forms.ClearableFileInput(attrs={'class': 'file-input'}),
+        }
+
+
+
 #вдруг сортировка понадобится, вот у меня пример из дз будет, просто перепишу под что надо
 # class FilmFilterForm(forms.Form):
 #     sort_choices = [
@@ -21,14 +35,3 @@ from forum.models import Category
 #         widget=forms.Select(attrs={'id': 'sort-select'})
 #         )
 
-
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = ["title", "description", "icon"]
-
-        widgets = {
-        'title': forms.TextInput(attrs={'class': 'validate'}),
-        'description': forms.Textarea(attrs={'class': 'materialize-textarea'}),
-        'icon': forms.ClearableFileInput(attrs={'class': 'file-input'}),
-        }

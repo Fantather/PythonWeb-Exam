@@ -1,0 +1,24 @@
+/* Фиксируем высоту всей карточки */
+.category-card {
+    height: 220px; 
+    display: flex;
+}
+
+/* Фиксируем ширину левого блока с картинкой */
+.category-card .card-image {
+    width: 220px; 
+    min-width: 220px; /* Запрещаем блоку сужаться */
+    flex-shrink: 0;
+}
+
+/* Заставляем картинку заполнить отведенный блок */
+.category-card .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Картинка заполнит блок, излишки обрежутся */
+}
+
+/* Скрываем текст, если описание слишком длинное для фиксированной карточки */
+.category-card .card-content {
+    overflow: hidden;
+}

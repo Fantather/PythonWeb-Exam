@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -53,24 +53,25 @@ class CategoryListView(ListView):
 
 
 class CategoryCreateView(CreateView):
-    '''
-    создание новой категории
-    '''
     model = Category
     form_class = CategoryForm
     template_name = "category_form.html"
-    # fields = ["title", "description"]
+    success_url = reverse_lazy("category_list")
 
     def form_valid(self, form):
         parent_id = self.request.GET.get("parent")
+        
+        data = form.cleaned_data
+        
         if parent_id:
             parent_category = Category.objects.get(id=parent_id)
-            form.instance.parent = parent_category
-        return super().form_valid(form)
+            self.object = parent_category.add_child(**data)
+        else:
+            # Создаем независимую корневую категорию
+            self.object = Category.add_root(**data)
+            
+        return HttpResponseRedirect(self.get_success_url())
     
-    def get_success_url(self):
-        return reverse_lazy("category_list")
-
 class CategoryUpdateView(UpdateView):
     '''
     редактирование категории
