@@ -1,0 +1,20 @@
+    .carousel { height: 300px !important; }
+    .carousel .carousel-item {
+        width: 400px !important;
+        height: 250px !important;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .category-card-content {
+        position: absolute;
+        bottom: 0;
+        padding: 20px;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        width: 100%;
+        color: white;
+    }
+    .pinned-topic {
+        background-color: #fff9c4 !important; 
+        border-left: 5px solid #fbc02d;
+    }
+    .topic-stats i { vertical-align: middle; font-size: 18px; }

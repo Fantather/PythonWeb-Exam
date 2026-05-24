@@ -7,19 +7,23 @@ from .helpers import *
 
 
 # Create your views here.
-def index(request):
-    '''
-    для проверки lauout'а, потом удалю
-    '''
-    return render(request, "index.html")
 
-class IndexView(ListView):
+class ForumIndexView(ListView):
     '''
-    отображение всех категорий на главной странице форума
+    отображение категорий в виде карусели и список топиков
     '''
-    model = Category
-    template_name = "forum/index.html"
-    context_object_name = "categories"
+    model = Topic
+    template_name = "index.html"
+    context_object_name = "topics"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        return context
+    
+    def get_queryset(self):
+        return Topic.objects.all().select_related("category").order_by("-is_pinned", "-last_active")
+
 
 ###############################Category Views ##############################
 ##crud

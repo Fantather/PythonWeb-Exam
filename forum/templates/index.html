@@ -1,8 +1,14 @@
 {% extends "_layout.html" %}
+{% load static %}
 {% block title %}Форум хуерум{% endblock %}
 
+{% extends "_layout.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/carousel.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Добро пожаловать на форум!</h1>
-<p>Здесь вы можете обсуждать различные темы, задавать вопросы и делиться опытом
-    с другими участниками.</p>
+<div class="container">
+    
 {% endblock %}
