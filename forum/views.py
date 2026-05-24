@@ -1,23 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Category, Topic, Post
-
+from .helpers import *
 ###temp
-def seedCategories(request):
-    '''
-    для проверки lauout'а, потом удалю
-    '''
-    categ_data = [
-        for i in range(1, 10):
-            {
-                "title": f"Категория {i}",
-                "description": f"Описание категории {i}",
-                "image": "https://placehold.co/600x400",
-            }
-        ]   
-    
-    
-    
+
 
 
 # Create your views here.

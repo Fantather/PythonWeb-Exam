@@ -1,4 +1,4 @@
-<p align="center">
+<!-- <p align="center">
   <a href="http://materializecss.com/">
     <img src="http://materializecss.com/res/materialize.svg" width="150">
   </a>
@@ -88,4 +88,4 @@ We use Jasmine as our testing framework and we're trying to write a robust test 
 Check out the [CONTRIBUTING document](CONTRIBUTING.md) in the root of the repository to learn how you can contribute. You can also browse the [help-wanted](https://github.com/Dogfalo/materialize/labels/help-wanted) tag in our issue tracker to find things to do.
 
 ## Copyright and license
-Code Copyright 2018 Materialize. Code released under the MIT license.
+Code Copyright 2018 Materialize. Code released under the MIT license. -->
