@@ -1,12 +1,25 @@
 from django.db import models
 class TopicQuerySet(models.QuerySet):
+    """Менеджер для работы с темами форума."""
+
     def active(self):
         """Возвращает активные Topics"""
         return self.filter(is_closed=False)
     
     def pinned_first(self):
         """Возвращает сначала закреплённые Topics, а потом сортирует по дате последней активности в Topic"""
-        return self.filter('-is_pinned', '-last_active')
+        return self.order_by('-is_pinned', '-last_active')
+    
+    def get_for_category(self, category_slug: str):
+        """Возвращает список Topic для конкретной категории."""
+        return self.filter(
+            category__slug=category_slug
+        ).select_related(
+            'category'
+        ).order_by(
+            "-is_pinned", "-last_active"
+        )
+
         
     
 class PostQuerySet(models.QuerySet):

@@ -78,12 +78,19 @@ class Topic(TimeStampedModel):
         on_delete=models.CASCADE,
         related_name="topics",
     )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="created_topics",
+        verbose_name="Автор темы"
+    )
     title = models.CharField(max_length=255)
     is_closed = models.BooleanField(default=False)
     is_pinned = models.BooleanField(default=False)
     views_count = models.IntegerField(default=0)
     replies_count = models.IntegerField(default=0)
     last_active = models.DateTimeField(auto_now_add=True)
+    
 
     class Meta(TimeStampedModel.Meta):
         verbose_name = "Topic"
