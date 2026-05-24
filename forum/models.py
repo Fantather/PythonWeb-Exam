@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
@@ -25,6 +26,12 @@ class Category(MP_Node, TimeStampedModel):
         unique=True,
     )
     description = models.TextField(blank=True)
+    icon = models.FileField(
+        upload_to="categories/icons/",
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(['svg', 'png', 'webp'])],
+    )
     node_order_by = ["title"]
 
     class Meta(MP_Node.Meta):   # type: ignore[override]  так нада
