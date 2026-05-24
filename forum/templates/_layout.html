@@ -42,7 +42,7 @@
         <li>
             <div class="user-view">
                 <div class="background">
-                    <img src="{% static 'assets/catto.jpg' %}" alt="bg">
+                    <img src="{% static 'assets/catto.png' %}" alt="bg">
                 </div>
                 {% comment %}
                 ссылки сюда    
@@ -56,12 +56,15 @@
         <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
     </ul>
 </header>
-  
-<main class="container" style="background-image: url('{% static 'assets/image.png' %}'); background-size: cover; height: 100%; width: 100%; padding: 2rem;">
-    {% block content %}
-    {% endblock %}
-</main>    
+
+<main style="background-image: url('{% static 'assets/image.png' %}');">
     
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</main>
+
 <footer class="page-footer light-blue darken-4">
     <div class="container">
         <div class="row">

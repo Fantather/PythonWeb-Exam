@@ -1,0 +1,15 @@
+<div class="col s12 m4">
+    <div class="card-panel blue darken-1 white-text center-align">
+        <h5>Начать обсуждение</h5>
+        <p class="create-discussion-text">У вас есть вопрос или интересная тема? Поделитесь с сообществом прямо сейчас.</p>
+        {% if user.is_authenticated %}
+            {% comment %} <a href="{% url 'category_create' %}" class="btn white blue-text text-darken-2 waves-effect waves-light create-discussion-btn"> {% endcomment %}
+                Создать
+            {% comment %} </a> {% endcomment %}
+        {% else %}
+            {% comment %} <a href="{% url 'register' %}" class="btn white blue-text text-darken-2 waves-effect waves-light create-discussion-btn"> {% endcomment %}
+                Создать
+            {% comment %} </a> {% endcomment %}
+        {% endif %}
+    </div>
+</div>

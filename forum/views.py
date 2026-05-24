@@ -1,11 +1,20 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Category, Topic, Post
 from .helpers import *
 ###temp
 
-# seedCategories()
-# seedTopics()
+def seedData(request):
+    """Представление для заполнения базы данных по запросу"""
+    seedCategories()
+    seedTopics()
+    return HttpResponse("База данных успешно заполнена тестовыми данными!")
+
+def clearData(request):
+    clearCategories()
+    clearTopics()
+    return HttpResponse("Данные успешно удалены!")
 
 # Create your views here.
 
