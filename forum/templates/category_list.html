@@ -1,0 +1,15 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+    <h4 class="center-align ">Категории форума</h4>
+    {% if categories %}
+    <div class="row">
+    {% include "category_partial/card_category.html" with categories=categories %}
+</div>
+    {% include "_pagination.html" with pagination_class="category-pagination" %}
+    {% else %}
+    <div class="card-panel center-align grey lighten-4">
+        <p class="grey-text">Пока нет категорий для обсуждения</p>
+    </div>
+    {% endif %}
+{% endblock %}

@@ -44,15 +44,16 @@ class CategoryListView(ListView):
     отображение всех категорий на главной странице форума
     '''
     model = Category
-    template_name = "forum/category_list.html"
+    template_name = "category_list.html"
     context_object_name = "categories"
+    paginate_by = 5
 
 class CategoryCreateView(CreateView):
     '''
     создание новой категории
     '''
     model = Category
-    template_name = "forum/category_form.html"
+    template_name = "category_form.html"
     fields = ["title", "description"]
 
 class CategoryUpdateView(UpdateView):
