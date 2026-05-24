@@ -10,7 +10,6 @@ from django.utils.text import slugify
 
 
 class Category(MP_Node, TimeStampedModel):
-
     '''
     Категория - это верхний уровень организации контента на форуме. Она может содержать в себе несколько топиков (тем для обсуждения).
 
