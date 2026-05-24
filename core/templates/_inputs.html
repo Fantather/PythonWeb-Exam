@@ -1,0 +1,15 @@
+<div class="input-field {{ grid_class }}">
+    {{ field }}
+    
+    <label for="{{ field.id_for_label }}">
+        {% if custom_label %}
+            {{ custom_label }}
+        {% else %}
+            {{ field.label }}
+        {% endif %}
+    </label>
+    
+    {% if field.errors %}
+        <span class="helper-text red-text">{{ field.errors.0 }}</span>
+    {% endif %}
+</div>

@@ -1,6 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from forum.forms import CategoryForm
 from .models import Category, Topic, Post
 from .helpers import *
 ###temp
@@ -48,21 +51,37 @@ class CategoryListView(ListView):
     context_object_name = "categories"
     paginate_by = 5
 
+
 class CategoryCreateView(CreateView):
     '''
     создание новой категории
     '''
     model = Category
+    form_class = CategoryForm
     template_name = "category_form.html"
-    fields = ["title", "description"]
+    # fields = ["title", "description"]
+
+    def form_valid(self, form):
+        parent_id = self.request.GET.get("parent")
+        if parent_id:
+            parent_category = Category.objects.get(id=parent_id)
+            form.instance.parent = parent_category
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy("category_list")
 
 class CategoryUpdateView(UpdateView):
     '''
     редактирование категории
     '''
     model = Category
+    form_class = CategoryForm
     template_name = "category_form.html"
     fields = ["title", "description"]
+
+    def get_success_url(self):
+        return reverse_lazy("category_list")
 
 class CategoryDeleteView(DeleteView):
     '''
@@ -70,7 +89,7 @@ class CategoryDeleteView(DeleteView):
     '''
     model = Category
     template_name = "category_confirm_delete.html"
-    success_url = "/"
+    success_url = reverse_lazy("category_list")
 
 ##############################Topic Views ##############################
 class TopicListView(ListView):
