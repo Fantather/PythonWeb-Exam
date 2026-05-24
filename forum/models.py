@@ -28,7 +28,7 @@ class Category(MP_Node, TimeStampedModel):
     )
     description = models.TextField(blank=True)
     icon = models.FileField(
-        upload_to="categories/icons/",
+        upload_to="static/assets/icons/",
         blank=True,
         null=True,
         validators=[FileExtensionValidator(['svg', 'png', 'webp'])],
