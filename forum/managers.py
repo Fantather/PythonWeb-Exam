@@ -22,7 +22,7 @@ class TopicQuerySet(models.QuerySet):
         ).order_by(
             "-is_pinned", "-last_active"
         )
-    
+
     def get_by_user(self, user_id: int):
         """
         Возвращает все темы, созданные конкретным пользователем.
@@ -52,12 +52,13 @@ class PostQuerySet(models.QuerySet):
     
     def get_topic_starter(self, topic_id:int):
         """
-        Извлекает только самый первый пост из Topic.
+        Извлекает корневой пост темы.
         Если понадобится preview для Topic вывести.
         """
 
         return self.filter(
-            topic_id=topic_id, parent__isnull=True
+            topic_id=topic_id,
+            parent__isnull=True
         ).first()
     
     def get_by_user(self, user_id:int):

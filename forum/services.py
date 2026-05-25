@@ -73,7 +73,7 @@ class PostService:
         Возвращает True, если связь создана, False - если удалена.
         """
         with transaction.atomic():
-            if post.liked_by.filter(id=user.pk).exists():
+            if post.liked_by.filter(id=post.pk).exists():
                 post.liked_by.remove(user)
                 Post.objects.filter(id=user.pk).update(likes_count=F('likes_count')-1)
                 return False

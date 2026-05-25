@@ -1,18 +1,20 @@
+import uuid
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
-from unidecode import unidecode
-from core.models import TimeStampedModel
-from treebeard.mp_tree import MP_Node
 from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
+from unidecode import unidecode
+from treebeard.mp_tree import MP_Node
 
+from core.models import TimeStampedModel
 from forum.managers import PostQuerySet, TopicQuerySet
 
 
 class Category(MP_Node, TimeStampedModel):
-    '''
+    """
     Категория - это верхний уровень организации контента на форуме. Она может содержать в себе несколько топиков (тем для обсуждения).
 
     Модели:
@@ -20,50 +22,48 @@ class Category(MP_Node, TimeStampedModel):
      - slug - уникальный идентификатор для URL
      - description - описание категории
      - node_order_by - порядок сортировки узлов (по названию)
-    '''
-    title = models.CharField(max_length=255)
+    """
+    title = models.CharField(
+        max_length=255, 
+        verbose_name=_("Title")
+    )
     slug = models.SlugField(
         max_length=255,
         unique=True,
+        verbose_name=_("Slug")
     )
-    description = models.TextField(blank=True)
+    description = models.TextField(
+        blank=True, 
+        verbose_name=_("Description")
+    )
     icon = models.FileField(
-        upload_to="static/assets/icons/",
+        upload_to="icons/",
         blank=True,
-        null=True,
         validators=[FileExtensionValidator(['svg', 'png', 'webp'])],
+        verbose_name=_("Icon")
     )
     node_order_by = ["title"]
 
-    class Meta(MP_Node.Meta):   # type: ignore[override]  так нада
-        verbose_name = "Category"
-        verbose_name_plural = "Categories"
-
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
         indexes = [
             models.Index(fields=["slug"]),
         ]
 
-
     def __str__(self) -> str:
         return self.title
     
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """Добавляем генерацию slug"""
         if not self.slug:
             base_slug = slugify(unidecode(self.title)) or 'category'
-
-            # А эту переменную мы будем изменять, если slug уже занят
-            unique_slug = base_slug
-            counter = 1
-            while Category.objects.filter(slug=unique_slug).exists():
-                unique_slug = f"{base_slug}-{counter}"
-                counter += 1
-
-            self.slug = unique_slug
+            self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
 
+
 class Topic(TimeStampedModel):
-    '''
+    """
     Топик - главная тема для обсуждения, которая может содержать в себе посты (сообщения)
     Модели:
      - category - категория, к которой относится топик
@@ -73,52 +73,70 @@ class Topic(TimeStampedModel):
      - views_count - количество просмотров топика
      - replies_count - количество ответов в топике
      - last_active - дата и время последней активности в топике (создание или обновление поста)
-
-    '''
+    """
     category = models.ForeignKey(
-        "forum.category",
+        "forum.Category",
         on_delete=models.CASCADE,
         related_name="topics",
+        verbose_name=_("Category")
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="created_topics",
-        verbose_name="Автор темы"
+        verbose_name=_("Author")
     )
-    title = models.CharField(max_length=255)
-    is_closed = models.BooleanField(default=False)
-    is_pinned = models.BooleanField(default=False)
-    views_count = models.IntegerField(default=0)
-    replies_count = models.IntegerField(default=0)
-    last_active = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(
+        max_length=255,
+        verbose_name=_("Title")
+    )
+    is_closed = models.BooleanField(
+        default=False,
+        verbose_name=_("Is closed")
+    )
+    is_pinned = models.BooleanField(
+        default=False,
+        verbose_name=_("Is pinned")
+    )
+    views_count = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Views count")
+    )
+    replies_count = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Replies count")
+    )
+    last_active = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True,
+        verbose_name=_("Last active")
+    )
     
     objects = TopicQuerySet.as_manager()
 
-    class Meta(TimeStampedModel.Meta):
-        verbose_name = "Topic"
-        verbose_name_plural = "Topics"
-        
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
+        verbose_name = _("Topic")
+        verbose_name_plural = _("Topics")
         indexes = [
             models.Index(fields=["category", "-is_pinned", "-last_active"]),
         ]
 
+    def __str__(self) -> str:
+        return self.title
 
-    def get_absolute_url(self):
-        '''
+    def get_absolute_url(self) -> str:
+        """
         Позволяем получить полную ссылку на конкретный topic, включающую slug
-        '''
+        """
         slug_text = slugify(unidecode(self.title)) or "topic"
         return reverse("topic_detail", kwargs={
             "topic_id": self.pk,
             "slug": slug_text,
         })
-    
-
 
 
 class Post(TimeStampedModel):
-    '''
+    """
     Пост - это сообщение в топике. Он может быть как начальным сообщением (постом-родителем), так и ответом на другой пост (постом-ребенком).
     Модель:
      - topic - тема, к которой относится пост
@@ -128,16 +146,18 @@ class Post(TimeStampedModel):
      - liked_by - пользователи, которым понравился пост
      - likes_count - количество лайков
      - image - изображение, прикрепленное к посту
-    '''
+    """
     topic = models.ForeignKey(
         "forum.Topic",
         on_delete=models.CASCADE,
         related_name="posts",
+        verbose_name=_("Topic")
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="posts",
+        verbose_name=_("Author")
     )
     parent = models.ForeignKey(
         "self",
@@ -145,40 +165,47 @@ class Post(TimeStampedModel):
         null=True,
         blank=True,
         related_name="replies",
+        verbose_name=_("Parent post")
     )
-    content = models.TextField()
+    content = models.TextField(
+        verbose_name=_("Content")
+    )
     liked_by = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name="liked_posts",
         blank=True,
+        verbose_name=_("Liked by")
     )
-    likes_count = models.IntegerField(
+    likes_count = models.PositiveIntegerField(
         default=0,
         db_index=True,
+        verbose_name=_("Likes count")
     )
     image = models.ImageField(
         upload_to="posts/images/%Y/%m/%d/",
         blank=True,
+        verbose_name=_("Image")
     )
 
     objects = PostQuerySet.as_manager()
 
-    class Meta(TimeStampedModel.Meta):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         ordering = ['-created_at']
-        verbose_name = 'Post'
-        verbose_name_plural = 'Posts'
-
+        verbose_name = _("Post")
+        verbose_name_plural = _("Posts")
         indexes = [
             models.Index(fields=["topic", "parent", "created_at"]),
         ]
     
-
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Post {self.pk} in Topic {self.topic_id}"
 
-    def clean(self):
+    def clean(self) -> None:
         """Валидация на уровне доменной модели."""
         if self.parent_id:
-            if self.topic_id != self.parent.topic_id:
-                raise ValidationError("Дочерний пост обязан принадлежать тому же Topic, что и родительский.")
+            parent_topic_id = Post.objects.filter(pk=self.parent_id).values_list('topic_id', flat=True).first()
+            if parent_topic_id and self.topic_id != parent_topic_id:
+                raise ValidationError({
+                    'parent': _("Дочерний пост обязан принадлежать тому же Topic, что и родительский.")
+                })
         super().clean()
