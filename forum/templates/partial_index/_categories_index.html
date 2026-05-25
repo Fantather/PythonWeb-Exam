@@ -1,3 +1,4 @@
+{% load static %}
 <div class="col s12">
     <h5 class="grey-text text-darken-2 forum-category-heading">Категории</h5>
     
@@ -8,7 +9,7 @@
                     <div class="category-card-inner">
                         <div class="category-icon-wrapper">
                             {% if cat.icon %}
-                                <img src="{{ cat.icon.url }}" alt="{{ cat.title }}">
+                                <img src="{{ cat.icon.url }}" alt="{{ cat.title }}" onerror="this.onerror=null; this.src='{% static 'image.png' %}'; this.style.objectFit='contain';">
                             {% else %}
                                 <i class="material-icons large grey-text text-lighten-1">folder</i>
                             {% endif %}

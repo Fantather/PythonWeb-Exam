@@ -1,6 +1,9 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from forum.forms import CategoryForm
 from .models import Category, Topic, Post
 from .helpers import *
 ###temp
@@ -44,24 +47,42 @@ class CategoryListView(ListView):
     отображение всех категорий на главной странице форума
     '''
     model = Category
-    template_name = "forum/category_list.html"
+    template_name = "category_list.html"
     context_object_name = "categories"
+    paginate_by = 5
+
 
 class CategoryCreateView(CreateView):
-    '''
-    создание новой категории
-    '''
     model = Category
-    template_name = "forum/category_form.html"
-    fields = ["title", "description"]
+    form_class = CategoryForm
+    template_name = "category_form.html"
+    success_url = reverse_lazy("category_list")
 
+    def form_valid(self, form):
+        parent_id = self.request.GET.get("parent")
+        
+        data = form.cleaned_data
+        
+        if parent_id:
+            parent_category = Category.objects.get(id=parent_id)
+            self.object = parent_category.add_child(**data)
+        else:
+            # Создаем независимую корневую категорию
+            self.object = Category.add_root(**data)
+            
+        return HttpResponseRedirect(self.get_success_url())
+    
 class CategoryUpdateView(UpdateView):
     '''
     редактирование категории
     '''
     model = Category
+    form_class = CategoryForm
     template_name = "category_form.html"
     fields = ["title", "description"]
+
+    def get_success_url(self):
+        return reverse_lazy("category_list")
 
 class CategoryDeleteView(DeleteView):
     '''
@@ -69,7 +90,7 @@ class CategoryDeleteView(DeleteView):
     '''
     model = Category
     template_name = "category_confirm_delete.html"
-    success_url = "/"
+    success_url = reverse_lazy("category_list")
 
 ##############################Topic Views ##############################
 class TopicListView(ListView):
