@@ -5,7 +5,6 @@ from django.utils.translation import gettext_lazy as _
 
 from core.managers import UserManager
 
-
 class TimeStampedModel(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, 
@@ -78,3 +77,4 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
     def __str__(self) -> str:
         return f"{self.email}: {self.username}"
+    
