@@ -57,7 +57,11 @@ class EditProfileView(UpdateView):
     model = User
     template_name = "edit_profile.html"
     form_class = UserChangeForm
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("user_page")
 
     def get_object(self, queryset=None):
         return self.request.user
+    
+    # def get_success_url(self):
+    #  return reverse_lazy("user_page", kwargs={"username": self.request.user.username})
+

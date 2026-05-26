@@ -3,3 +3,40 @@
 {% block title %}
 Редактирование профиля
 {% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col s12 m8 offset-m2 l6 offset-l3">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title center-align">Редактирование профиля</span>
+                <form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    {% if field.name != "avatar" %}
+                        {% include "_inputs.html" with field=field grid_class="col s12" %}
+                    {% else %}
+                        {% include "_image_form.html" with field=field grid_class="col s12" custom_label="Аватар" custom_placeholder="Выберите файл изображения для аватара" %}
+                    {% endif %}
+                    {% endfor %}                
+                    
+                    <div class="row" style="margin-bottom: 0;">
+                        <div class="col s12 center-align" style="margin-top: 15px;">
+                            <button class="btn waves-effect waves-light blue darken-2" type="submit" name="action">
+                                Сохранить изменения
+                                <i class="material-icons right">save</i>
+                            </button>
+                            <a href="{% url 'user_page' request.user.username %}" class="btn waves-effect waves-light grey darken-1" style="margin-left: 10px;">
+                                Отмена
+                                <i class="material-icons right">cancel</i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
