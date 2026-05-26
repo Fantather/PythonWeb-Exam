@@ -1,24 +1,29 @@
 {% load static %}
+
 <div class="col s12">
     <h5 class="grey-text text-darken-2 forum-category-heading">Категории</h5>
     
     {% if categories %}
         <div class="carousel" id="forum-carousel">
             {% for cat in categories %}
-                <div class="carousel-item card hoverable white black-text">
-                    <div class="category-card-inner">
-                        <div class="category-icon-wrapper">
-                            {% if cat.icon %}
+                <div class="carousel-item card hoverable">
+
+                       {% if cat.icon %}
                                 <img src="{{ cat.icon.url }}" alt="{{ cat.title }}" onerror="this.onerror=null; this.src='{% static 'image.png' %}'; this.style.objectFit='contain';">
                             {% else %}
-                                <i class="material-icons large grey-text text-lighten-1">folder</i>
-                            {% endif %}
+                                <div class="category-bg-placeholder">
+                                    <i class="material-icons large">folder</i>                        
                         </div>
-                        <span class="card-title category-card-title">{{ cat.title }}</span>
-                        <p class="grey-text text-darken-1 category-card-desc">
+                        {% endif %}
+                        <div class = "category-card-content">
+                            <span class="card-title">
+                            {{ cat.title }}
+                            </span>
+                            <p class="category-desc">
                             {{ cat.description|truncatechars:60 }}
-                        </p>
-                    </div>
+                            </p>
+                        </div>
+
                 </div>
             {% endfor %}
         </div>

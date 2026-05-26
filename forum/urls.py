@@ -9,5 +9,6 @@ urlpatterns = [
     path('clear-data/', views.clearData, name='clear_data'),
     path('categories/', views.CategoryListView.as_view(), name='category_list'),
     path('categories/create/', views.CategoryCreateView.as_view(), name='category_create'),
+    
     # path('topics/<int:topic_id>-<str:slug>', views.topic_detail, name='topic_detail'),
 ]

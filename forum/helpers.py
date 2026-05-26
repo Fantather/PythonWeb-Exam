@@ -10,7 +10,7 @@ def seedCategories():
             Category.add_root(
                 title=f"Категория {i}",
                 description=f"Описание категории {i}",
-                icon="assets/catto.png"
+                icon="catto.png"
             )
 
 def clearCategories():

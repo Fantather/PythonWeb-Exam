@@ -11,9 +11,13 @@ class CategoryForm(forms.ModelForm):
         widgets = {
         'title': forms.TextInput(attrs={'class': 'validate'}),
         'description': forms.Textarea(attrs={'class': 'materialize-textarea'}),
-        'icon': forms.ClearableFileInput(attrs={'class': 'file-input'}),
+        'icon': forms.ClearableFileInput(attrs={
+                'class': 'file-input', 
+                'accept': '.png, .svg, image/png, image/svg+xml'
+            }),
         }
 
+   
    
 
 #вдруг сортировка понадобится, вот у меня пример из дз будет, просто перепишу под что надо

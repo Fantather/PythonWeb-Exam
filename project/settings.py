@@ -49,9 +49,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'treebeard',
     'core.apps.CoreConfig',
     'forum.apps.ForumConfig',
     'accounts.apps.AccountsConfig'
+    
 ]
 
 MIDDLEWARE = [
@@ -135,13 +137,17 @@ STATICFILES_DIRS = [BASE_DIR / 'project' / 'static']
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
+LOGIN_REDIRECT_URL = 'forum:index'
+
+LOGIN_URL = 'login' 
+
 
 JAZZMIN_SETTINGS = {
     "show_ui_builder": False,
 }
 
 JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": True,
+    "navbar_small_text": False,
     "footer_small_text": True,
     "body_small_text": False,
     "brand_small_text": True,
@@ -149,19 +155,19 @@ JAZZMIN_UI_TWEAKS = {
     "accent": "accent-primary",
     "navbar": "navbar-white navbar-light",
     "no_navbar_border": True,
-    "navbar_fixed": False,
+    "navbar_fixed": True,
     "layout_boxed": False,
     "footer_fixed": True,
     "sidebar_fixed": False,
     "sidebar": "sidebar-dark-primary",
-    "sidebar_nav_small_text": True,
+    "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": False,
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
-    "sidebar_nav_flat_style": False,
-    "theme": "flatly",
-    "default_theme_mode": "dark",
+    "sidebar_nav_flat_style": True,
+    "theme": "litera",
+    "default_theme_mode": "auto",
     "button_classes": {
         "primary": "btn-outline-primary",
         "secondary": "btn-outline-secondary",
@@ -169,5 +175,6 @@ JAZZMIN_UI_TWEAKS = {
         "warning": "btn-outline-warning",
         "danger": "btn-outline-danger",
         "success": "btn-outline-success"
-    }
+    },
+    "actions_sticky_top": False
 }

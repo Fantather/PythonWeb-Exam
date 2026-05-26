@@ -1,11 +1,12 @@
 from django.contrib import admin
-from .models import User
-from .forms import AdminPanelCategoryForm, AdminPanelUserCreationForm, AdminPanelUserChangeForm
+from accounts.models import User
+from .forms import AdminPanelUserCreationForm, AdminPanelUserChangeForm
 # Register your models here.
 from forum.models import Category, Post, Topic
 from django.utils.html import format_html   
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
+from django.forms import ClearableFileInput
 
 admin.site.register(Topic)
 admin.site.register(Post)
@@ -43,11 +44,18 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(TreeAdmin):
     model = Category
-    form = movenodeform_factory(Category, form=AdminPanelCategoryForm)
+    form = movenodeform_factory(Category )
     list_display = ("title", "slug", "description", "category_count", "icon_preview")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "slug")
     list_filter = ("title",)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+            if db_field.name == 'icon':
+                kwargs['widget'] = ClearableFileInput(attrs={
+                    'accept': '.png, .svg, image/png, image/svg+xml'
+                })
+            return super().formfield_for_dbfield(db_field, request, **kwargs)
 
     def category_count(self, obj):
         return obj.get_descendant_count()
@@ -56,7 +64,7 @@ class CategoryAdmin(TreeAdmin):
         if obj.icon: 
             return format_html('<img src="{}" style="max-width: 100px; max-height: 100px;" />', obj.icon.url)
         return "No image"
-# class Media:
-#         js = ('js/admin_image_preview.js',)
+    class Media:
+        js = ('js/admin_image_preview.js',)
 
         

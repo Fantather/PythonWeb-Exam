@@ -1,0 +1,15 @@
+<div class="file-field input-field {{ grid_class }}">
+    <div class="btn blue darken-2">
+        <span>{{ custom_label|default:"Файл" }}</span>
+        {{ field }}
+    </div>
+    <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="{{ custom_placeholder|default:'Выберите файл' }}">
+    </div>
+    
+    {% if field.errors %}
+        <span class="helper-text red-text">{{ field.errors.0 }}</span>
+    {% endif %}
+
+    <div class="field-avatar_preview center-align"></div>
+</div>

@@ -1,0 +1,65 @@
+{% extends "_layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row" style="margin-top: 40px;">
+    <div class="col s12 m8 offset-m2 l6 offset-l3">
+        <div class="card">
+            
+            <div class="card-image center-align" style="padding-top: 30px;">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="Avatar" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; display: inline-block;">
+                {% else %}
+                    <img src="{% static 'assets/default_avatar.png' %}" alt="Default Avatar" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; display: inline-block;">
+                {% endif %}
+            </div>
+
+            <div class="card-content center-align">
+                <span class="card-title" style="font-weight: 500;">{{ user.username }}</span>
+                <p class="grey-text">{{ user.email }}</p>
+                
+                <div style="margin-top: 15px;">
+                    {% if user.is_active %}
+                        <span class="new badge green" data-badge-caption="Активен" style="float: none; margin: 0;"></span>
+                    {% else %}
+                        <span class="new badge red" data-badge-caption="Неактивен" style="float: none; margin: 0;"></span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="card-content">
+                <ul class="collection" style="border: none; margin: 0;">
+                    {% if user.first_name or user.last_name %}
+                    <li class="collection-item" style="padding-left: 0; padding-right: 0;">
+                        <b>Имя:</b> {{ user.first_name }} {{ user.last_name }}
+                    </li>
+                    {% endif %}
+                    
+                    {% if user.birthday %}
+                    <li class="collection-item" style="padding-left: 0; padding-right: 0;">
+                        <b>Дата рождения:</b> {{ user.birthday|date:"d.m.Y" }}
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="card-action center-align">
+                {% if user.is_staff %}
+                    <a href="{% url 'admin:index' %}" class="red-text text-darken-2" style="margin-right: 20px;">
+                        <i class="material-icons left">admin_panel_settings</i>
+                    </a>
+                {% endif %}
+
+                {% if request.user == user %}
+                    <a href="{% url 'edit_profile' %}" class="blue-text text-darken-2">
+                        <i class="material-icons left">edit</i>
+                    </a>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock content %}
