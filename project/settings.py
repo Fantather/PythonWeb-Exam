@@ -36,7 +36,7 @@ ALLOWED_HOSTS = []
 
 
 #твоя модель
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'forum.apps.ForumConfig',
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [
