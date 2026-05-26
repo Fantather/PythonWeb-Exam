@@ -1,0 +1,40 @@
+
+.padding_top_30 {
+    padding-top: 30px;
+}
+
+.top_margin_15 {
+    margin-top: 15px;
+}
+
+.avatar_circle {
+    width: 15rem;
+    height: 15rem;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-block;
+}
+
+.bold_title {
+    font-weight: 500;
+}
+
+.badge_user_status {
+    float: none;
+    margin: 0;
+}
+
+
+.collection_no_border {
+    border: none; 
+    margin: 0;
+}
+
+.collection_item_no_padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.margin_right_20{
+    margin-right: 20px;
+}
