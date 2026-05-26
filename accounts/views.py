@@ -24,9 +24,10 @@ class RegisterPageView(CreateView):
     success_url = reverse_lazy("login")
 
     def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect(self.success_url)
+        response = super().form_valid(form)
+        login(self.request, self.object)
+        
+        return response
     
 
 class LoginPageView(LoginView):
