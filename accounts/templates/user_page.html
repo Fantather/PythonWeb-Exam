@@ -1,28 +1,28 @@
 {% extends "_layout.html" %}
 {% load static %}
-
+{% block title %}Профиль пользователя{% endblock title %}
 {% block content %}
 <div class="row" style="margin-top: 40px;">
     <div class="col s12 m8 offset-m2 l6 offset-l3">
         <div class="card">
             
-            <div class="card-image center-align" style="padding-top: 30px;">
+            <div class="center-align padding_top_30">
                 {% if user.avatar %}
-                    <img src="{{ user.avatar.url }}" alt="Avatar" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; display: inline-block;">
+                    <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar_circle">
                 {% else %}
-                    <img src="{% static 'assets/default_avatar.png' %}" alt="Default Avatar" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; display: inline-block;">
+                    <img src="{% static 'assets/default_avatar.png' %}" alt="Default Avatar" class="avatar_circle">
                 {% endif %}
             </div>
 
             <div class="card-content center-align">
-                <span class="card-title" style="font-weight: 500;">{{ user.username }}</span>
+                <span class="card-title bold_title">{{ user.username }}</span>
                 <p class="grey-text">{{ user.email }}</p>
                 
-                <div style="margin-top: 15px;">
+                <div class="top_margin_15">
                     {% if user.is_active %}
-                        <span class="new badge green" data-badge-caption="Активен" style="float: none; margin: 0;"></span>
+                        <span class="new badge green badge_user_status" data-badge-caption="Активен"></span>
                     {% else %}
-                        <span class="new badge red" data-badge-caption="Неактивен" style="float: none; margin: 0;"></span>
+                        <span class="new badge red badge_user_status" data-badge-caption="Неактивен"></span>
                     {% endif %}
                 </div>
             </div>
@@ -30,24 +30,27 @@
             <div class="divider"></div>
 
             <div class="card-content">
-                <ul class="collection" style="border: none; margin: 0;">
+                <ul class="collection collection_no_border">
                     {% if user.first_name or user.last_name %}
-                    <li class="collection-item" style="padding-left: 0; padding-right: 0;">
+                    <li class="collection-item collection_item_no_padding">
                         <b>Имя:</b> {{ user.first_name }} {{ user.last_name }}
                     </li>
                     {% endif %}
                     
                     {% if user.birthday %}
-                    <li class="collection-item" style="padding-left: 0; padding-right: 0;">
+                    <li class="collection-item collection_item_no_padding">
                         <b>Дата рождения:</b> {{ user.birthday|date:"d.m.Y" }}
                     </li>
+                    {% if user.birthday|date:"m-d" == today|date:"m-d" %}
+                    <i class="material-icons">cake</i> Сегодня день рождения!
+                    {% endif %}
                     {% endif %}
                 </ul>
             </div>
 
             <div class="card-action center-align">
                 {% if user.is_staff %}
-                    <a href="{% url 'admin:index' %}" class="red-text text-darken-2" style="margin-right: 20px;">
+                    <a href="{% url 'admin:index' %}" class="red-text text-darken-2 margin_right_20">
                         <i class="material-icons left">admin_panel_settings</i>
                     </a>
                 {% endif %}
@@ -63,3 +66,8 @@
     </div>
 </div>
 {% endblock content %}
+
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/user_page.css' %}">
+{% endblock extra_css %}
