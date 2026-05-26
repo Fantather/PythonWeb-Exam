@@ -33,6 +33,17 @@ class UserManager(BaseUserManager):
     
 
 class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
+    '''
+    fields:
+    - email
+    - first_name
+    - last_name
+    - username
+    - avatar
+    - birthday
+    - is_staff
+    - is_active
+    '''
     first_name = models.CharField(
         max_length=150,
         blank=True,

@@ -10,9 +10,9 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from accounts.forms import UserRegistrationForm, UserLoginForm, UserChangeForm
+from accounts.forms import UserEditForm, UserRegistrationForm, UserLoginForm, UserChangeForm
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 
 from accounts.models import User
 
@@ -57,12 +57,20 @@ class UserPageView(DetailView):
 class EditProfileView(UpdateView):
     model = User
     template_name = "edit_profile.html"
-    form_class = UserChangeForm
+    form_class = UserEditForm
     success_url = reverse_lazy("user_page")
 
     def get_object(self, queryset=None):
         return self.request.user
     
-    # def get_success_url(self):
-    #  return reverse_lazy("user_page", kwargs={"username": self.request.user.username})
+    def get_success_url(self):
+     return reverse_lazy("user_page", kwargs={"username": self.request.user.username})
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = "password_change.html"
+    
+    def get_success_url(self):
+        return reverse_lazy("user_page", kwargs={"username": self.request.user.username})
+    
 
