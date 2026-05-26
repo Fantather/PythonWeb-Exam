@@ -14,17 +14,7 @@ class CategoryForm(forms.ModelForm):
         'icon': forms.ClearableFileInput(attrs={'class': 'file-input'}),
         }
 
-
-class AdminPanelCategoryForm(CategoryForm):
-    class Meta(CategoryForm.Meta):
-
-            
-        fields = (*CategoryForm.Meta.fields, "slug", "_position", "_ref_node_id")
-        widgets = {
-            **CategoryForm.Meta.widgets,
-            "slug": forms.TextInput(attrs={"required": False}),
-        }
-        
+   
 
 #вдруг сортировка понадобится, вот у меня пример из дз будет, просто перепишу под что надо
 # class FilmFilterForm(forms.Form):

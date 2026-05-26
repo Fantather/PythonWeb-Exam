@@ -2,7 +2,6 @@ from django import forms
 from .models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.utils.translation import gettext_lazy as _
-from accounts.forms import UserChangeForm, UserRegistrationForm
 
 
 class UserRegistrationForm(forms.ModelForm):
@@ -60,23 +59,3 @@ class UserChangeForm(forms.ModelForm):
 
     def clean_password(self):
         return self.initial["password"]
-    
-
-
-
-################## Админ часть ##################
-
-class AdminPanelUserForm(UserChangeForm):
-    class Meta(UserChangeForm.Meta):
-        fields = ("email", "username", "first_name", "last_name", "password", "is_active", "is_staff", "is_superuser"
-                  )
-
-class AdminPanelUserCreationForm(UserRegistrationForm):
-    class Meta(UserRegistrationForm.Meta):
-        fields = ("email", "username", "first_name", "last_name", "password1", "password2", "is_active", "is_staff", "is_superuser"
-                  )
-        
-class AdminPanelUserChangeForm(UserChangeForm):
-    class Meta(UserChangeForm.Meta):
-        fields = ("email", "username", "first_name", "last_name", "password", "is_active", "is_staff", "is_superuser"
-)
