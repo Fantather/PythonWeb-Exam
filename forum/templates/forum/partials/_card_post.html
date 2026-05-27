@@ -1,0 +1,29 @@
+<article class="card flat" id="post-{{ post.pk }}" style="border-bottom: 2px solid #e0e0e0; margin-bottom: 30px;">
+    <div class="card-content">
+        <div class="author-meta" style="margin-bottom: 20px;">
+            <span class="card-title blue-text text-darken-2" style="font-size: 1.4rem; font-weight: 500;">
+                <i class="material-icons left">account_circle</i> {{ post.author.username }}
+            </span>
+            <span class="grey-text" style="font-size: 0.9rem;">
+                Опубликовано: {{ post.created_at|date:"d E Y в H:i" }}
+            </span>
+        </div>
+
+        <div class="post-text" style="font-size: 1.1rem; line-height: 1.6;">
+            {{ post.content|linebreaks }}
+        </div>
+
+        {% if post.image %}
+            <div class="post-image center-align" style="margin-top: 25px; width: 100%;">
+                <img class="responsive-img materialboxed" src="{{ post.image.url }}" alt="Изображение к теме" style="margin: 0 auto; display: inline-block; border-radius: 4px;">
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="card-action grey-text text-darken-1" style="border-top: none;">
+        <span><i class="material-icons meta-chip">thumb_up</i> {{ post.likes_count }}</span>
+        {% if not topic.is_closed %}
+            <a href="#reply-form" class="right blue-text text-darken-2" onclick="setParent({{ post.pk }})">Ответить в тему</a>
+        {% endif %}
+    </div>
+</article>

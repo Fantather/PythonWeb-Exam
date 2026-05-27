@@ -43,3 +43,33 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
   display: none;
 }
 }
+
+
+/* Что бы выровнять иконки  */
+/* Кастомный бейдж для метаданных форума (просмотры, лайки, статус) */
+.meta-chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e4e4e4;
+    border-radius: 16px;
+    padding: 0 12px;
+    height: 32px;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.87);
+    white-space: nowrap;
+    width: fit-content;
+}
+
+/* Изолируем иконку от глобальных стилей Materialize */
+.meta-chip .material-icons {
+    font-size: 18px;
+    margin-right: 6px;
+    line-height: 1;
+    float: none;
+}
+
+/* Модификатор для красного бейджа (например, для "Закрыто") */
+.meta-chip.danger {
+    background-color: #f44336;
+    color: white;
+}

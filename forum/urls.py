@@ -10,5 +10,5 @@ urlpatterns = [
     path('categories/', views.CategoryListView.as_view(), name='category_list'),
     path('categories/create/', views.CategoryCreateView.as_view(), name='category_create'),
     
-    # path('topics/<int:topic_id>-<str:slug>', views.topic_detail, name='topic_detail'),
+    path('topic/<int:topic_id>/<slug:slug>/', views.TopicPostListView.as_view(), name='topic_detail')
 ]

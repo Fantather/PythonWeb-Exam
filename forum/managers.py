@@ -57,7 +57,9 @@ class PostQuerySet(models.QuerySet):
         return self.filter(
             topic_id=topic_id
         ).select_related(
-            "author"
+            "author", 
+            "parent", 
+            "parent__author"
         ).order_by(
             "created_at"
         )

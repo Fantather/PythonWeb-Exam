@@ -15,9 +15,9 @@
                 </span>
                 
                 <span class="card-title topic-title-wrapper">
-                    {% comment %} <a href="{{ topic.get_absolute_url }}" class="black-text topic-title-link"> {% endcomment %}
+                    <a href="{{ topic.get_absolute_url }}" class="black-text topic-title-link">
                         {{ topic.title }}
-                    {% comment %} </a> {% endcomment %}
+                    </a>
                 </span>
                 
                 <p class="grey-text topic-activity-text">
@@ -26,8 +26,8 @@
             </div>
             
             <div class="card-action topic-meta-icons grey-text text-darken-1 topic-meta-action">
-                <span><i class="material-icons">visibility</i>{{ topic.views_count }}</span>
-                <span><i class="material-icons">chat_bubble_outline</i>{{ topic.replies_count }}</span>
+                <span><i class="material-icons meta-chip">visibility</i>{{ topic.views_count }}</span>
+                <span><i class="material-icons meta-chip">chat_bubble_outline</i>{{ topic.replies_count }}</span>
                 
                 {% if topic.is_closed %}
                     <span class="right red-text text-darken-1"><i class="material-icons">lock_outline</i>Закрыто</span>

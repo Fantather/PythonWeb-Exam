@@ -1,0 +1,35 @@
+<div class="card flat hoverable" id="post-{{ post.pk }}" style="margin-left: 20px; border-left: 3px solid #eceff1;">
+    <div class="card-content">
+        <span class="card-title blue-text text-darken-2" style="font-size: 1.1rem; margin-bottom: 10px;">
+            {{ post.author.username }}
+            <span class="right grey-text" style="font-size: 0.8rem;">
+                {{ post.created_at|date:"d M Y H:i" }}
+            </span>
+        </span>
+
+        {% if post.parent_id %}
+            <blockquote class="grey lighten-4" style="border-left: 5px solid #2196f3; padding: 10px; margin-top: 0;">
+                <a href="#post-{{ post.parent_id }}" class="grey-text text-darken-1">
+                    <i class="material-icons tiny">reply</i> Ответ пользователю {{ post.parent.author.username }}
+                </a>
+            </blockquote>
+        {% endif %}
+
+        <div class="post-text">
+            {{ post.content|linebreaks }}
+        </div>
+
+        {% if post.image %}
+            <div class="post-image center-align" style="margin-top: 15px; width: 100%;">
+                <img class="responsive-img materialboxed" src="{{ post.image.url }}" alt="Вложение пользователя" style="margin: 0 auto; display: inline-block;">
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="card-action grey-text text-darken-1">
+        <span><i class="material-icons meta-chip">thumb_up</i> {{ post.likes_count }}</span>
+        {% if not topic.is_closed %}
+            <a href="#reply-form" class="right blue-text text-darken-2" onclick="setParent({{ post.pk }})">Ответить</a>
+        {% endif %}
+    </div>
+</div>
