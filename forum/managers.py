@@ -2,13 +2,25 @@ from django.db import models
 class TopicQuerySet(models.QuerySet):
     """Менеджер для работы с темами форума."""
 
-    def active(self):
-        """Возвращает активные Topics."""
+    def active(self) -> "TopicQuerySet":
+        """Фильтрует QuerySet, оставляя только открытые темы."""
         return self.filter(is_closed=False)
+
+    def newest(self) -> "TopicQuerySet":
+        """Сортирует QuerySet по дате создания (по убыванию)."""
+        return self.order_by('-created_at')
+
+    def recently_active(self) -> "TopicQuerySet":
+        """Сортирует QuerySet по дате последней активности (по убыванию)."""
+        return self.order_by('-last_active')
     
     def pinned_first(self):
         """Возвращает сначала закреплённые Topics, а потом сортирует по дате последней активности в Topic."""
         return self.order_by('-is_pinned', '-last_active')
+    
+    def pinned(self) -> "TopicQuerySet":
+        """Возвращает только закрепленные Topics."""
+        return self.filter(is_pinned=True)
     
     def get_for_category(self, category_slug: str):
         """
@@ -36,7 +48,7 @@ class TopicQuerySet(models.QuerySet):
 class PostQuerySet(models.QuerySet):
     """Менеджер для работы с Post."""
 
-    def get_thread(self, topic_id:int):
+    def thread(self, topic_id:int):
         """
         Извлекает Всё дерево обсуждения для конкретной темы одним запросом.
         Подтягивает автора Post.

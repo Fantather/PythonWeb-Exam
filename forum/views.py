@@ -2,10 +2,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
+from django.shortcuts import get_object_or_404
+from .managers import *
 from forum.forms import CategoryForm
 from .models import Category, Topic, Post
 from .helpers import *
+
 ###temp
 
 def seedData(request):
@@ -133,5 +135,31 @@ class PostCreateView(CreateView):
     fields = ["content", "image"]
 
 
+class TopicPostListView(ListView):
+    """
+    Контроллер для вывода дерева обсуждения (постов) в конкретном топике.
+    Ожидает 'topic_id' в параметрах URL.
+    """
+    model = Post
+    template_name = "forum/topic_posts.html"
+    context_object_name = "posts"
+    paginate_by = 20
 
+    def get_queryset(self):
+        """
+        Извлекает посты, относящиеся к топику, с агрессивной загрузкой авторов.
+        """
+        self.topic_id = self.kwargs.get("topic_id")
+        return Post.objects.thread(self.topic_id)
 
+    def get_context_data(self, **kwargs):
+        """
+        Добавляет объект Topic в контекст. 
+        """
+        context = super().get_context_data(**kwargs)
+
+        context['topic'] = get_object_or_404(
+            Topic.objects.select_related('category'), 
+            pk=self.topic_id
+        )
+        return context

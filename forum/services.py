@@ -1,5 +1,4 @@
 from django.utils import timezone
-from core.models import User
 from .models import Category, Post, Topic
 from django.db import transaction
 from django.db.models import F
@@ -7,7 +6,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
 
-class CategoryServise:
+User = get_user_model()
+
+class CategoryService:
     @staticmethod
     def create_root_category(title: str, slug: str, description: str = "") -> Category:
         """Создаёт корневой узел"""
@@ -36,7 +37,7 @@ class TopicService:
         author:User,
         title:str,
         content:str,
-        image: UploadedFile | None = None
+        image: UploadedFile | str | None = None
     ) -> Topic:
         """
         Атомарно создает новую тему и корневое сообщение для нее.
@@ -91,7 +92,7 @@ class PostService:
         author: User,
         content: str,
         parent: Post,
-        image: UploadedFile|None = None
+        image: UploadedFile | str | None = None
     ) -> Post:
         """
         Создает новый пост-ответ в теме и атомарно обновляет метрики темы.

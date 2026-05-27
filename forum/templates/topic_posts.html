@@ -1,0 +1,98 @@
+{% extends "_layout.html" %}
+{% load static %}
+
+{% block title %}{{ topic.title }} - {{ topic.category.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col s12 m8">
+        
+        <nav class="clean-breadcrumb z-depth-0 transparent" style="margin-bottom: 20px;">
+            <div class="nav-wrapper">
+                <div class="col s12">
+                    <a href="{{ topic.category.get_absolute_url }}" class="breadcrumb blue-text text-darken-2">
+                        {{ topic.category.title }}
+                    </a>
+                    <span class="breadcrumb grey-text text-darken-1">{{ topic.title }}</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="topic-header section">
+            <h4 class="grey-text text-darken-3">{{ topic.title }}</h4>
+            <div class="chip">
+                <i class="material-icons left">visibility</i> {{ topic.views_count }}
+            </div>
+            {% if topic.is_closed %}
+                <div class="chip red white-text">
+                    <i class="material-icons left">lock</i> Закрыто
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="posts-collection">
+            {% for post in posts %}
+                <div class="card flat hoverable" id="post-{{ post.pk }}">
+                    <div class="card-content">
+                        <span class="card-title blue-text text-darken-2" style="font-size: 1.2rem; margin-bottom: 15px;">
+                            {{ post.author.username }}
+                            <span class="right grey-text" style="font-size: 0.8rem;">
+                                {{ post.created_at|date:"d M Y H:i" }}
+                            </span>
+                        </span>
+
+                        {% if post.parent_id %}
+                            <blockquote class="grey lighten-4" style="border-left: 5px solid #2196f3; padding: 10px;">
+                                <a href="#post-{{ post.parent_id }}" class="grey-text text-darken-1">
+                                    <i class="material-icons tiny">reply</i> Ответ на сообщение #{{ post.parent_id }}
+                                </a>
+                            </blockquote>
+                        {% endif %}
+
+                        <div class="post-text">
+                            {{ post.content|linebreaks }}
+                        </div>
+
+                        {% if post.image %}
+                            <div class="post-image" style="margin-top: 15px;">
+                                <img class="responsive-img materialboxed" src="{{ post.image.url }}" alt="Изображение пользователя">
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-action grey-text text-darken-1">
+                        <span><i class="material-icons tiny">thumb_up</i> {{ post.likes_count }}</span>
+                        {% if not topic.is_closed %}
+                            <a href="#reply-form" class="right blue-text text-darken-2" onclick="setParent({{ post.pk }})">Ответить</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="card-panel center-align grey lighten-4">
+                    <p class="grey-text">В данном топике пока нет сообщений.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% include "partials/_pagination.html" with pagination_class="post-pagination" %}
+    </div>
+
+    <div class="col s12 m4">
+        </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Инициализация плагина Materialbox для увеличения изображений
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.materialboxed');
+        M.Materialbox.init(elems);
+    });
+
+    // Логика установки ID родительского поста в скрытое поле формы ответа
+    function setParent(postId) {
+        // Требует реализации логики формы
+    }
+</script>
+{% endblock %}
