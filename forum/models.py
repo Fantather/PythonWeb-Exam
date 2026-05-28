@@ -39,7 +39,7 @@ class Category(MP_Node, TimeStampedModel):
     icon = models.FileField(
         upload_to="icons/",
         blank=True,
-        validators=[FileExtensionValidator(['svg', 'png', 'webp'])],
+        validators=[FileExtensionValidator(allowed_extensions=['svg', 'png', 'webp', 'jpg', 'jpeg'])],
         verbose_name=_("Icon")
     )
     node_order_by = ["title"]
