@@ -19,9 +19,9 @@
                     <span class="card-title black-text">{{ category.title }}</span>
                     <p class="grey-text category-description">{{ category.description }}</p>
                 </div>
-                <div class="card-action">
-                    <a href="{{ category.get_absolute_url }}" class="blue-text text-darken-2">Перейти к обсуждениям</a>
-                </div>
+                    <div class="card-action">
+                        <a href="{{ category.get_absolute_url }}" class="blue-text text-darken-2">Перейти к обсуждениям</a>
+                    </div>
             </div>
             
         </div>
@@ -29,7 +29,7 @@
 {% empty %}
     <div class="col s12 m8 offset-m2">
         <div class="card-panel center-align grey lighten-4">
-            <p class="grey-text">Пока нет категорий для обсуждения</p>
+            <p class="grey-text">Пока нет сообществ для обсуждения</p>
         </div>
     </div>
 {% endfor %}

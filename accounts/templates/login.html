@@ -14,12 +14,20 @@
                     <img src="{% static 'assets/i_m_suffering.jpeg' %}" alt="Login Image" style="width: 100%; height: auto; margin-bottom: 20px;">
                 </div>
                 <span class="card-title center-align">Вход</span>
-                <form method="post" action="{% url 'login' %}">
+                <form method="post" action="{% url 'login' %}" novalidate>
                     {% csrf_token %}
                     <div class="row">
                         {% for field in form %}
                             {% include "_inputs.html" with field=field grid_class="col s12" %}
                         {% endfor %}
+                        <!-- Здесь можно добавить дополнительные элементы, например, сообщения об ошибках -->
+                        {% if form.non_field_errors %}
+                            <div class="col s12">
+                                <div class="card-panel red lighten-4 red-text text-darken-4">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                     
                     <div class="row" style="margin-bottom: 0;">

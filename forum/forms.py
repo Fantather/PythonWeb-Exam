@@ -13,7 +13,7 @@ class CategoryForm(forms.ModelForm):
         'description': forms.Textarea(attrs={'class': 'materialize-textarea'}),
         'icon': forms.ClearableFileInput(attrs={
                 'class': 'file-input', 
-                'accept': '.png, .svg, image/png, image/svg+xml'
+                'accept': '.png, .svg, .jpg, .jpeg, .webp, image/webp, image/png, image/svg+xml, image/jpeg', 
             }),
         }
 

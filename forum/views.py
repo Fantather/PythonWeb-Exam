@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
 from .managers import *
@@ -14,12 +14,16 @@ def seedData(request):
     """Представление для заполнения базы данных по запросу"""
     seedCategories()
     seedTopics()
-    return HttpResponse("База данных успешно заполнена тестовыми данными!")
+
+    return HttpResponseRedirect(reverse("index"))
+
 
 def clearData(request):
     clearCategories()
     clearTopics()
-    return HttpResponse("Данные успешно удалены!")
+    
+    return HttpResponseRedirect(reverse("index"))
+
 
 # Create your views here.
 
@@ -46,19 +50,30 @@ class ForumIndexView(ListView):
 ##crud
 class CategoryListView(ListView):
     '''
-    отображение всех категорий на главной странице форума
+    отображение всех сообществ
     '''
     model = Category
-    template_name = "category_list.html"
+    template_name = "community_list.html"
     context_object_name = "categories"
     paginate_by = 5
+    search_fields = ["title", "slug"]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get("search", "")
+        if search_query:
+            queryset = queryset.filter(title__icontains=search_query)
+        return queryset.order_by("title")
+    
 
 class CategoryCreateView(CreateView):
+    '''
+    создание нового сообщества
+        '''
     model = Category
     form_class = CategoryForm
-    template_name = "category_form.html"
-    success_url = reverse_lazy("category_list")
+    template_name = "community_form.html"
+    success_url = reverse_lazy("communities_list")
 
     def form_valid(self, form):
         parent_id = self.request.GET.get("parent")
@@ -76,28 +91,42 @@ class CategoryCreateView(CreateView):
     
 class CategoryUpdateView(UpdateView):
     '''
-    редактирование категории
+    редактирование сообщества
     '''
     model = Category
     form_class = CategoryForm
-    template_name = "category_form.html"
+    template_name = "community_form.html"
     fields = ["title", "description"]
 
     def get_success_url(self):
-        return reverse_lazy("category_list")
+        return reverse_lazy("communities_list")
 
 class CategoryDeleteView(DeleteView):
     '''
-    удаление категории
+    удаление сообщества. С страницы пользователя что ей владеет
     '''
     model = Category
-    template_name = "category_confirm_delete.html"
-    success_url = reverse_lazy("category_list")
+    success_url = reverse_lazy("communities_list")
+
+class CategoryDetailView(DetailView):
+    '''
+    отображение категории и всех ее топиков
+    '''
+    model = Category
+    template_name = "community_detail.html"
+    context_object_name = "category"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.get_object()
+        context["topics"] = Topic.objects.filter(category=category).order_by("-is_pinned", "-last_active")
+        return context
+
 
 ##############################Topic Views ##############################
 class TopicListView(ListView):
     '''
-    отображение всех топиков в категории
+    отображение всех топиков в сообществе
     топик это тема, которая может содержать в себе посты (сообщения)
     они отсортированы по дате последней активности (создание или обновление поста)
     и по флагу is_pinned, который указывает, закреплен ли топик
@@ -108,8 +137,8 @@ class TopicListView(ListView):
     context_object_name = "topics"
 
     def get_queryset(self):
-        category_id = self.kwargs.get("category_id")
-        return Topic.objects.filter(category_id=category_id).order_by("-is_pinned", "-last_active")
+        categories_id = self.kwargs.get("categories_id")
+        return Topic.objects.filter(category_id=categories_id).order_by("-is_pinned", "-last_active")
     
 class TopicDetailView(DetailView):
     '''
