@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('forum/', include('forum.urls')),
     path('accounts/', include('accounts.urls')),
-    path('', RedirectView.as_view(pattern_name='index', permanent=False), name='root_redirect')
+    path('', RedirectView.as_view(url='/forum/', permanent=False), name='root_redirect')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

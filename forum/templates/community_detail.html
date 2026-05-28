@@ -13,7 +13,7 @@
     {% if category.banner %}
         <img src="{{ category.banner.url }}" class="community-banner-image" alt="Баннер">
     {% else %}
-        <div class="community-banner-placeholder blue darken-3"></div>
+        <div class="community-banner-placeholder brown darken-3"></div>
     {% endif %}
 
     <div class="card-content community-header-content">
@@ -35,7 +35,7 @@
             </div>
             
             <div class="col s12 m3 l3 right-align hide-on-small-only community-title-col">
-                <a href="#" class="btn light-blue darken-3 waves-effect waves-light create-discussion-btn">Создать пост</a>
+                {% comment %} <a href="{% url 'create_topic' category.id category.slug %}" class="btn light-blue darken-3 waves-effect waves-light create-discussion-btn">Создать пост</a> {% endcomment %}
             </div>
             
         </div>

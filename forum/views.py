@@ -154,6 +154,13 @@ class TopicDetailView(DetailView):
         context["posts"] = Post.objects.filter(topic=topic).order_by("created_at")
         return context
     
+class TopicCreateView(CreateView):
+    '''
+    создание нового топика в сообществе
+    '''
+    model = Topic
+    template_name = "topic_form.html"
+    fields = ["title"]
 ###############################Post Views ##############################
 class PostCreateView(CreateView):
     '''
@@ -192,3 +199,13 @@ class TopicPostListView(ListView):
             pk=self.topic_id
         )
         return context
+
+
+class PostCreateView(CreateView):
+    '''
+    создание нового поста в топике
+    '''
+    model = Post
+    template_name = "post_form.html"
+    fields = ["content", "image"]
+

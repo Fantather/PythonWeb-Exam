@@ -8,8 +8,8 @@ from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 from django.forms import ClearableFileInput
 
-admin.site.register(Topic)
-admin.site.register(Post)
+# admin.site.register(Topic)
+# admin.site.register(Post)
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -53,7 +53,7 @@ class CategoryAdmin(TreeAdmin):
     def formfield_for_dbfield(self, db_field, request, **kwargs):
             if db_field.name == 'icon':
                 kwargs['widget'] = ClearableFileInput(attrs={
-                    'accept': '.png, .svg, image/png, image/svg+xml'
+                    'accept': '.png, .svg, .jpg, .jpeg, .webp, image/webp, image/png, image/svg+xml, image/jpeg', 
                 })
             return super().formfield_for_dbfield(db_field, request, **kwargs)
 
@@ -68,3 +68,24 @@ class CategoryAdmin(TreeAdmin):
         js = ('js/admin_image_preview.js',)
 
         
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ("title", "category", "is_closed", "is_pinned", "views_count", "replies_count", "last_active")
+    search_fields = ("title",)
+    list_filter = ("title",)
+
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("topic", "author", "content", "likes_count", "parent")
+    search_fields = ("content",)
+    list_filter = ("topic",)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+            if db_field.name == 'image':
+                kwargs['widget'] = ClearableFileInput(attrs={
+                    'accept': '.png, .svg, .jpg, .jpeg, .webp, image/webp, image/png, image/svg+xml, image/jpeg', 
+                })
+            return super().formfield_for_dbfield(db_field, request, **kwargs)
+    

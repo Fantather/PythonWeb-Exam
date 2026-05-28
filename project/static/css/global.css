@@ -8,10 +8,35 @@ main {
   flex: 1 0 auto;
   background-size: cover;
   min-height: 100vh;
-  background-image: url('../assets/background.svg');
+  /* background-image: url('../assets/background.svg'); */
+  background-image: url('../assets/image.gif');
   
+  display: flex; 
+  flex-direction: column;
+}
+.main-content-plaque {
+  padding: 30px;  
+  /* border-radius: 16px;   
+  margin-top: 40px;
+  margin-bottom: 40px; */
+  /* background-color: rgba(35, 24, 24, 0.9);
+   */
+background-color: rgba(56, 24, 9, 0.85);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  
+  width: 95% !important;
+  max-width: 1400px !important;
+  flex: 1;
 }
 
+/* Адаптация для мобильных устройств */
+@media only screen and (max-width: 600px) {
+    .main-content-plaque {
+        padding: 15px;
+        width: 98% !important;
+        margin-top: 20px;
+    }
+}
 
 /* анимация */
 header, main, footer, .sidenav.sidenav-fixed {
