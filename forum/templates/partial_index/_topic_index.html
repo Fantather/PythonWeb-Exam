@@ -1,6 +1,4 @@
 <div class="col s12 m8">
-    <h5 class="grey-text text-darken-2">Обсуждения</h5>
-    
     {% for topic in topics %}
         <div class="card flat hoverable topic-card {% if topic.is_pinned %}pinned-topic grey lighten-5{% endif %}">
             <div class="card-content">
