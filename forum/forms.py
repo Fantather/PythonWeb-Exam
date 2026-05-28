@@ -1,11 +1,11 @@
 from django import forms
-from forum.models import Category, Topic
+from forum.models import Community, Topic
 from django.utils.translation import gettext_lazy as _
 
 
 class CategoryForm(forms.ModelForm):
     class Meta:
-        model = Category
+        model = Community
         fields = ["title", "description", "icon"]
 
         widgets = {

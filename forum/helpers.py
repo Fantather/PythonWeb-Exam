@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
-from .models import Category, Topic, Post
+from .models import Community, Topic, Post
 
 def seedCategories():
     '''
     Временная функция для заполнения базы данными
     '''
-    if not Category.objects.exists():
+    if not Community.objects.exists():
         for i in range(1, 10):
-            Category.add_root(
+            Community.add_root(
                 title=f"Категория {i}",
                 description=f"Описание категории {i}",
                 icon="catto.png"
@@ -17,13 +17,13 @@ def clearCategories():
     '''
     Временная функция для очистки базы от данных
     '''
-    Category.objects.all().delete()
+    Community.objects.all().delete()
     
 def seedTopics():
     '''
     Временная функция для заполнения базы данными
     '''
-    first_category = Category.objects.first()
+    first_category = Community.objects.first()
     
     if not first_category:
         print("Ошибка: Нет ни одной категории. Сначала выполните seedCategories()")

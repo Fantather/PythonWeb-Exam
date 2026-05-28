@@ -3,8 +3,9 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from django.db import transaction
 
-from forum.models import Category, Topic, Post
-from forum.services import CategoryService, TopicService, PostService
+from forum.models import Community, Topic, Post
+# Слой сервисов должен быть переименован в соответствии с новыми доменными моделями
+from forum.services import CommunityService, TopicService, PostService
 from core.helpers import generate_unique_slug
 
 User = get_user_model()
@@ -15,7 +16,7 @@ class Command(BaseCommand):
     Команда для инициализации БД начальными данными.
     Запуск: python manage.py seed_forum
     """
-    help = "Инициализирует БД базовой структурой категорий и тестовыми топиками."
+    help = "Инициализирует БД базовой структурой сообществ и тестовыми топиками."
 
     def handle(self, *args, **options) -> None:
         """Точка входа команды управления."""
@@ -35,7 +36,7 @@ class Command(BaseCommand):
         Проверяет наличие записей в основных таблицах.
         Использование .exists() генерирует оптимизированный SQL-запрос `SELECT 1 ... LIMIT 1`.
         """
-        return Category.objects.exists() or Topic.objects.exists() or Post.objects.exists()
+        return Community.objects.exists() or Topic.objects.exists() or Post.objects.exists()
 
     @transaction.atomic
     def _generate_seed_data(self) -> None:
@@ -44,7 +45,6 @@ class Command(BaseCommand):
         Администратор (новости) и Пользователи (обсуждения и комментарии).
         """
         # 1. Инициализация учетных записей (Identity Management)
-        # Администратор системы
         admin_user, admin_created = User.objects.get_or_create(
             username="Confessor_Makarov",
             defaults={
@@ -58,7 +58,6 @@ class Command(BaseCommand):
             admin_user.set_password("for_emperor_40k")
             admin_user.save()
 
-        # Пул обычных пользователей (фанатов/граждан)
         fan_users = []
         fan_credentials = [
             ("Guardsman_Kael", "kael@cadiastands.local"),
@@ -78,35 +77,41 @@ class Command(BaseCommand):
             
         fan_kael, fan_zeta, fan_scum = fan_users
 
-        # 2. Инициализация доменных зон (Категории)
-        cat_news = CategoryService.create_root_category(
+        # 2. Инициализация доменных зон (Сообщества)
+        community_news = CommunityService.create_root_community(
             title="Adeptus Ministorum (Официально)",
-            slug=generate_unique_slug("Adeptus Ministorum", Category),
-            description="Официальные указы, проповеди и новости сектора."
+            slug=generate_unique_slug("Adeptus Ministorum", Community),
+            description="Официальные указы, проповеди и новости сектора.",
+            owner=admin_user  # Назначение владельца (One-to-Many)
         )
+        # Инициализация подписок (Many-to-Many)
+        community_news.subscribers.set([fan_kael, fan_zeta, fan_scum])
 
-        cat_mechanicus = CategoryService.create_root_category(
+        community_mechanicus = CommunityService.create_root_community(
             title="Adeptus Mechanicus",
-            slug=generate_unique_slug("Adeptus Mechanicus", Category),
-            description="Обсуждение обслуживания техники, СПО и оружия."
+            slug=generate_unique_slug("Adeptus Mechanicus", Community),
+            description="Обсуждение обслуживания техники, СПО и оружия.",
+            owner=fan_zeta
         )
+        community_mechanicus.subscribers.set([fan_kael, fan_scum])
 
-        cat_underhive = CategoryService.create_root_category(
+        community_underhive = CommunityService.create_root_community(
             title="Нижний Улей",
-            slug=generate_unique_slug("Underhive", Category),
-            description="Свободное общение граждан Империума. Модерируется Арбитрес."
+            slug=generate_unique_slug("Underhive", Community),
+            description="Свободное общение граждан Империума. Модерируется Арбитрес.",
+            owner=fan_scum
         )
+        community_underhive.subscribers.set(fan_users)
 
         # 3. Генерация топика Администратора (Новости)
         topic_news = TopicService.create_topic_with_post(
-            category=cat_news,
+            community=community_news,
             author=admin_user,
             title="Helldivers x Warhammer 40k coming soon",
             content="Коллаборация между Warhammer 40k и Helldivers",
             image="posts/images/seed/helldivers-x-warhammer-40k-coming.webp"
         )
 
-        # Комментарии обычных пользователей к новости Администратора
         root_post_news = Post.objects.get(topic=topic_news, parent__isnull=True)
         
         reply_news_1 = PostService.create_reply(
@@ -123,9 +128,9 @@ class Command(BaseCommand):
             parent=reply_news_1
         )
 
-        # 4. Генерация пользовательского контента (Изолировано от Администратора)
+        # 4. Генерация пользовательского контента
         topic_tech = TopicService.create_topic_with_post(
-            category=cat_mechanicus,
+            community=community_mechanicus,
             author=fan_zeta,
             title="Где достать священную мазь для лазгана (Паттерн Кантран)?",
             content="Дух машины моего лазгана гневается. Стандартные литании не помогают, линза перегревается после третьего выстрела.",
@@ -142,7 +147,7 @@ class Command(BaseCommand):
         )
 
         topic_rumors = TopicService.create_topic_with_post(
-            category=cat_underhive,
+            community=community_underhive,
             author=fan_scum,
             title="Странные тени в секторе 4",
             content="Вчера видел многорукую тень возле гидропонных ферм. Местные пропадают. Прикладываю размытый снимок с ауспекса.",

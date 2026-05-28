@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.shortcuts import get_object_or_404
 from .managers import *
 from forum.forms import CategoryForm
-from .models import Category, Topic, Post
+from .models import Community, Topic, Post
 from .helpers import *
 
 ###temp
@@ -38,12 +38,12 @@ class ForumIndexView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Category.get_root_nodes().order_by("title")
+        context["categories"] = Community.get_root_nodes().order_by("title")
         return context
     
     def get_queryset(self):
         #леша это не шарп, тут нет еще запроса. ListView видит paginate_by = 5 и будет кастрировать запрос
-        return Topic.objects.all().select_related("category").order_by("-is_pinned", "-last_active")
+        return Topic.objects.all().select_related("community", "author").order_by("-is_pinned", "-last_active")
 
 
 ###############################Category Views ##############################
@@ -52,7 +52,7 @@ class CategoryListView(ListView):
     '''
     отображение всех сообществ
     '''
-    model = Category
+    model = Community
     template_name = "community_list.html"
     context_object_name = "categories"
     paginate_by = 5
@@ -70,7 +70,7 @@ class CategoryCreateView(CreateView):
     '''
     создание нового сообщества
         '''
-    model = Category
+    model = Community
     form_class = CategoryForm
     template_name = "community_form.html"
     success_url = reverse_lazy("communities_list")
@@ -81,11 +81,11 @@ class CategoryCreateView(CreateView):
         data = form.cleaned_data
         
         if parent_id:
-            parent_category = Category.objects.get(id=parent_id)
+            parent_category = Community.objects.get(id=parent_id)
             self.object = parent_category.add_child(**data)
         else:
             # Создаем независимую корневую категорию
-            self.object = Category.add_root(**data)
+            self.object = Community.add_root(**data)
             
         return HttpResponseRedirect(self.get_success_url())
     
@@ -93,7 +93,7 @@ class CategoryUpdateView(UpdateView):
     '''
     редактирование сообщества
     '''
-    model = Category
+    model = Community
     form_class = CategoryForm
     template_name = "community_form.html"
     fields = ["title", "description"]
@@ -105,14 +105,14 @@ class CategoryDeleteView(DeleteView):
     '''
     удаление сообщества. С страницы пользователя что ей владеет
     '''
-    model = Category
+    model = Community
     success_url = reverse_lazy("communities_list")
 
 class CategoryDetailView(DetailView):
     '''
     отображение категории и всех ее топиков
     '''
-    model = Category
+    model = Community
     template_name = "community_detail.html"
     context_object_name = "category"
 

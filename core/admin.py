@@ -2,7 +2,7 @@ from django.contrib import admin
 from accounts.models import User
 from .forms import AdminPanelUserCreationForm, AdminPanelUserChangeForm
 # Register your models here.
-from forum.models import Category, Post, Topic
+from forum.models import Community, Post, Topic
 from django.utils.html import format_html   
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
@@ -41,10 +41,10 @@ class UserAdmin(admin.ModelAdmin):
     def deactivate_users(self, request, queryset):
         queryset.update(is_active=False)
 
-@admin.register(Category)
+@admin.register(Community)
 class CategoryAdmin(TreeAdmin):
-    model = Category
-    form = movenodeform_factory(Category )
+    model = Community
+    form = movenodeform_factory(Community )
     list_display = ("title", "slug", "description", "category_count", "icon_preview")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "slug")

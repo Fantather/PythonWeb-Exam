@@ -13,7 +13,7 @@ from core.models import TimeStampedModel
 from forum.managers import PostQuerySet, TopicQuerySet
 
 
-class Category(MP_Node, TimeStampedModel):
+class Community(MP_Node, TimeStampedModel):
     """
     короче это сообщество. Я не знаю почему она категория но только храбрый и смелый ее переименует лол
     
@@ -23,6 +23,18 @@ class Category(MP_Node, TimeStampedModel):
      - description - описание категории
      - node_order_by - порядок сортировки узлов (по названию)
     """
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="owned_communities",
+        verbose_name=_("Owner")
+    )
+    subscribers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="subscibed_comunities",
+        blank=True,
+        verbose_name=_("Subscribers"),
+    )
     title = models.CharField(
         max_length=255, 
         verbose_name=_("Title")
@@ -82,11 +94,11 @@ class Topic(TimeStampedModel):
      - replies_count - количество ответов в топике
      - last_active - дата и время последней активности в топике (создание или обновление поста)
     """
-    category = models.ForeignKey(
-        "forum.Category",
+    community = models.ForeignKey(
+        "forum.Community",
         on_delete=models.CASCADE,
         related_name="topics",
-        verbose_name=_("Category")
+        verbose_name=_("Community")
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -126,7 +138,7 @@ class Topic(TimeStampedModel):
         verbose_name = _("Topic")
         verbose_name_plural = _("Topics")
         indexes = [
-            models.Index(fields=["category", "-is_pinned", "-last_active"]),
+            models.Index(fields=["community", "-is_pinned", "-last_active"]),
         ]
 
     def __str__(self) -> str:
