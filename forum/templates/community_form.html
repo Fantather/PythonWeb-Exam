@@ -1,12 +1,12 @@
 {% extends "_layout.html" %}
 {% load static %}
 
-{% block title %}{% if object %}Редактировать категорию{% else %}Добавить категорию{% endif %}{% endblock %}
+{% block title %}{% if object %}Редактировать сообщество{% else %}Добавить сообщество{% endif %}{% endblock %}
 
 {% block content %}
 <div class="row" style="margin-top: 4rem;">
     <h4 class="center-align">
-        {% if object %}Редактирование: {{ object.title }}{% else %}Добавление новой категории{% endif %}
+        {% if object %}Редактирование: {{ object.title }}{% else %}Добавление нового сообщества{% endif %}
     </h4>
     
     <form class="col s12 m8 offset-m2" method="post" enctype="multipart/form-data" novalidate>
@@ -24,7 +24,7 @@
                     {{ form.icon }}
                 </div>
                 <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" placeholder="Выберите файл изображения">
+                    {{ form.icon.value|default_if_none:"" }}
                 </div>
                 {% if form.icon.errors %}
                     <span class="helper-text red-text" style="display: block; margin-top: 8px;">{{ form.icon.errors.0 }}</span>
@@ -35,7 +35,7 @@
         <div class="row">
             <div class="col s12">
                 <button class="btn waves-effect waves-light blue darken-2" type="submit" name="action">
-                    {% if object %}Сохранить изменения{% else %}Добавить категорию{% endif %}
+                    {% if object %}Сохранить изменения{% else %}Добавить сообщество{% endif %}
                     <i class="material-icons right">send</i>
                 </button>
             </div>

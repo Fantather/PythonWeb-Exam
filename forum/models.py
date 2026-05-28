@@ -15,8 +15,8 @@ from forum.managers import PostQuerySet, TopicQuerySet
 
 class Category(MP_Node, TimeStampedModel):
     """
-    Категория - это верхний уровень организации контента на форуме. Она может содержать в себе несколько топиков (тем для обсуждения).
-
+    короче это сообщество. Я не знаю почему она категория но только храбрый и смелый ее переименует лол
+    
     Модели:
      - title - название категории
      - slug - уникальный идентификатор для URL
@@ -60,6 +60,14 @@ class Category(MP_Node, TimeStampedModel):
             base_slug = slugify(unidecode(self.title)) or 'category'
             self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('community_detail', kwargs={
+            'category_id': self.pk, 
+            'slug': self.slug
+        })
+
+
 
 
 class Topic(TimeStampedModel):

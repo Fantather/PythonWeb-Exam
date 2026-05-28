@@ -1,0 +1,17 @@
+<div class="card backgroung-card-forum">
+    <div class="card-content">
+        <span class="card-title">О сообществе</span>
+        
+        <p class="grey-text text-darken-3 create-discussion-text">
+            {% if category.description %}
+                {{ category.description }}
+            {% else %}
+                Добро пожаловать в сообщество {{ category.title }}! Здесь пока нет описания.
+            {% endif %} 
+        </p>
+        
+        <div class="divider"></div>
+        
+        <a href="#" class="btn light-blue darken-3 waves-effect waves-light create-discussion-btn hide-on-med-and-up w-100">Создать пост</a>
+    </div>
+</div>

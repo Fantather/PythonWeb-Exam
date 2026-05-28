@@ -1,15 +1,15 @@
 {% load static %}
 
 <div class="col s12">
-    <h5 class="grey-text text-darken-2 forum-category-heading">Категории</h5>
+    <h5 class="grey-text text-darken-2 forum-category-heading">Сообщества</h5>
     
     {% if categories %}
         <div class="carousel" id="forum-carousel">
-            {% for cat in categories %}
+            {% for category in categories %}
                 <div class="carousel-item card hoverable">
 
-                       {% if cat.icon %}
-                                <img src="{{ cat.icon.url }}" alt="{{ cat.title }}" onerror="this.onerror=null; this.src='{% static 'image.png' %}'; this.style.objectFit='contain';">
+                       {% if category.icon %}
+                                <img src="{{ category.icon.url }}" alt="{{ category.title }}" onerror="this.onerror=null; this.src='{% static 'image.png' %}'; this.style.objectFit='contain';">
                             {% else %}
                                 <div class="category-bg-placeholder">
                                     <i class="material-icons large">folder</i>                        
@@ -17,10 +17,10 @@
                         {% endif %}
                         <div class = "category-card-content">
                             <span class="card-title">
-                            {{ cat.title }}
+                            {{ category.title }}
                             </span>
                             <p class="category-desc">
-                            {{ cat.description|truncatechars:60 }}
+                            {{ category.description|truncatechars:60 }}
                             </p>
                         </div>
 
@@ -28,6 +28,6 @@
             {% endfor %}
         </div>
     {% else %}
-        <p class="center-align grey-text" style="margin-top: 2rem;">Категории отсутствуют</p>
+        <p class="center-align grey-text" style="margin-top: 2rem;">Сообщества отсутствуют</p>
     {% endif %}
 </div>

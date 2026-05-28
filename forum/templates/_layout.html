@@ -50,23 +50,27 @@
                 <div class="background">
                     <img src="{% static 'assets/catto.png' %}" alt="bg">
                 </div>
-                {% comment %}
-                ссылки сюда    
-                {% endcomment %}
             </div>
         </li>
         {% if user.is_authenticated %}
         <li><a href="{% url 'user_page' request.user.username %}"><i class="material-icons">person</i>Мой профиль</a></li>
+        <li><a href="{% url "community_create" %}"><i class="material-icons">add</i>Создать сообщество</a></li>
         {% endif %}
         <li><a href="#!">Second Link</a></li>
         <li><div class="divider"></div></li>
-        <li><a class="subheader">Subheader</a></li>
-        <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+        <li><a class="subheader">Любимые посты</a></li>
+        <li><a href="{% url "communities_list" %}"><i class="material-icons">group</i>Сообщества</a></li>
+        {% if user.is_superuser %}
+        <li><a href="{% url 'admin:index' %}"><i class="material-icons">admin_panel_settings</i>Админка</a></li>
+        <li><a href="{% url "seed_data" %}"><i class="material-icons">data_object</i>Seed Data</a></li>
+        <li><a href="{% url "clear_data" %}"><i class="material-icons">delete</i>Clear Data</a></li>
+        {% endif %}
+        
     </ul>
 </header>
 
-<main style="background-image: url('{% static 'assets/image.gif' %}');">
-    
+{% comment %} <main style="background-image: url('{% static 'assets/image.gif' %}');"> {% endcomment %}
+<main>
     <div class="container">
         {% block content %}
         {% endblock %}

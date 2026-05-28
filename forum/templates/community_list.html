@@ -1,0 +1,26 @@
+{% extends "_layout.html" %}
+
+{% block content%}
+<div class="row backgroung-card-forum" style="margin-top: 4rem;">
+    <h4 class="center-align ">Сообщества форума</h4>
+    <form method="GET" action="">
+        <search>
+            <div class="input-field col s12 m6 offset-m3">
+                <i class="material-icons prefix">search</i>
+                <input id="search" type="text" name="search" value="{{ request.GET.search|default_if_none:'' }}">
+                <label for="search">Поиск сообществ...</label>
+            </div>
+        </search>
+    </form>
+    {% if categories %}
+    <div class="row">
+    {% include "forum/partials/_card_comminity.html" with categories=categories %}
+</div>
+    {% include "_pagination.html" with pagination_class="community-pagination" %}
+    {% else %}
+    <div class="card-panel center-align grey lighten-4">
+        <p class="grey-text">Пока нет сообществ для обсуждения</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

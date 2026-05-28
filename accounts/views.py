@@ -34,6 +34,15 @@ class LoginPageView(LoginView):
     template_name = "login.html" 
     redirect_authenticated_user = True 
 
+    def form_invalid(self, form):
+        if '__all__' in form.errors:
+            del form.errors['__all__']
+        
+        form.add_error(None, "Неверное имя пользователя или пароль.")
+        
+        return super().form_invalid(form)
+
+
     def get_success_url(self):
         return reverse_lazy("user_page", kwargs={"username": self.request.user.username})
 
