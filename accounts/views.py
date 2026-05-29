@@ -68,6 +68,7 @@ class EditProfileView(UpdateView):
     template_name = "edit_profile.html"
     form_class = UserEditForm
     success_url = reverse_lazy("user_page")
+    login_required = True
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -78,7 +79,8 @@ class EditProfileView(UpdateView):
 
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = "password_change.html"
-    
+    login_required = True
+
     def get_success_url(self):
         return reverse_lazy("user_page", kwargs={"username": self.request.user.username})
     
