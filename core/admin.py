@@ -70,7 +70,7 @@ class CategoryAdmin(TreeAdmin):
         
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ("title", "category", "is_closed", "is_pinned", "views_count", "replies_count", "last_active")
+    list_display = ("title", "community", "is_closed", "is_pinned", "views_count", "replies_count", "last_active")
     search_fields = ("title",)
     list_filter = ("title",)
 
