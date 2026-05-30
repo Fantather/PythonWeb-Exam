@@ -1,0 +1,17 @@
+<div class="comment-thread" style="position: relative; margin-top: 15px;">
+    
+    {% if is_main_post %}
+        {% include "forum/partials/_card_post.html" with post=node %}
+    {% else %}
+        {% include "forum/partials/_card_comment.html" with post=node %}
+    {% endif %}
+
+    {% if node.children %}
+        <div class="replies-container" style="margin-left: 30px; border-left: 2px solid #e0e0e0; padding-left: 10px;">
+            {% for child in node.children %}
+                {% include "forum/partials/_thread_node.html" with node=child is_main_post=False %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>

@@ -189,7 +189,7 @@ class TopicPostListView(ViewTrackerMixin, ListView):
     """
     model = Post
     template_name = "forum/topic_posts.html"
-    context_object_name = "posts"
+    context_object_name = "flat_posts"
     paginate_by = 20
 
     # --- Настройки для ViewTrackerMixin ---
@@ -210,10 +210,26 @@ class TopicPostListView(ViewTrackerMixin, ListView):
         """
         context = super().get_context_data(**kwargs)
 
-        context['topic'] = get_object_or_404(
-            Topic.objects.select_related('community'), 
-            pk=self.topic_id
-        )
+        posts = list(context["flat_posts"])
+        post_dict = {post.id: post for post in posts}   # Словарь для быстрого поиска постов по ID (O(1))
+        root_posts = []
+
+        #Инициализируем пустой список детей для каждого поста, это нужно делать тут, что бы хранилища оставались независимыми
+        for post in posts:
+            post.children = []
+
+        for post in posts:
+            if post.parent_id:
+                post_dict[post.parent_id].children.append(post)
+            elif not post.parent_id:
+                root_posts.append(post)
+
+            context["nested_posts"] = root_posts
+            context["topic"] = get_object_or_404(
+                Topic.objects.select_related('community'),
+                pk = self.topic_id
+            )
+
         return context
     
 class ToggleLikeView(LoginRequiredMixin, View):

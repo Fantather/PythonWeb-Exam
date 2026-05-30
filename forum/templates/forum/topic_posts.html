@@ -18,11 +18,11 @@
         </div>
 
         <div class="posts-collection">
-            {% for post in posts %}
-                {% if forloop.first and page_obj.number|default:1 == 1 %}
-                    {% include "forum/partials/_card_post.html" %}
+            {% for root_post in nested_posts %}
+                {% if forloop.first %}
+                    {% include "forum/partials/_thread_node.html" with node=root_post is_main_post=True %}
                 {% else %}
-                    {% include "forum/partials/_card_comment.html" %}
+                    {% include "forum/partials/_thread_node.html" with node=root_post is_main_post=False %}
                 {% endif %}
             {% empty %}
                 <div class="card-panel center-align grey lighten-4">

@@ -62,16 +62,13 @@ class PostQuerySet(models.QuerySet):
         Извлекает Всё дерево обсуждения для конкретной темы одним запросом.
         Подтягивает автора Post.
         """
-
         return self.filter(
             topic_id=topic_id
         ).select_related(
             "author", 
             "parent", 
             "parent__author"
-        ).order_by(
-            "created_at"
-        )
+        ).order_by("created_at")
     
     def get_topic_starter(self, topic_id:int):
         """
