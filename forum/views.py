@@ -10,7 +10,8 @@ from forum.mixins import ViewTrackerMixin
 from .managers import *
 from forum.forms import CommunityForm
 from .models import Community, Topic, Post
-from .helpers import *
+from .helpers import clearCategories, clearTopics, clearPosts
+
 from .services import PostService
 
 from django.db.models import Count
@@ -18,15 +19,16 @@ from django.db.models import Count
 
 def seedData(request):
     """Представление для заполнения базы данных по запросу"""
-    seedCategories()
-    seedTopics()
-
+    from forum.management.commands.seed_forum import Command
+    command = Command()
+    command.handle()
     return HttpResponseRedirect(reverse("index"))
 
 
 def clearData(request):
     clearCategories()
     clearTopics()
+    clearPosts()
     
     return HttpResponseRedirect(reverse("index"))
 
