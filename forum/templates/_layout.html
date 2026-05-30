@@ -30,7 +30,11 @@
             <a href="{% url 'index' %}" class="brand-logo center">
                 <img class="logo" style="margin: 0.5rem; height: 3rem;" src="{% static 'assets/emperor_sign.png' %}" alt="Logo">
             </a>
-            
+            <a href="{% url 'index' %}" class="brand-logo center hide-on-small-and-down" style="font-size: 1.5rem; font-weight: 500;">
+            {% block h1_text %}
+            {% endblock h1_text %}
+            </a>
+       
             <ul class="right hide-on-med-and-down">
                 <li><a href="{% url 'index' %}">Главная</a></li>
                 <li class="">

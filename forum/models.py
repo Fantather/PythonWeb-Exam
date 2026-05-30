@@ -56,8 +56,8 @@ class Community(MP_Node, TimeStampedModel):
     node_order_by = ["title"]
 
     class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
+        verbose_name = _("Community")
+        verbose_name_plural = _("Communities")
         indexes = [
             models.Index(fields=["slug"]),
         ]
@@ -68,13 +68,13 @@ class Community(MP_Node, TimeStampedModel):
     def save(self, *args, **kwargs) -> None:
         """Добавляем генерацию slug"""
         if not self.slug:
-            base_slug = slugify(unidecode(self.title)) or 'category'
+            base_slug = slugify(unidecode(self.title)) or 'community'
             self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('community_detail', kwargs={
-            'category_id': self.pk, 
+            'community_id': self.pk, 
             'slug': self.slug
         })
 
@@ -85,10 +85,10 @@ class Topic(TimeStampedModel):
     """
     Топик - главная тема для обсуждения, которая может содержать в себе посты (сообщения)
     Модели:
-     - community - категория, к которой относится топик
+     - community - сообщество, к которому относится топик
      - title - название топика
      - is_closed - флаг, указывающий, закрыт ли топик для новых сообщений
-     - is_pinned - флаг, указывающий, закреплен ли топик в категории. По задумке, админы могут закреплять темы (Topics). Они будут обходить стандартную фильтрацию по дате последней активности и выводиться в самом верху
+     - is_pinned - флаг, указывающий, закреплен ли топик в сообществе. По задумке, админы могут закреплять темы (Topics). Они будут обходить стандартную фильтрацию по дате последней активности и выводиться в самом верху
      - views_count - количество просмотров топика
      - replies_count - количество ответов в топике
      - last_active - дата и время последней активности в топике (создание или обновление поста)
