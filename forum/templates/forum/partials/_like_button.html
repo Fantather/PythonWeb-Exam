@@ -4,7 +4,7 @@
     data-url="{% url 'post_toggle_like' post.id %}"
     id="like-btn-{{ post.id }}"
 >
-    <i class="material-icons">
+    <i class="material-icons meta-chip">
         {% if request.user in post.liked_by.all %}favorite{% else %}favorite_border{% endif %}
     </i>
     <span class="likes-count">{{ post.likes_count }}</span>
