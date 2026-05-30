@@ -4,10 +4,9 @@
     <h5 class="white-text text-darken-2 forum-category-heading">Сообщества</h5>
     
     {% if community %}
-        <div class="carousel" id="forum-carousel">
+        <div class="carousel" id="forum-carousel" style="user-select: none;">
             {% for com in community %}
-                <div class="carousel-item card hoverable" onclick="window.location='{{ com.get_absolute_url }}';" style="cursor: pointer;">
-
+                <div class="carousel-item card hoverable" data-url="{{ com.get_absolute_url }}">
                        {% if com.icon %}
                                 <img src="{{ com.icon.url }}" alt="{{ com.title }}" onerror="this.onerror=null; this.src='{% static 'image.png' %}'; this.style.objectFit='contain';">
                             {% else %}
