@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import F
+
 class TopicQuerySet(models.QuerySet):
     """Менеджер для работы с темами форума."""
 
@@ -42,6 +44,13 @@ class TopicQuerySet(models.QuerySet):
         return self.filter(
             author_id=user_id
         ).order_by('-created_at')
+    
+    def increment_views(self, topic_id: int) -> int:
+        """
+        Атомарно увеличивает счетчик просмотров топика на 1.
+        Возвращает количество обновленных строк (0 или 1).
+        """
+        return self.filter(pk=topic_id).update(views_count=F('views_count') + 1)
 
         
     

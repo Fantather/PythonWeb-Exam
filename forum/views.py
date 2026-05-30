@@ -1,8 +1,14 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
+
+from forum.mixins import ViewTrackerMixin
 from .managers import *
 from forum.forms import CategoryForm
 from .models import Community, Topic, Post
@@ -171,7 +177,7 @@ class PostCreateView(CreateView):
     fields = ["content", "image"]
 
 
-class TopicPostListView(ListView):
+class TopicPostListView(ViewTrackerMixin, ListView):
     """
     Контроллер для вывода дерева обсуждения (постов) в конкретном топике.
     Ожидает 'topic_id' в параметрах URL.
@@ -180,6 +186,11 @@ class TopicPostListView(ListView):
     template_name = "forum/topic_posts.html"
     context_object_name = "posts"
     paginate_by = 20
+
+    # --- Настройки для ViewTrackerMixin ---
+    view_tracker_model = Topic
+    view_tracker_kwarg = 'topic_id'
+
 
     def get_queryset(self):
         """
@@ -195,17 +206,9 @@ class TopicPostListView(ListView):
         context = super().get_context_data(**kwargs)
 
         context['topic'] = get_object_or_404(
-            Topic.objects.select_related('category'), 
+            Topic.objects.select_related('community'), 
             pk=self.topic_id
         )
         return context
-
-
-class PostCreateView(CreateView):
-    '''
-    создание нового поста в топике
-    '''
-    model = Post
-    template_name = "post_form.html"
-    fields = ["content", "image"]
+    
 
