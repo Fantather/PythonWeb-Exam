@@ -50,11 +50,15 @@ class Command(BaseCommand):
                 "email": "priest@ecclesiarchy.local",
                 "is_staff": True,
                 "is_superuser": True,
-                "is_active": True
+                "is_active": True,
+                "avatar": "/users/seed/catto.png",
             }
         )
+        
         if admin_created:
             admin_user.set_password("for_emperor_40k")
+            print("Admin user created: Confessor_Makarov")
+            print("Avatar Url:", admin_user.avatar.url)
             admin_user.save()
 
         fan_users = []
@@ -63,6 +67,7 @@ class Command(BaseCommand):
             ("Tech_Adept_Zeta", "zeta@mars.local"),
             ("Hive_Scum_99", "scum@necromunda.local")
         ]
+
         
         for username, email in fan_credentials:
             user, created = User.objects.get_or_create(
@@ -82,6 +87,7 @@ class Command(BaseCommand):
             slug=generate_unique_slug("Adeptus Ministorum", Community),
             description="Официальные указы, проповеди и новости сектора.",
             owner=admin_user  # Назначение владельца (One-to-Many)
+
         )
         # Инициализация подписок (Many-to-Many)
         community_news.subscribers.set([fan_kael, fan_zeta, fan_scum])
@@ -102,6 +108,15 @@ class Command(BaseCommand):
         )
         community_underhive.subscribers.set(fan_users)
 
+        community_koshkin_dom = CommunityService.create_root_community(
+            title="Кошкин дом",
+            slug=generate_unique_slug("Koshkin Dom", Community),
+            description="Котики?.",
+            owner=fan_scum,
+            icon="/icons/seed/yoshi.png"
+        )
+        community_koshkin_dom.subscribers.set(fan_users)
+        
         # 3. Генерация топика Администратора (Новости)
         topic_news = TopicService.create_topic_with_post(
             community=community_news,
@@ -161,3 +176,50 @@ class Command(BaseCommand):
             content="Ересь! Немедленно доложите локальному отделению Адептус Арбитрес. Подобные пикт-снимки не должны распространяться в открытой ноосфере.",
             parent=root_post_rumors
         )
+
+
+        #что?
+        topic_cat = TopicService.create_topic_with_post(
+            community=community_koshkin_dom,
+            author=fan_zeta,
+            title="Котики в Империуме",
+            content="Вы тут вархамерите, а я котиков положу",
+            image="posts/images/seed/cattoritoditto.png"
+        )
+
+        root_post_cat = Post.objects.get(topic=topic_cat, parent__isnull=True)
+        PostService.create_reply(
+            topic=topic_cat,
+            author=fan_kael,
+            content="Ересь! Но мило.",
+            parent=root_post_cat
+        )
+        PostService.create_reply(
+            topic=topic_cat,
+            author=fan_scum,
+            content="Только броня и восхваление императора!",
+            parent=root_post_cat
+        )
+
+        reply_cat_1 = PostService.create_reply(
+            topic=topic_cat,
+            author=fan_kael,
+            content="Какая милота в империуме?!?!?!",
+            parent=root_post_cat
+        )
+        PostService.create_reply(
+            topic=topic_cat,
+            author=fan_scum,
+            content="Ужас! Снимайте эти изображения с экранов, пока не поздно!",
+            parent=reply_cat_1
+        )
+
+        PostService.create_reply(
+            topic=topic_cat,
+            author=fan_scum,
+            content="Котики...",
+            parent=reply_cat_1
+        )
+
+
+
