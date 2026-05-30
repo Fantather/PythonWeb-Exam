@@ -3,7 +3,7 @@ from forum.models import Community, Topic
 from django.utils.translation import gettext_lazy as _
 
 
-class CategoryForm(forms.ModelForm):
+class CommunityForm(forms.ModelForm):
     class Meta:
         model = Community
         fields = ["title", "description", "icon"]

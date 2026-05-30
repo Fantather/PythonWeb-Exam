@@ -8,11 +8,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from forum.mixins import ViewTrackerMixin
 from .managers import *
-from forum.forms import CategoryForm
+from forum.forms import CommunityForm
 from .models import Community, Topic, Post
 from .helpers import *
 from .services import PostService
 
+from django.db.models import Count
 ###temp
 
 def seedData(request):
@@ -51,32 +52,35 @@ class ForumIndexView(ListView):
         return Topic.objects.all().select_related("community", "author").order_by("-is_pinned", "-last_active")
 
 
-###############################Category Views ##############################
+###############################Community Views ##############################
 ##crud
-class CategoryListView(ListView):
+class CommunityListView(ListView):
     '''
     отображение всех сообществ
     '''
     model = Community
     template_name = "community_list.html"
-    context_object_name = "categories"
+    context_object_name = "community"
     paginate_by = 5
     search_fields = ["title", "slug"]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().annotate(
+            subscribers_count=Count("subscribers", distinct=True),
+            topics_count=Count("topics__posts", distinct=True)
+        )
         search_query = self.request.GET.get("search", "")
         if search_query:
             queryset = queryset.filter(title__icontains=search_query)
-        return queryset.order_by("title")
+        return queryset.order_by("-subscribers_count", "-topics_count", "title")
     
 
-class CategoryCreateView(CreateView):
+class CommunityCreateView(CreateView):
     '''
     создание нового сообщества
         '''
     model = Community
-    form_class = CategoryForm
+    form_class = CommunityForm
     template_name = "community_form.html"
     success_url = reverse_lazy("communities_list")
     login_required = True
@@ -95,12 +99,12 @@ class CategoryCreateView(CreateView):
             
         return HttpResponseRedirect(self.get_success_url())
     
-class CategoryUpdateView(UpdateView):
+class CommunityUpdateView(UpdateView):
     '''
     редактирование сообщества
     '''
     model = Community
-    form_class = CategoryForm
+    form_class = CommunityForm
     template_name = "community_form.html"
     fields = ["title", "description"]
     login_required = True
@@ -108,7 +112,7 @@ class CategoryUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy("communities_list")
 
-class CategoryDeleteView(DeleteView):
+class CommunityDeleteView(DeleteView):
     '''
     удаление сообщества. С страницы пользователя что ей владеет
     '''
@@ -116,18 +120,18 @@ class CategoryDeleteView(DeleteView):
     success_url = reverse_lazy("communities_list")
     login_required = True
 
-class CategoryDetailView(DetailView):
+class CommunityDetailView(DetailView):
     '''
-    отображение категории и всех ее топиков
+    отображение сообщества и всех его топиков
     '''
     model = Community
     template_name = "community_detail.html"
-    context_object_name = "category"
+    context_object_name = "community"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        category = self.get_object()
-        context["topics"] = Topic.objects.filter(category=category).order_by("-is_pinned", "-last_active")
+        community = self.get_object()
+        context["topics"] = Topic.objects.filter(community=community).order_by("-is_pinned", "-last_active")
         return context
 
 

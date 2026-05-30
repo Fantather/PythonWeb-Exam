@@ -3,13 +3,13 @@
 <div class="col s12">
     <h5 class="white-text text-darken-2 forum-category-heading">Сообщества</h5>
     
-    {% if categories %}
+    {% if community %}
         <div class="carousel" id="forum-carousel">
-            {% for category in categories %}
-                <div class="carousel-item card hoverable">
+            {% for com in community %}
+                <div class="carousel-item card hoverable" onclick="window.location='{{ com.get_absolute_url }}';" style="cursor: pointer;">
 
-                       {% if category.icon %}
-                                <img src="{{ category.icon.url }}" alt="{{ category.title }}" onerror="this.onerror=null; this.src='{% static 'image.png' %}'; this.style.objectFit='contain';">
+                       {% if com.icon %}
+                                <img src="{{ com.icon.url }}" alt="{{ com.title }}" onerror="this.onerror=null; this.src='{% static 'image.png' %}'; this.style.objectFit='contain';">
                             {% else %}
                                 <div class="category-bg-placeholder">
                                     <i class="material-icons large">folder</i>                        
@@ -17,10 +17,10 @@
                         {% endif %}
                         <div class = "category-card-content">
                             <span class="card-title">
-                            {{ category.title }}
+                            {{ com.title }}
                             </span>
                             <p class="category-desc">
-                            {{ category.description|truncatechars:60 }}
+                            {{ com.description|truncatechars:60 }}
                             </p>
                         </div>
 
