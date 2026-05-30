@@ -1,18 +1,17 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
-from django.core.cache import cache
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from forum.mixins import ViewTrackerMixin
 from .managers import *
 from forum.forms import CategoryForm
 from .models import Community, Topic, Post
 from .helpers import *
+from .services import PostService
 
 ###temp
 
@@ -216,9 +215,25 @@ class TopicPostListView(ViewTrackerMixin, ListView):
             pk=self.topic_id
         )
         return context
-<<<<<<< HEAD
     
-=======
+class ToggleLikeView(LoginRequiredMixin, View):
+    def handle_no_permission(self):
+        """
+        Переопределяем поведение для неавторизованных пользователей.
+        Вместо редиректа на страницу логина, отдаем ошибку 401 в формате JSON.
+        """
+        return JsonResponse({
+            'status': 'error', 
+            'message': 'Требуется авторизация'
+        }, status=401)
+    
+    def post(self, request, post_id, *args, **kwargs):
+        post = get_object_or_404(Post, pk=post_id)
+        is_liked = PostService.toggle_like(post, request.user)
 
->>>>>>> 3dd9e42dec9f3011cfe197ca39205fe83d683fa6
-
+        post.refresh_from_db(fields=['likes_count'])
+        return JsonResponse({
+            'status': 'success',
+            'is_liked': is_liked,
+            'likes_count': post.likes_count
+        })

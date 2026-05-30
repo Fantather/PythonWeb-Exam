@@ -90,7 +90,7 @@
     </div>
     <div class="footer-copyright">
         <div class="container">
-            © {% now "Y" %} форум наше название леша впиши
+            © {% now "Y" %} Форум хуёрум
             <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
         </div>
     </div>
@@ -99,7 +99,16 @@
 <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 
+{% csrf_token %}
 {% block extra_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.materialboxed');
+            M.Materialbox.init(elems);
+        });
+    </script>
+    
+    <script src="{% static 'js/likes.js' %}"></script>
 {% endblock %}
 </body>
 </html>

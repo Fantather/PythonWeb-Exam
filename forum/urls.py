@@ -13,8 +13,8 @@ urlpatterns = [
     path('communities/<int:category_id>/<slug:slug>/update/', views.CategoryUpdateView.as_view(), name='community_update'),
     path('communities/<int:category_id>/<slug:slug>/delete/', views.CategoryDeleteView.as_view(), name='community_delete'),
     path('communities/<int:category_id>/<slug:slug>/create-topic/', views.TopicCreateView.as_view(), name='create_topic'),
-
-    path('topic/<int:topic_id>/<slug:slug>/create-post/', views.PostCreateView.as_view(), name='create_post'),
     
-    path('topic/<int:topic_id>/<slug:slug>/', views.TopicPostListView.as_view(), name='topic_detail')
+    path('topic/<int:topic_id>/<slug:slug>/create-post/', views.PostCreateView.as_view(), name='create_post'),
+    path('topic/<int:topic_id>/<slug:slug>/', views.TopicPostListView.as_view(), name='topic_detail'),
+    path('post/<int:post_id>/like/', views.ToggleLikeView.as_view(), name='post_toggle_like'),
 ]

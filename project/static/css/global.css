@@ -160,3 +160,9 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
     font-weight: bold;
     margin-top: 10px;
 }
+
+/* Стиль для комментария */
+.comment-card {
+    margin-left: 20px;
+    border-left: 3px solid #eceff1;
+}
