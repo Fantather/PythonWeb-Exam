@@ -15,10 +15,20 @@
             {{ post.content|linebreaks }}
         </div>
 
-        {% if post.image %}
-            <div class="post-image center-align" style="margin-top: 25px; width: 100%;">
-                <img class="responsive-img materialboxed" src="{{ post.image.url }}" alt="Изображение к теме" style="margin: 0 auto; display: inline-block; border-radius: 4px;">
-            </div>
+        {% if post.images.all %}
+            {% if post.images.all.count == 1 %}
+                    <div class="center-align" style="width: 100%;">
+                        <img class="responsive-img materialboxed" src="{{ post.images.first.image.url }}" alt="Изображение к теме" style="margin: 0 auto; display: inline-block; border-radius: 4px;">
+                    </div>
+                {% else %}
+                    <div class="carousel carousel-slider center">
+                        {% for img_obj in post.images.all %}
+                            <a class="carousel-item" href="#!">
+                                <img src="{{ img_obj.image.url }}" alt="Вложение" style="border-radius: 4px;">
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
         {% endif %}
     </div>
     

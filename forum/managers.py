@@ -68,6 +68,8 @@ class PostQuerySet(models.QuerySet):
             "author", 
             "parent", 
             "parent__author"
+        ).prefetch_related(
+            "images"
         ).order_by("created_at")
     
     def get_topic_starter(self, topic_id:int):

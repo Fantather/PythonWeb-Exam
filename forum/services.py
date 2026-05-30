@@ -1,5 +1,5 @@
 from django.utils import timezone
-from .models import Community, Post, Topic
+from .models import Community, Post, Topic, PostImage
 from django.db import transaction
 from django.db.models import F
 from django.contrib.auth import get_user_model
@@ -35,12 +35,12 @@ class TopicService:
     @transaction.atomic
     def create_topic_with_post(
         cls,
-        community: Community,
-        author: User,
+        community: 'Community',
+        author: 'User',
         title: str,
         content: str,
-        image: UploadedFile | str | None = None
-    ) -> Topic:
+        images: list | str | None = None
+    ) -> 'Topic':
         """
         Атомарно создает новую тему и корневое сообщение для нее.
         """
@@ -55,36 +55,27 @@ class TopicService:
             title=title.strip(),
         )
 
-        Post.objects.create(
+        post = Post.objects.create(
             topic=topic,
             author=author,
             content=content.strip(),
             parent=None,
-            image=image,
         )
 
+        if images:
+            if not isinstance(images, list):
+                images = [images]
+                
+            for img in images:
+                PostImage.objects.create(
+                    post=post,
+                    image=img
+                )
+
         return topic
-
-    
-
-class PostService:
-    @staticmethod
-    def toggle_like(post: Post, user: User) -> bool:
-        """
-        Управляет состоянием лайка. 
-        Возвращает True, если связь создана, False - если удалена.
-        """
-        with transaction.atomic():
-            if post.liked_by.filter(id=user.pk).exists():
-                post.liked_by.remove(user)
-                Post.objects.filter(id=post.pk).update(likes_count=F('likes_count') - 1)
-                return False
-            
-            post.liked_by.add(user)
-            Post.objects.filter(id=post.pk).update(likes_count=F('likes_count') + 1)
-            return True
         
 
+class PostService:
     @classmethod
     @transaction.atomic
     def create_reply(
@@ -93,7 +84,7 @@ class PostService:
         author: User,
         content: str,
         parent: Post,
-        image: UploadedFile | str | None = None
+        images: list | str | None = None  # 1. Меняем аргумент на images
     ) -> Post:
         """
         Создает новый пост-ответ в теме и атомарно обновляет метрики темы.
@@ -108,8 +99,17 @@ class PostService:
             author=author,
             content=content.strip(),
             parent=parent,
-            image=image
         )
+
+        if images:
+            if not isinstance(images, list):
+                images = [images]
+                
+            for img in images:
+                PostImage.objects.create(
+                    post=post,
+                    image=img
+                )
 
         Topic.objects.filter(pk=topic.pk).update(
             replies_count=F('replies_count') + 1,

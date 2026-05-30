@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 
 from forum.models import Community, Topic, Post
-# Слой сервисов должен быть переименован в соответствии с новыми доменными моделями
 from forum.services import CommunityService, TopicService, PostService
 from core.helpers import generate_unique_slug
 
@@ -109,7 +108,7 @@ class Command(BaseCommand):
             author=admin_user,
             title="Helldivers x Warhammer 40k coming soon",
             content="Коллаборация между Warhammer 40k и Helldivers",
-            image="posts/images/seed/helldivers-x-warhammer-40k-coming.webp"
+            images="posts/images/seed/helldivers-x-warhammer-40k-coming.webp" # <-- ИСПРАВЛЕНО
         )
 
         root_post_news = Post.objects.get(topic=topic_news, parent__isnull=True)
@@ -134,7 +133,7 @@ class Command(BaseCommand):
             author=fan_zeta,
             title="Где достать священную мазь для лазгана (Паттерн Кантран)?",
             content="Дух машины моего лазгана гневается. Стандартные литании не помогают, линза перегревается после третьего выстрела.",
-            image=None
+            images=None # <-- ИСПРАВЛЕНО
         )
 
         root_post_tech = Post.objects.get(topic=topic_tech, parent__isnull=True)
@@ -151,7 +150,7 @@ class Command(BaseCommand):
             author=fan_scum,
             title="Странные тени в секторе 4",
             content="Вчера видел многорукую тень возле гидропонных ферм. Местные пропадают. Прикладываю размытый снимок с ауспекса.",
-            image="posts/images/seed/mehanicus-mech.jpg"
+            images="posts/images/seed/mehanicus-mech.jpg" # <-- ИСПРАВЛЕНО
         )
 
         root_post_rumors = Post.objects.get(topic=topic_rumors, parent__isnull=True)

@@ -200,12 +200,6 @@ class Post(TimeStampedModel):
         db_index=True,
         verbose_name=_("Likes count")
     )
-    image = models.ImageField(
-        upload_to="posts/images/%Y/%m/%d/",
-        blank=True,
-        verbose_name=_("Image")
-    )
-
     objects = PostQuerySet.as_manager()
 
     class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
@@ -228,3 +222,30 @@ class Post(TimeStampedModel):
                     'parent': _("Дочерний пост обязан принадлежать тому же Topic, что и родительский.")
                 })
         super().clean()
+
+
+class PostImage(TimeStampedModel):
+    """
+    Изображение, прикрепленное к посту.
+    Модель:
+     - post - пост, к которому относится изображение
+     - image - файл изображения
+    """
+    post = models.ForeignKey(
+        "forum.Post",
+        on_delete=models.CASCADE,
+        related_name="images",
+        verbose_name=_("Post")
+    )
+    image = models.ImageField(
+        upload_to="posts/images/%Y/%m/%d/",
+        verbose_name=_("Image")
+    )
+
+    class Meta: # pyright: ignore[reportIncompatibleVariableOverride]
+        ordering = ['created_at']   # Сортировка по дате создания гарантирует вывод в порядке загрузки
+        verbose_name = _("Post image")
+        verbose_name_plural = _("Post images")
+
+    def __str__(self) -> str:
+        return f"Image for post ID {self.post_id}"

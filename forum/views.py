@@ -78,7 +78,7 @@ class CommunityListView(ListView):
 class CommunityCreateView(CreateView):
     '''
     создание нового сообщества
-        '''
+    '''
     model = Community
     form_class = CommunityForm
     template_name = "community_form.html"
@@ -86,17 +86,10 @@ class CommunityCreateView(CreateView):
     login_required = True
 
     def form_valid(self, form):
-        parent_id = self.request.GET.get("parent")
-        
         data = form.cleaned_data
         
-        if parent_id:
-            parent_category = Community.objects.get(id=parent_id)
-            self.object = parent_category.add_child(**data)
-        else:
-            # Создаем независимую корневую категорию
-            self.object = Community.add_root(**data)
-            
+        # Создаем независимую корневую категорию
+        self.object = Community.add_root(**data)
         return HttpResponseRedirect(self.get_success_url())
     
 class CommunityUpdateView(UpdateView):
