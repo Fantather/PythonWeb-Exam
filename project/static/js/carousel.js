@@ -12,4 +12,24 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+    const carouselItems = document.querySelectorAll('.carousel-item[data-url]');
+        
+        carouselItems.forEach(item => {
+
+            item.addEventListener('click', (e) => {
+
+                const carouselEl = item.closest('.carousel');
+
+                const instance = M.Carousel.getInstance(carouselEl);
+
+                if (instance && instance.dragged) {
+                    e.preventDefault();
+                    return;
+                }
+
+                if (item.classList.contains('active')) {
+                    window.location.href = item.getAttribute('data-url');
+                }
+            });
+        });
 });

@@ -1,24 +1,22 @@
-<div class="col s12 m4">
-    <div class="card-panel white darken-1 black-text center-align" style="border-radius: 8px;">
-        <h5 style="margin-top: 0;">Начать обсуждение</h5>
-        <p class="create-discussion-text">У вас есть вопрос или интересная тема? Поделитесь с сообществом прямо сейчас.</p>
+<div class="card-panel white darken-1 black-text center-align" style="border-radius: 8px;">
+    <h5 style="margin-top: 0;">Начать обсуждение</h5>
+    <p class="create-discussion-text">У вас есть вопрос или интересная тема? Поделитесь с сообществом прямо сейчас.</p>
+    
+    {% if user.is_authenticated %}
         
-        {% if user.is_authenticated %}
-            
-            {% if category %}
-                <a href="{% url 'create_topic' category_id=category.id slug=category.slug %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
-                    Создать тему
-                </a>
-            {% else %}
-                <a href="{% url 'community_create' %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
-                    Создать сообщество
-                </a>
-            {% endif %}
-
+        {% if category %}
+            <a href="{% url 'create_topic' category_id=category.id slug=category.slug %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
+                Создать тему
+            </a>
         {% else %}
-            <a href="{% url 'login' %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
-                Войти и создать
+            <a href="{% url 'community_create' %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
+                Создать сообщество
             </a>
         {% endif %}
-    </div>
+
+    {% else %}
+        <a href="{% url 'login' %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
+            Войти и создать
+        </a>
+    {% endif %}
 </div>

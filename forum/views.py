@@ -44,7 +44,7 @@ class ForumIndexView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Community.get_root_nodes().order_by("title")
+        context["community"] = Community.get_root_nodes().order_by("title")
         return context
     
     def get_queryset(self):
