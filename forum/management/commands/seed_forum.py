@@ -184,7 +184,7 @@ class Command(BaseCommand):
             author=fan_zeta,
             title="Котики в Империуме",
             content="Вы тут вархамерите, а я котиков положу",
-            image="posts/images/seed/cattoritoditto.png"
+            images=["posts/images/seed/cattoritoditto.png", "posts/images/seed/catto.png"] 
         )
 
         root_post_cat = Post.objects.get(topic=topic_cat, parent__isnull=True)
