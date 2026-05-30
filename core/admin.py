@@ -42,10 +42,10 @@ class UserAdmin(admin.ModelAdmin):
         queryset.update(is_active=False)
 
 @admin.register(Community)
-class CategoryAdmin(TreeAdmin):
+class CommunityAdmin(TreeAdmin):
     model = Community
     form = movenodeform_factory(Community )
-    list_display = ("title", "slug", "description", "category_count", "icon_preview")
+    list_display = ("title", "slug", "description", "community_count", "icon_preview")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "slug")
     list_filter = ("title",)
@@ -57,7 +57,7 @@ class CategoryAdmin(TreeAdmin):
                 })
             return super().formfield_for_dbfield(db_field, request, **kwargs)
 
-    def category_count(self, obj):
+    def community_count(self, obj):
         return obj.get_descendant_count()
 
     def icon_preview(self, obj):

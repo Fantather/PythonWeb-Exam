@@ -80,6 +80,7 @@ class CategoryCreateView(CreateView):
     form_class = CategoryForm
     template_name = "community_form.html"
     success_url = reverse_lazy("communities_list")
+    login_required = True
 
     def form_valid(self, form):
         parent_id = self.request.GET.get("parent")
@@ -103,6 +104,7 @@ class CategoryUpdateView(UpdateView):
     form_class = CategoryForm
     template_name = "community_form.html"
     fields = ["title", "description"]
+    login_required = True
 
     def get_success_url(self):
         return reverse_lazy("communities_list")
@@ -113,6 +115,7 @@ class CategoryDeleteView(DeleteView):
     '''
     model = Community
     success_url = reverse_lazy("communities_list")
+    login_required = True
 
 class CategoryDetailView(DetailView):
     '''
@@ -167,6 +170,8 @@ class TopicCreateView(CreateView):
     model = Topic
     template_name = "topic_form.html"
     fields = ["title"]
+    login_required = True
+
 ###############################Post Views ##############################
 class PostCreateView(CreateView):
     '''
@@ -175,6 +180,7 @@ class PostCreateView(CreateView):
     model = Post
     template_name = "post_form.html"
     fields = ["content", "image"]
+    login_required = True
 
 
 class TopicPostListView(ViewTrackerMixin, ListView):
@@ -210,5 +216,9 @@ class TopicPostListView(ViewTrackerMixin, ListView):
             pk=self.topic_id
         )
         return context
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 3dd9e42dec9f3011cfe197ca39205fe83d683fa6
 
