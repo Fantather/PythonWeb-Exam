@@ -23,3 +23,20 @@ def clearDataHelper(request):
     Topic.objects.all().delete()
     Community.objects.all().delete()
     return HttpResponse("База данных очищена.")
+def clearCategories():
+    '''
+    Временная функция для очистки базы от данных
+    '''
+    Community.objects.all().delete()
+    
+def clearTopics():
+    '''
+    Временная функция для очистки базы от данных
+    '''
+    Topic.objects.all().delete()
+
+def clearPosts():
+    '''
+    Временная функция для очистки базы от данных
+    '''
+    Post.objects.all().delete()

@@ -10,23 +10,25 @@ User = get_user_model()
 
 class CommunityService:
     @staticmethod
-    def create_root_community(title: str, slug: str, owner: User, description: str = "") -> Community:
+    def create_root_community(title: str, slug: str, owner: User, description: str = "", icon: str = None) -> Community:
         """Создаёт корневой узел."""
         return Community.add_root(
             title=title,
             slug=slug,
             description=description,
-            owner=owner
+            owner=owner,
+            icon=icon
         )
     
     @staticmethod
-    def create_subcommunity(parent: Community, title: str, slug: str, owner: User, description: str = "") -> Community:
+    def create_subcommunity(parent: Community, title: str, slug: str, owner: User, description: str = "", icon: str = None) -> Community:
         """Добавляет дочерний узел к существующему сообществу."""
         return parent.add_child(
             title=title,
             slug=slug,
             description=description,
-            owner=owner
+            owner=owner,
+            icon=icon
         )
     
 
