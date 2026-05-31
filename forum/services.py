@@ -117,3 +117,25 @@ class PostService:
         )
 
         return post
+    
+
+    @classmethod
+    @transaction.atomic
+    def delete_post(cls, post: Post) -> str | None:
+        """
+        Удаляет пост. Если пост корневой (нет родителя) - удаляет всю тему.
+        Возвращает URL для редиректа (если тема удалена) или None (если удален только коммент).
+        """
+        topic = post.topic
+        
+        if post.parent is None:
+            redirect_url = topic.community.get_absolute_url()
+            topic.delete() # Каскадно удалит все посты и картинки
+            return redirect_url
+            
+        else:
+            post.delete()
+            Topic.objects.filter(pk=topic.pk).update(
+                replies_count=F('replies_count') - 1
+            )
+            return None

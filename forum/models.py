@@ -142,7 +142,7 @@ class Topic(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.title
-
+    
     def get_absolute_url(self) -> str:
         """
         Позволяем получить полную ссылку на конкретный topic, включающую slug
@@ -152,6 +152,19 @@ class Topic(TimeStampedModel):
             "topic_id": self.pk,
             "slug": slug_text,
         })
+    
+    # Метод для получения ссылки на удаление
+    def get_delete_url(self):
+        return reverse('topic_delete', kwargs={'pk': self.pk})
+
+    # Метод для получения ссылки на редактирование
+    def get_update_url(self):
+        return reverse('topic_update', kwargs={'pk': self.pk})
+
+    # Свойство для генерации ID для HTML-циклов
+    @property
+    def dom_id(self):
+        return f"topic-{self.pk}"
 
 
 class Post(TimeStampedModel):
@@ -212,6 +225,21 @@ class Post(TimeStampedModel):
     
     def __str__(self) -> str:
         return f"Post {self.pk} in Topic {self.topic_id}"
+    
+
+    # Метод для получения ссылки на удаление
+    def get_delete_url(self):
+        return reverse('post_delete', kwargs={'post_id': self.pk})
+
+    # Метод для получения ссылки на редактирование
+    def get_update_url(self):
+        return reverse('post_update', kwargs={'post_id': self.pk})
+
+    # Свойство для генерации ID для HTML-циклов
+    @property
+    def dom_id(self):
+        return f"post-{self.pk}"
+
 
     def clean(self) -> None:
         """Валидация на уровне доменной модели."""

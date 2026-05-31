@@ -1,0 +1,24 @@
+<a class='dropdown-trigger btn-flat right' href='#' data-target='dropdown-{{ target_id }}' style="padding: 0 10px;">
+    <i class="material-icons grey-text text-darken-1">more_vert</i>
+</a>
+
+<ul id='dropdown-{{ target_id }}' class='dropdown-content'>
+
+    <li>
+        {% if edit_url %}
+            <a href="{{ edit_url }}" class="blue-text text-darken-2">
+                <i class="material-icons">edit</i> Изменить
+            </a>
+        {% else %}
+            <a href="#!" class="blue-text text-darken-2 ajax-edit-btn" data-target-id="{{ target_id }}">
+                <i class="material-icons">edit</i> Изменить
+            </a>
+        {% endif %}
+    </li>
+
+    <li>
+        <a href="#!" class="red-text text-darken-2 ajax-delete-btn" data-delete-url="{{ delete_url }}" data-target-id="{{ target_id }}">
+            <i class="material-icons">delete</i> Удалить
+        </a>
+    </li>
+</ul>

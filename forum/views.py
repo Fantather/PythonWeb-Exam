@@ -1,16 +1,17 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from forum.mixins import ViewTrackerMixin
 from .managers import *
 from forum.forms import CommunityForm
 from .models import Community, Topic, Post
-from .helpers import *
+from .helpers import seedDataHelper, clearDataHelper
 from .services import PostService
 
 from django.db.models import Count
@@ -18,21 +19,16 @@ from django.db.models import Count
 
 def seedData(request):
     """Представление для заполнения базы данных по запросу"""
-    seedCategories()
-    seedTopics()
-
+    seedDataHelper(request)
     return HttpResponseRedirect(reverse("index"))
 
 
 def clearData(request):
-    clearCategories()
-    clearTopics()
-    
+    clearDataHelper(request)
     return HttpResponseRedirect(reverse("index"))
 
 
 # Create your views here.
-
 class ForumIndexView(ListView):
     '''
     отображение категорий в виде карусели и список топиков
@@ -75,7 +71,7 @@ class CommunityListView(ListView):
         return queryset.order_by("-subscribers_count", "-topics_count", "title")
     
 
-class CommunityCreateView(CreateView):
+class CommunityCreateView(LoginRequiredMixin, CreateView):
     '''
     создание нового сообщества
     '''
@@ -83,10 +79,10 @@ class CommunityCreateView(CreateView):
     form_class = CommunityForm
     template_name = "community_form.html"
     success_url = reverse_lazy("communities_list")
-    login_required = True
 
     def form_valid(self, form):
         data = form.cleaned_data
+        data['owner'] = self.request.user #Передаю автора в объект
         
         # Создаем независимую корневую категорию
         self.object = Community.add_root(**data)
@@ -135,7 +131,6 @@ class TopicListView(ListView):
     топик это тема, которая может содержать в себе посты (сообщения)
     они отсортированы по дате последней активности (создание или обновление поста)
     и по флагу is_pinned, который указывает, закреплен ли топик
-
     '''
     model = Topic
     template_name = "topic_list.html"
@@ -169,15 +164,53 @@ class TopicCreateView(CreateView):
     login_required = True
 
 ###############################Post Views ##############################
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     '''
-    создание нового поста в топике
+    Создание нового поста (ответа) в топике
     '''
     model = Post
     template_name = "post_form.html"
-    fields = ["content", "image"]
-    login_required = True
+    # Убрали 'image', так как его нет в модели. 
+    # Оставили content и parent (если это ответ на другой комментарий)
+    fields = ["content", "parent"] 
 
+    def form_valid(self, form):
+        topic_id = self.kwargs.get('topic_id')
+        topic = get_object_or_404(Topic, pk=topic_id)
+        images = self.request.FILES.getlist('images')
+        
+        self.object = PostService.create_reply(
+            topic=topic,
+            author=self.request.user,
+            content=form.cleaned_data['content'],
+            parent=form.cleaned_data.get('parent'), 
+            images=images
+        )
+        
+        return HttpResponseRedirect(topic.get_absolute_url())
+
+class PostDeleteAjaxView(LoginRequiredMixin, View):
+    """
+    Удаление поста через AJAX-запрос.
+    """
+    def post(self, request, post_id, *args, **kwargs):
+        post = get_object_or_404(Post, pk=post_id)
+        
+        # Серверная проверка прав
+        if request.user != post.author:
+            return JsonResponse({'status': 'error', 'message': 'Доступ запрещен'}, status=403)
+
+        redirect_url = PostService.delete_post(post)
+        
+        # Если удалили корневой пост - получаем ссылку для перенаправления пользователя
+        if redirect_url:
+            return JsonResponse({
+                'status': 'success', 
+                'redirect_url': redirect_url
+            })
+            
+        # Если это был обычный пост, то просто успех
+        return JsonResponse({'status': 'success'})
 
 class TopicPostListView(ViewTrackerMixin, ListView):
     """

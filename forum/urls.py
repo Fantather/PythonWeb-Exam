@@ -2,11 +2,13 @@ from django.urls import path
 
 from forum import views
 
-# Называй методы контроллера как угодно, я их пишу чтоб бы пусто не было
 urlpatterns = [
+    # --- Базовые маршруты ---
     path('', views.ForumIndexView.as_view(), name='index'),
     path('seed-data/', views.seedData, name='seed_data'),
     path('clear-data/', views.clearData, name='clear_data'),
+    
+    # --- Community (Сообщества) ---
     path('communities/', views.CommunityListView.as_view(), name='communities_list'),
     path('communities/create/', views.CommunityCreateView.as_view(), name='community_create'),
     path('communities/<int:community_id>/<slug:slug>/', views.CommunityDetailView.as_view(), name='community_detail'),
@@ -14,7 +16,15 @@ urlpatterns = [
     path('communities/<int:community_id>/<slug:slug>/delete/', views.CommunityDeleteView.as_view(), name='community_delete'),
     path('communities/<int:community_id>/<slug:slug>/create-topic/', views.TopicCreateView.as_view(), name='create_topic'),
     
-    path('topic/<int:topic_id>/<slug:slug>/create-post/', views.PostCreateView.as_view(), name='create_post'),
+    # --- Topic (Темы) ---
     path('topic/<int:topic_id>/<slug:slug>/', views.TopicPostListView.as_view(), name='topic_detail'),
+    path('topic/<int:topic_id>/<slug:slug>/create-post/', views.PostCreateView.as_view(), name='create_post'),
+    # path('topic/<int:topic_id>/<slug:slug>/update/', views.TopicUpdateView.as_view(), name='topic_update'),
+    # path('topic/<int:topic_id>/<slug:slug>/delete/', views.TopicDeleteView.as_view(), name='topic_delete'),
+
+    # --- Post (Сообщения / Комментарии) ---
     path('post/<int:post_id>/like/', views.ToggleLikeView.as_view(), name='post_toggle_like'),
+    # Новые маршруты для управления постами (будут обрабатывать AJAX-запросы):
+    # path('post/<int:post_id>/update/', views.PostUpdateAjaxView.as_view(), name='post_update'),
+    path('post/<int:post_id>/delete/', views.PostDeleteAjaxView.as_view(), name='post_delete'),
 ]

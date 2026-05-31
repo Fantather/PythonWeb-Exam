@@ -1,5 +1,9 @@
 <div class="card flat hoverable comment-card" id="post-{{ post.pk }}">
     <div class="card-content">
+        {% if request.user == post.author %}
+            {% include "forum/partials/_dropdown_menu.html" with target_id=post.dom_id delete_url=post.get_delete_url %}
+        {% endif %}
+
         <span class="card-title blue-text text-darken-2" style="font-size: 1.1rem; margin-bottom: 10px;">
             {{ post.author.username }}
             <span class="right grey-text" style="font-size: 0.8rem;">

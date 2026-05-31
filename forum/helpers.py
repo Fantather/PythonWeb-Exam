@@ -1,59 +1,25 @@
-from django.contrib.auth import get_user_model
-from .models import Community, Topic, Post
+from django.http import HttpResponse
+from django.core.management import call_command
 
-def seedCategories():
-    '''
-    Временная функция для заполнения базы данными
-    '''
-    if not Community.objects.exists():
-        for i in range(1, 10):
-            Community.add_root(
-                title=f"Категория {i}",
-                description=f"Описание категории {i}",
-                icon="catto.png"
-            )
+def seedDataHelper(request):
+    """
+    Вызывает вашу консольную команду seed_forum прямо из браузера.
+    """
+    try:
+        # Имя 'seed_forum' должно совпадать с названием файла в папке management/commands
+        call_command('seed_forum')
+        return HttpResponse("Сидирование базы данных успешно завершено! Проверьте главную страницу.")
+    except Exception as e:
+        return HttpResponse(f"Произошла ошибка при сидировании: {str(e)}", status=500)
 
-def clearCategories():
-    '''
-    Временная функция для очистки базы от данных
-    '''
-    Community.objects.all().delete()
-    
-def seedTopics():
-    '''
-    Временная функция для заполнения базы данными
-    '''
-    first_category = Community.objects.first()
-    
-    if not first_category:
-        print("Ошибка: Нет ни одной категории. Сначала выполните seedCategories()")
-        return
-
-    User = get_user_model()
-    author = User.objects.first()
-    
-    if not author:
-        author = User.objects.create_user(
-            username="seed_author", 
-            email="seed@example.com", 
-            password="password123"
-        )
-
-    topic_data = [
-        {
-            "title": f"Топик {i}",
-            "category": first_category,
-            "author": author
-        }
-        for i in range(1, 10)
-    ]
-    
-    if not Topic.objects.exists():
-        Topic.objects.bulk_create([Topic(**data) for data in topic_data])
-
-
-def clearTopics():
-    '''
-    Временная функция для очистки базы от данных
-    '''
+def clearDataHelper(request):
+    """
+    Если у вас есть команда для очистки (например, clear_forum), 
+    её можно вызвать точно так же.
+    """
+    # Временно оставим прямое удаление, если команды пока нет
+    from forum.models import Community, Topic, Post
+    Post.objects.all().delete()
     Topic.objects.all().delete()
+    Community.objects.all().delete()
+    return HttpResponse("База данных очищена.")
