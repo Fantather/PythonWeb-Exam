@@ -71,7 +71,7 @@ class CommunityListView(ListView):
         return queryset.order_by("-subscribers_count", "-topics_count", "title")
 
 
-class CommunityCreateView(LoginRequiredMixin, LoginRequiredMixin, CreateView):
+class CommunityCreateView(LoginRequiredMixin, CreateView):
     model = Community
     form_class = CommunityForm
     template_name = "community_form.html"
