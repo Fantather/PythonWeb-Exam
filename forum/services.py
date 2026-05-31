@@ -93,7 +93,7 @@ class PostService:
         author: User,
         content: str,
         parent: Post,
-        images: list | str | None = None  # 1. Меняем аргумент на images
+        images: list | str | None = None  # Меняем аргумент на images
     ) -> Post:
         """
         Создает новый пост-ответ в теме и атомарно обновляет метрики темы.
@@ -127,8 +127,6 @@ class PostService:
 
         return post
 
-    
-
     @classmethod
     @transaction.atomic
     def delete_post(cls, post: Post) -> str | None:
@@ -149,3 +147,25 @@ class PostService:
                 replies_count=F('replies_count') - 1
             )
             return None
+        
+
+    @classmethod
+    @transaction.atomic
+    def toggle_like(cls, post, user) -> bool:
+        """
+        Ставит или убирает лайк пользователя на посте.
+        Возвращает True, если лайк поставлен, и False, если убран.
+        """
+        # Если пользователь уже лайкал пост - убираем лайк
+        if post.liked_by.filter(id=user.id).exists():
+            post.liked_by.remove(user)
+            post.likes_count = F('likes_count') - 1
+            post.save(update_fields=['likes_count'])
+            return False
+        
+        # Если не лайкал - ставим
+        else:
+            post.liked_by.add(user)
+            post.likes_count = F('likes_count') + 1
+            post.save(update_fields=['likes_count'])
+            return True
