@@ -311,7 +311,7 @@ class ToggleLikeView(LoginRequiredMixin, View):
             'status': 'error', 
             'message': 'Требуется авторизация'
         }, status=401)
-    
+
     def post(self, request, post_id, *args, **kwargs):
         post = get_object_or_404(Post, pk=post_id)
         is_liked = PostService.toggle_like(post, request.user)
@@ -323,11 +323,17 @@ class ToggleLikeView(LoginRequiredMixin, View):
             'likes_count': post.likes_count
         })
 
-def subscribe_to_community(request, community_id):
-    '''при нажатии на кнопку подписки, пользователь подписывается на сообщество и получает доступ к его топикам'''
+
+def subscribe_to_community(request, community_id, slug):  # Добавили аргумент slug
+    """
+    При нажатии на кнопку подписки пользователь подписывается на сообщество
+    и получает доступ к его топикам.
+    """
     community = get_object_or_404(Community, pk=community_id)
+
     if request.user in community.subscribers.all():
         community.subscribers.remove(request.user)
     else:
         community.subscribers.add(request.user)
+
     return redirect(community.get_absolute_url())

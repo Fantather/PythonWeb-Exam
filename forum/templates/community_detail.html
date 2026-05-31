@@ -35,7 +35,12 @@
             </div>
             
             <div class="col s12 m3 l3 right-align hide-on-small-only community-title-col">
-                <a href="{% url 'subscribe_to_community' community.id community.slug %}" class="btn brown darken-1 waves-effect waves-light create-discussion-btn">Подписаться</a>
+                <form action="{% url 'subscribe_to_community' community.id community.slug %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn brown darken-1 waves-effect waves-light create-discussion-btn">
+                        {% if user in community.subscribers.all %}Отписаться{% else %}Подписаться{% endif %}
+                    </button>
+                </form>
             </div>
             
         </div>

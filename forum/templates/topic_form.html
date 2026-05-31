@@ -12,7 +12,7 @@
             <div class="card unified-card">
                 <div>
                     {% if form.non_field_errors %}
-                        <div class="card-panel red lighten-2 white-text">
+                        <div class="card-panel red lighten-2 red-text">
                             {{ form.non_field_errors.0 }}
                             </div>
                     {% endif %}
@@ -24,13 +24,13 @@
                 </div>
 
                 <div class="card-tabs">
-                    <ul class="tabs tabs-fixed-width" style="background-color: transparent;">
+                    <ul class="tabs tabs-fixed-width white-text" style="background-color: transparent;">
                         <li class="tab"><a href="#tab-text">Текст</a></li>
                         <li class="tab"><a class="active" href="#tab-image">Изображение</a></li>
                     </ul>
                 </div>
 
-                <div class="card-content grey lighten-4 black-text">
+                <div class="card-content white-text">
                     
                     <div id="tab-text">
                         {% include "_inputs.html" with field=form.content %}
@@ -38,6 +38,8 @@
              
                     <div id="tab-image">
                         <div class="center-align" style="margin-top: 30px; margin-bottom: 20px;">
+                            {% include "_inputs.html" with field=form.content %}
+
                             <label for="{{ form.images.id_for_label }}" class="btn waves-effect white grey-text darken-text-2" style="cursor: pointer; user-select: none;">
                                 Выбрать файлы
                             </label>
