@@ -180,7 +180,7 @@ class Post(TimeStampedModel):
      - content - содержимое поста
      - liked_by - пользователи, которым понравился пост
      - likes_count - количество лайков
-     - image - изображение, прикрепленное к посту
+     - images - изображения, прикрепленные к посту
     """
     topic = models.ForeignKey(
         "forum.Topic",

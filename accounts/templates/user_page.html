@@ -65,6 +65,21 @@
                 {% endif %}
             
             </div>
+            {% comment %} Блок с дополнительной информацией о пользователе, например, список его сообществ, постов и т.д. может быть добавлен здесь. {% endcomment %}
+                <div class="card-content">
+                    <h5 class="bold_title">Сообщества пользователя:</h5>
+                        <ul class="collection">
+                            {% for community in user.subscibed_comunities.all %}
+                                <li class="collection-item">
+                                    <a href="{% url 'community_detail' community.id community.slug %}">
+                                        {{ community.title }}
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li class="collection-item">Пользователь не состоит ни в одном сообществе.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
             
         </div>
     </div>

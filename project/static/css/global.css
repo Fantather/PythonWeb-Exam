@@ -237,6 +237,12 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
    они могут конфликтовать с темным фоном карточки. 
    Переопределяем их для элементов внутри unified-card.
 */
+.field-images_preview .image-preview {
+    border: 1px solid var(--primary-border-color) !important;
+    border-radius: var(--border-radius-card) !important;
+
+
+}
 
 .unified-card .card-title,
 .unified-card .post-text,

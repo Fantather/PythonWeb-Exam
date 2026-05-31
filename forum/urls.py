@@ -14,7 +14,7 @@ urlpatterns = [
     path('communities/<int:community_id>/<slug:slug>/', views.CommunityDetailView.as_view(), name='community_detail'),
     path('communities/<int:community_id>/<slug:slug>/update/', views.CommunityUpdateView.as_view(), name='community_update'),
     path('communities/<int:community_id>/<slug:slug>/delete/', views.CommunityDeleteView.as_view(), name='community_delete'),
-    path('communities/<int:community_id>/<slug:slug>/create-topic/', views.TopicCreateView.as_view(), name='create_topic'),
+    path('communities/create-topic/', views.TopicCreateView.as_view(), name='create_topic'),
     
     # --- Topic (Темы) ---
     path('topic/<int:topic_id>/<slug:slug>/', views.TopicPostListView.as_view(), name='topic_detail'),
@@ -27,4 +27,7 @@ urlpatterns = [
     # Новые маршруты для управления постами (будут обрабатывать AJAX-запросы):
     # path('post/<int:post_id>/update/', views.PostUpdateAjaxView.as_view(), name='post_update'),
     path('post/<int:post_id>/delete/', views.PostDeleteAjaxView.as_view(), name='post_delete'),
+
+    path('communities/<int:community_id>/<slug:slug>/subscribe/', views.subscribe_to_community, name='subscribe_to_community'),
+
 ]

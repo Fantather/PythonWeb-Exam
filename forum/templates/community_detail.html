@@ -31,11 +31,11 @@
             
             <div class="col s9 m7 l8 community-title-col">
                 <h4 class="community-title-text">{{ community.title }}</h4>
-                <span class="grey-text text-darken-1">r/{{ community.slug }}</span>
+                <span class="grey-text text-darken-1">{{ community.slug }}</span>
             </div>
             
             <div class="col s12 m3 l3 right-align hide-on-small-only community-title-col">
-                {% comment %} <a href="{% url 'create_topic' community.id community.slug %}" class="btn light-blue darken-3 waves-effect waves-light create-discussion-btn">Создать пост</a> {% endcomment %}
+                <a href="{% url 'subscribe_to_community' community.id community.slug %}" class="btn brown darken-1 waves-effect waves-light create-discussion-btn">Подписаться</a>
             </div>
             
         </div>

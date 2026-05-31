@@ -1,18 +1,18 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import FormView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from forum.mixins import ViewTrackerMixin
 from .managers import *
-from forum.forms import CommunityForm
+from forum.forms import CommunityForm, TopicCreateForm
 from .models import Community, Topic, Post
 from .helpers import seedDataHelper, clearDataHelper
-from .services import PostService
+from .services import CommunityService, PostService, TopicService, User
 
 from django.db.models import Count
 ###temp
@@ -69,12 +69,9 @@ class CommunityListView(ListView):
         if search_query:
             queryset = queryset.filter(title__icontains=search_query)
         return queryset.order_by("-subscribers_count", "-topics_count", "title")
-    
 
-class CommunityCreateView(LoginRequiredMixin, CreateView):
-    '''
-    создание нового сообщества
-    '''
+
+class CommunityCreateView(LoginRequiredMixin, LoginRequiredMixin, CreateView):
     model = Community
     form_class = CommunityForm
     template_name = "community_form.html"
@@ -83,11 +80,18 @@ class CommunityCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         data = form.cleaned_data
         data['owner'] = self.request.user #Передаю автора в объект
-        
-        # Создаем независимую корневую категорию
-        self.object = Community.add_root(**data)
-        return HttpResponseRedirect(self.get_success_url())
-    
+
+        # Делегируем создание бизнес-логике сервиса
+        self.object = CommunityService.create_root_community(
+            title=data.get("title"),
+            description=data.get("description", ""),
+            icon=data.get("icon"),
+            owner=self.request.user,
+        )
+
+        return redirect(self.get_success_url())
+
+
 class CommunityUpdateView(UpdateView):
     '''
     редактирование сообщества
@@ -139,7 +143,7 @@ class TopicListView(ListView):
     def get_queryset(self):
         categories_id = self.kwargs.get("categories_id")
         return Topic.objects.filter(category_id=categories_id).order_by("-is_pinned", "-last_active")
-    
+
 class TopicDetailView(DetailView):
     '''
     отображение топика и всех его постов
@@ -153,15 +157,47 @@ class TopicDetailView(DetailView):
         topic = self.get_object()
         context["posts"] = Post.objects.filter(topic=topic).order_by("created_at")
         return context
-    
-class TopicCreateView(CreateView):
+
+class TopicCreateView(FormView):
     '''
     создание нового топика в сообществе
+    FormView из за сервиса Леши
     '''
     model = Topic
+    form_class = TopicCreateForm
     template_name = "topic_form.html"
-    fields = ["title"]
     login_required = True
+
+    def get_initial(self):
+        initial = super().get_initial()
+        community_id = self.kwargs.get("community_id")
+        if community_id:
+            initial["community"] = get_object_or_404(Community, pk=community_id)
+        return initial
+    
+    def get_form(self, **kwargs):
+        '''ограничение только тех сообществ что подписаны пользователю'''
+        form = super().get_form(**kwargs)
+        user_communities = Community.objects.filter(subscribers=self.request.user)
+        form.fields["community"].queryset = user_communities
+
+        return form
+
+    def form_valid(self, form):
+        title = form.cleaned_data['title']
+        content = form.cleaned_data['content']
+        community = form.cleaned_data['community']
+        images = self.request.FILES.getlist('images')
+
+        topic = TopicService.create_topic_with_post(
+            community=community,
+            author=self.request.user,
+            title=title,
+            content=content,
+            images=images
+        )
+        return redirect(topic.get_absolute_url())
+
 
 ###############################Post Views ##############################
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -211,6 +247,9 @@ class PostDeleteAjaxView(LoginRequiredMixin, View):
             
         # Если это был обычный пост, то просто успех
         return JsonResponse({'status': 'success'})
+    fields = ["content", "images"]
+    login_required = True
+
 
 class TopicPostListView(ViewTrackerMixin, ListView):
     """
@@ -261,7 +300,7 @@ class TopicPostListView(ViewTrackerMixin, ListView):
             )
 
         return context
-    
+
 class ToggleLikeView(LoginRequiredMixin, View):
     def handle_no_permission(self):
         """
@@ -283,3 +322,12 @@ class ToggleLikeView(LoginRequiredMixin, View):
             'is_liked': is_liked,
             'likes_count': post.likes_count
         })
+
+def subscribe_to_community(request, community_id):
+    '''при нажатии на кнопку подписки, пользователь подписывается на сообщество и получает доступ к его топикам'''
+    community = get_object_or_404(Community, pk=community_id)
+    if request.user in community.subscribers.all():
+        community.subscribers.remove(request.user)
+    else:
+        community.subscribers.add(request.user)
+    return redirect(community.get_absolute_url())
