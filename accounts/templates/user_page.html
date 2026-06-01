@@ -67,6 +67,32 @@
             </div>
             {% comment %} Блок с дополнительной информацией о пользователе, например, список его сообществ, постов и т.д. может быть добавлен здесь. {% endcomment %}
                 <div class="card-content">
+
+                        
+                <div class="card-tabs">
+                    <ul class="tabs tabs-fixed-width white-text" style="background-color: transparent;">
+                        <li class="tab"><a href="#tab-community">Текст</a></li>
+                        <li class="tab"><a class="active" href="#tab-posts">Посты</a></li>
+                    </ul>
+                </div>
+
+                <div class="card-content white-text">
+                    
+                    <div id="tab-text">
+                        {% include "_inputs.html" with field=form.content %}
+                    </div>
+             
+                    <div id="tab-image">
+                        <div class="center-align" style="margin-top: 30px; margin-bottom: 20px;">
+                            {% include "_inputs.html" with field=form.content %}
+
+
+                    </div>
+                    
+                </div>
+
+
+
                     <h5 class="bold_title">Сообщества пользователя:</h5>
                         <ul class="collection">
                             {% for community in user.subscibed_comunities.all %}

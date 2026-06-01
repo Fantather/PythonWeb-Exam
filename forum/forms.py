@@ -1,5 +1,5 @@
 from django import forms
-from forum.models import Community, Topic
+from forum.models import Community, Topic, Post
 from django.utils.translation import gettext_lazy as _
 
 
@@ -35,8 +35,7 @@ class CommunityForm(forms.ModelForm):
             }),
         }
 
-   
-   
+
 class TopicCreateForm(forms.ModelForm):
     content = forms.CharField(
         widget=forms.Textarea(attrs={'class': 'materialize-textarea'}),
@@ -63,9 +62,22 @@ class TopicCreateForm(forms.ModelForm):
         }
 
 class CommentCreateForm(forms.ModelForm):
-    pass
+    images = MultipleFileField(
+        widget=MultipleFileInput(
+            attrs={
+                "class": "file-input",
+                "accept": ".png, .svg, .jpg, .jpeg, .webp, image/webp, image/png, image/svg+xml, image/jpeg",
+                "multiple": True,
+            }
+        ),
+        label=_("Images"),
+        required=False,
+    )
+    class Meta:
+        model = Post
+        fields = ["content"]
 
-#вдруг сортировка понадобится, вот у меня пример из дз будет, просто перепишу под что надо
+# вдруг сортировка понадобится, вот у меня пример из дз будет, просто перепишу под что надо
 # class FilmFilterForm(forms.Form):
 #     sort_choices = [
 #         ('title', 'По названию'),
@@ -77,9 +89,8 @@ class CommentCreateForm(forms.ModelForm):
 
 #     ]
 #     sort = forms.ChoiceField(
-#         choices=sort_choices, 
-#         required=False, 
+#         choices=sort_choices,
+#         required=False,
 #         initial='title',
 #         widget=forms.Select(attrs={'id': 'sort-select'})
 #         )
-
