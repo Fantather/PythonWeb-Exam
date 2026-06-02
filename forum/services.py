@@ -93,7 +93,7 @@ class PostService:
         author: User,
         content: str,
         parent: Post,
-        images: list | str | None = None  # Меняем аргумент на images
+        images: list | str | None = None
     ) -> Post:
         """
         Создает новый пост-ответ в теме и атомарно обновляет метрики темы.

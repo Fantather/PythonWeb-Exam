@@ -275,29 +275,31 @@ class TopicPostListView(ViewTrackerMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Добавляет объект Topic в контекст. 
+        Добавляет объект Topic в контекст и строит дерево постов. 
         """
         context = super().get_context_data(**kwargs)
 
         posts = list(context["flat_posts"])
-        post_dict = {post.id: post for post in posts}   # Словарь для быстрого поиска постов по ID (O(1))
+        post_dict = {post.id: post for post in posts}
         root_posts = []
 
-        #Инициализируем пустой список детей для каждого поста, это нужно делать тут, что бы хранилища оставались независимыми
         for post in posts:
             post.children = []
 
         for post in posts:
             if post.parent_id:
-                post_dict[post.parent_id].children.append(post)
-            elif not post.parent_id:
+                if post.parent_id in post_dict:
+                    post_dict[post.parent_id].children.append(post)
+                else:
+                    root_posts.append(post)
+            else:
                 root_posts.append(post)
 
-            context["nested_posts"] = root_posts
-            context["topic"] = get_object_or_404(
-                Topic.objects.select_related('community'),
-                pk = self.topic_id
-            )
+        context["nested_posts"] = root_posts
+        context["topic"] = get_object_or_404(
+            Topic.objects.select_related('community'),
+            pk=self.topic_id
+        )
 
         return context
 
