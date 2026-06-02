@@ -8,8 +8,8 @@ main {
   flex: 1 0 auto;
   background-size: cover;
   min-height: 100vh;
-  /* background-image: url('../assets/background.svg'); */
-  background-color: var(--primary-color-card) !important;
+  background-image: url('../assets/background.svg');
+  /* background-color: var(--primary-color-card) !important; */
   /* background-image: 
   linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
   url('../assets/image.gif'); */
@@ -185,16 +185,16 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
 
 /*==Variables==*/
 :root {
-    --primary-color-card: rgb(62, 39, 35);
-    --primary-color-main-bg:  rgba(62, 39, 35, 0.7);
+    --primary-color-card: rgb(197, 222, 255);
+    --primary-color-main-bg:  rgb(197, 222, 255);
 
 
-    --text-color: #ffffff;
-    --text-color-secondary: #bcaaa4; /* Светло-коричневый/серый для дат и мелкого текста */
+    --text-color: #000000;
+    --text-color-secondary: #6a5f9b; /* Светло-коричневый/серый для дат и мелкого текста */
     --link-color: #90caf9; /* Светло-голубой для ссылок на темном фоне */
 
     --primary-border-color: rgba(44, 36, 36, 0.8);
-    --primary-border-color-hover: rgba(100, 100, 100, 0.8); /* Сделал границу светлее при наведении для контраста */
+    --primary-border-color-hover: rgba(89, 98, 185, 0.8); /* Сделал границу светлее при наведении для контраста */
     --border-radius-card: 8px;
 
     /* 1.05 может быть почти незаметно глазу, рекомендую 1.1 или 1.15 */

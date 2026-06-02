@@ -3,11 +3,11 @@
     <p class="create-discussion-text">У вас есть вопрос или интересная тема? Поделитесь с сообществом прямо сейчас.</p>
     
     {% if user.is_authenticated %}
-        <a href="{% url 'create_topic' %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
+        <a href="{% url 'create_topic' %}" class="btn blue darken-2 white-text waves-effect waves-light create-discussion-btn w-100 ">
             Создать тему
         </a>
     {% else %}
-        <a href="{% url 'login' %}" class="btn brown darken-1 white-text waves-effect waves-light create-discussion-btn w-100 ">
+        <a href="{% url 'login' %}" class="btn blue darken-2 white-text waves-effect waves-light create-discussion-btn w-100 ">
             Войти и создать
         </a>
     {% endif %}
