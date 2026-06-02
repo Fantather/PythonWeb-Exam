@@ -1,46 +1,45 @@
-<div class="col s12 m8">
-    {% for topic in topics %}
-        <div class="card flat hoverable topic-card {% if topic.is_pinned %}pinned-topic grey lighten-5{% endif %}">
-            <div class="card-content">
-                {% if topic.is_pinned %}
-                    <span class="chip orange white-text topic-pinned-chip">
-                        Закреплено
-                    </span>
-                {% endif %}
-                
-                <span class="blue-text text-darken-2 topic-community-name">
-                    {{ topic.community.title }}
+{% for topic in topics %}
+    <div class="card flat unified-card  hoverable {% if topic.is_pinned %}pinned-topic grey lighten-5{% endif %}">
+        <div class="card-content">
+            {% if topic.is_pinned %}
+                <span class="chip orange white-text topic-pinned-chip">
+                    Закреплено
                 </span>
-                
-                <span class="card-title topic-title-wrapper">
-                    <a href="{{ topic.get_absolute_url }}" class="black-text topic-title-link">
-                        {{ topic.title }}
-                    </a>
-                </span>
-                
-                
-                <p class="grey-text topic-activity-text">
-                    Активность: {{ topic.last_active|timesince }} назад
-                </p>
-            </div>
+            {% endif %}
+            
+            <span class="blue-text text-darken-2 topic-community-name">
+                {{ topic.community.title }}
+            </span>
+            
+            <span class="card-title topic-title-wrapper">
+                <a href="{{ topic.get_absolute_url }}" class="black-text topic-title-link">
+                    {{ topic.title }}
+                </a>
+            </span>
             
             
-            <div class="card-action topic-meta-icons grey-text text-darken-1 topic-meta-action">
-                <span><i class="material-icons meta-chip">visibility</i>{{ topic.views_count }}</span>
-                <span><i class="material-icons meta-chip">chat_bubble_outline</i>{{ topic.replies_count }}</span>
-                {% if topic.is_pinned %}
-                    <span class="right orange-text text-darken-1"><i class="material-icons">push_pin</i>Закреплено</span>
-                {% endif %}
-                {% if topic.is_closed %}
-                    <span class="right red-text text-darken-1"><i class="material-icons">lock_outline</i>Закрыто</span>
-                {% endif %}
-            </div>
+            <p class="grey-text topic-activity-text">
+                Активность: {{ topic.last_active|timesince }} назад
+            </p>
         </div>
-    {% empty %}
-        <div class="card-panel center-align grey lighten-4">
-            <p class="grey-text">В этой секции еще нет тем для обсуждения</p>
+        
+        
+        <div class="card-action topic-meta-icons grey-text text-darken-1 topic-meta-action">
+            <span><i class="material-icons meta-chip">visibility</i>{{ topic.views_count }}</span>
+            <span><i class="material-icons meta-chip">chat_bubble_outline</i>{{ topic.replies_count }}</span>
+            {% if topic.is_pinned %}
+                <span class="right orange-text text-darken-1"><i class="material-icons">push_pin</i>Закреплено</span>
+            {% endif %}
+            {% if topic.is_closed %}
+                <span class="right red-text text-darken-1"><i class="material-icons">lock_outline</i>Закрыто</span>
+            {% endif %}
         </div>
-    {% endfor %}
+    </div>
+{% empty %}
+    <div class="card-panel center-align grey lighten-4">
+        <p class="grey-text">В этой секции еще нет тем для обсуждения</p>
+    </div>
+{% endfor %}
 
-   {% include "_pagination.html" with pagination_class="topic-pagination" %}
-</div>
+{% include "_pagination.html" with pagination_class="topic-pagination" %}
+

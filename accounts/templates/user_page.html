@@ -1,10 +1,17 @@
 {% extends "_layout.html" %}
 {% load static %}
+
 {% block title %}Профиль пользователя{% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/user_page.css' %}">
+{% endblock extra_css %}
+
 {% block content %}
-<div class="row padding_top_30">
-    <div class="col s12 m8 offset-m2 l6 offset-l3">
-        <div class="card">
+<div class="valign-wrapper" style="min-height: 80vh;">
+    <div class="row" style="width: 100%;">
+        <div class="col s12 m8 offset-m2 l6 offset-l3">
+            <div class="card unified-card-no-recolor">
             
             <div class="center-align padding_top_30">
                 {% if user.avatar %}
@@ -41,9 +48,11 @@
                     <li class="collection-item collection_item_no_padding">
                         <b>Дата рождения:</b> {{ user.birthday|date:"d.m.Y" }}
                     </li>
-                    {% if user.birthday|date:"m-d" == today|date:"m-d" %}
-                    <i class="material-icons">cake</i> Сегодня день рождения!
-                    {% endif %}
+                        {% if user.birthday|date:"m-d" == today|date:"m-d" %}
+                        <li class="collection-item collection_item_no_padding">
+                            <i class="material-icons">cake</i> Сегодня день рождения!
+                        </li>
+                        {% endif %}
                     {% endif %}
                 </ul>
             </div>
@@ -63,56 +72,59 @@
                         <i class="material-icons left">lock</i>
                     </a>
                 {% endif %}
-            
             </div>
-            {% comment %} Блок с дополнительной информацией о пользователе, например, список его сообществ, постов и т.д. может быть добавлен здесь. {% endcomment %}
-                <div class="card-content">
 
-                        
-                <div class="card-tabs">
-                    <ul class="tabs tabs-fixed-width white-text" style="background-color: transparent;">
-                        <li class="tab"><a href="#tab-community">Текст</a></li>
-                        <li class="tab"><a class="active" href="#tab-posts">Посты</a></li>
+            <div class="card-tabs">
+                <ul class="tabs tabs-fixed-width" style="background-color: transparent;">
+                    <li class="tab"><a href="#tab-community">Сообщества</a></li>
+                    <li class="tab"><a class="active" href="#tab-posts">Посты</a></li>
+                </ul>
+            </div>
+
+            <div class="card-content">                  
+                
+                <div id="tab-community">
+                    <h5 class="bold_title">Сообщества пользователя:</h5>
+                    <ul class="collection">
+                        {% for community in user.subscibed_comunities.all %}
+                            <li class="collection-item">
+                                <a href="{{ community.get_absolute_url }}">
+                                    {{ community.title }}
+                                </a>
+                            </li>
+                        {% empty %}
+                            <li class="collection-item">Пользователь не состоит ни в одном сообществе.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+         
+                <div id="tab-posts">
+                    <h5 class="bold_title">Посты пользователя:</h5>
+                    <ul class="collection">
+                        {% for post in user.posts.all %}
+                            <li class="collection-item">
+                                <span class="title">
+                                    <a href="{{ post.topic.get_absolute_url }}#{{ post.dom_id }}" class="blue-text text-darken-2">
+                                        Поднятая тема: {{ post.topic.title }}
+                                    </a>
+                                </span>
+                            </li>
+                        {% empty %}
+                            <li class="collection-item">У пользователя пока нет постов.</li>
+                        {% endfor %}
                     </ul>
                 </div>
 
-                <div class="card-content white-text">
-                    
-                    <div id="tab-text">
-                        {% include "_inputs.html" with field=form.content %}
-                    </div>
-             
-                    <div id="tab-image">
-                        <div class="center-align" style="margin-top: 30px; margin-bottom: 20px;">
-                            {% include "_inputs.html" with field=form.content %}
+            </div>
 
-
-                    </div>
-                    
-                </div>
-
-
-
-                    <h5 class="bold_title">Сообщества пользователя:</h5>
-                        <ul class="collection">
-                            {% for community in user.subscibed_comunities.all %}
-                                <li class="collection-item">
-                                    <a href="{% url 'community_detail' community.id community.slug %}">
-                                        {{ community.title }}
-                                    </a>
-                                </li>
-                            {% empty %}
-                                <li class="collection-item">Пользователь не состоит ни в одном сообществе.</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-            
         </div>
+    </div>
     </div>
 </div>
 {% endblock content %}
 
+{% block extra_js %}
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/user_page.css' %}">
-{% endblock extra_css %}
+<script src = "{% static 'js/tabs.js' %}"></script>
+
+{% endblock extra_js %}

@@ -1,45 +1,49 @@
 {% extends "_layout.html" %}
-
 {% load static %}
+
 {% block login %}
 Логин
 {% endblock login %}
 
 {% block content %}
-<div class="row">
-    <div class="col s12 m8 offset-m2 l6 offset-l3">
-        <div class="card">
-            <div class="card-content">
-                <div>
-                    <img src="{% static 'assets/i_m_suffering.jpeg' %}" alt="Login Image" style="width: 100%; height: auto; margin-bottom: 20px;">
-                </div>
-                <span class="card-title center-align">Вход</span>
-                <form method="post" action="{% url 'login' %}" novalidate>
-                    {% csrf_token %}
-                    <div class="row">
-                        {% for field in form %}
-                            {% include "_inputs.html" with field=field grid_class="col s12" %}
-                        {% endfor %}
-                        <!-- Здесь можно добавить дополнительные элементы, например, сообщения об ошибках -->
-                        {% if form.non_field_errors %}
-                            <div class="col s12">
-                                <div class="card-panel red lighten-4 red-text text-darken-4">
-                                    {{ form.non_field_errors }}
+<div class="valign-wrapper" style="min-height: 80vh;">
+    <div class="row" style="width: 100%;">
+        <div class="col s12 m8 offset-m2 l6 offset-l3">
+            <div class="card unified-card">
+                <div class="card-content">
+                    <div>
+                        <img src="{% static 'assets/i_m_suffering.jpeg' %}" alt="Login Image" style="width: 100%; height: auto; margin-bottom: 20px; border-radius: 8px;">
+                    </div>
+                    <span class="card-title center-align">Вход</span>
+                    <form method="post" action="{% url 'login' %}" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            {% for field in form %}
+                                {% include "_inputs.html" with field=field grid_class="col s12" %}
+                            {% endfor %}
+                            
+                            {% if form.non_field_errors %}
+                                <div class="col s12">
+                                    <div class="card-panel red lighten-4 red-text text-darken-4">
+                                        {{ form.non_field_errors }}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="row" style="margin-bottom: 0;">
-                        <div class="col s12 center-align" style="margin-top: 15px;">
-                            <button class="btn waves-effect waves-light blue darken-2" type="submit" name="action">
-                                Войти
-                                <i class="material-icons right">send</i>
-                            </button>
-                            <a class="btn waves-effect waves-light blue darken-2" href="{% url 'register' %}"><i class="material-icons left">person_add</i>Регистрация</a>
+                            {% endif %}
                         </div>
-                    </div>
-                </form>
+                        
+                        <div class="row" style="margin-bottom: 0;">
+                            <div class="col s12 center-align" style="margin-top: 15px;">
+                                <button class="btn waves-effect waves-light blue darken-2" type="submit" name="action">
+                                    Войти
+                                    <i class="material-icons right">send</i>
+                                </button>
+                                <a class="btn waves-effect waves-light blue darken-2" href="{% url 'register' %}">
+                                    <i class="material-icons left">person_add</i>Регистрация
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

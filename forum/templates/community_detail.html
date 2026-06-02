@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'css/community_details.css' %}">
 {% endblock extra_css %}
 
-{% block title %}{{ category.title }} - Форум{% endblock %}
+{% block title %}{{ community.title }} - Форум{% endblock %}
 
 {% block content %}
 <div class="card community-header-card z-depth-1">
@@ -13,28 +13,28 @@
     {% if community.banner %}
         <img src="{{ community.banner.url }}" class="community-banner-image" alt="Баннер">
     {% else %}
-        <div class="community-banner-placeholder brown darken-3"></div>
+        <div class="community-banner-placeholder blue light-3"></div>
     {% endif %}
 
     <div class="card-content community-header-content">
         <div class="row valign-wrapper community-header-row">
             
-            <div class="col s3 m2 l1 community-avatar-wrapper" style="margin-right: 2rem;">
+            <div class="community-avatar-wrapper" style="margin-right: 2rem;">
                 {% if community.icon %}
-                    <img src="{{ community.icon.url }}" alt="{{ community.title }}" class="circle responsive-img community-avatar-img">
+                    <img src="{{ community.icon.url }}" alt="{{ community.title }}" class="circle community-avatar-img">
                 {% else %}
                     <div class="grey lighten-3 community-avatar-placeholder z-depth-1">
-                        <i class="material-icons black-text" style="font-size: 2.5rem;">forum</i>
+                        <i class="material-icons black-text" style="font-size: 5rem;">forum</i>
                     </div>
                 {% endif %}
             </div>
             
-            <div class="col s9 m7 l8 community-title-col">
+            <div class="community-title-col" style="flex: 1;">
                 <h4 class="community-title-text">{{ community.title }}</h4>
                 <span class="grey-text text-darken-1">{{ community.slug }}</span>
             </div>
             
-            <div class="col s12 m3 l3 right-align hide-on-small-only community-title-col">
+            <div class="right-align hide-on-small-only community-title-col">
                 <form action="{% url 'subscribe_to_community' community.id community.slug %}" method="POST" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn blue darken-2 waves-effect waves-light create-discussion-btn">
@@ -48,16 +48,18 @@
 </div>
 
 <div class="row">
-    {% include "partial_index/_topic_index.html" %}
+    
+    <div class="col s12 m8">
+        {% include "partial_index/_topic_index.html" %}
+    </div>
     
     <div class="col s12 m4">
-    {% include "partial_index/_sidebar_index_create_topic.html" %}
+        {% include "partial_index/_sidebar_index_create_topic.html" %}
 
-        
         {% include "forum/partials/about.html" %}
 
         {% include "forum/partials/rules.html" %}
-        
     </div>
+    
 </div>
 {% endblock %}  
