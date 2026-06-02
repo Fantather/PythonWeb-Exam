@@ -36,6 +36,7 @@
         </span>
         {% if not topic.is_closed %}
             <a href="#reply-form" class="right blue-text text-darken-2" onclick="setParent({{ post.pk }})">Ответить</a>
+            {% include "replay.html" %}
         {% endif %}
     </div>
 </div>

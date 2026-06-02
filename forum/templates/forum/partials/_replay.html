@@ -1,0 +1,27 @@
+<ul class="collapsible z-depth-0">
+    <li>
+        <div class="collapsible-header">
+            <button class="btn-flat">Ответить</button>
+        </div>
+        
+        <div class="collapsible-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-field">
+                    <textarea name="comment" class="materialize-textarea"></textarea>
+                    <label>Ваш текст</label>
+                </div>
+                <button type="submit" class="btn">Отправить</button>
+            </form>
+        </div>
+    </li>
+</ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.collapsible');
+    M.Collapsible.init(elems, {
+        accordion: true
+    });
+});
+</script>
