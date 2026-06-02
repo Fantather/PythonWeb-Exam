@@ -5,10 +5,13 @@
         </div>
         
         <div class="collapsible-body">
-            <form method="post">
+            <form method="post" action="{% url 'add_reply' topic.pk %}">
                 {% csrf_token %}
+                
+                <input type="hidden" name="parent_id" value="{{ post.pk }}">
+                
                 <div class="input-field">
-                    <textarea name="comment" class="materialize-textarea"></textarea>
+                    <textarea name="comment" class="materialize-textarea" required></textarea>
                     <label>Ваш текст</label>
                 </div>
                 <button type="submit" class="btn">Отправить</button>
@@ -19,9 +22,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.collapsible');
-    M.Collapsible.init(elems, {
-        accordion: true
+        var elems = document.querySelectorAll('.collapsible');
+        M.Collapsible.init(elems, {
+            accordion: true
+        });
     });
-});
 </script>

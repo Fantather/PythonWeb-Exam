@@ -229,6 +229,10 @@ class Post(TimeStampedModel):
     def __str__(self) -> str:
         return f"Post {self.pk} in Topic {self.topic_id}"
     
+    
+    def get_absolute_url(self) -> str:
+        """Возвращает прямую ссылку на пост внутри ветки обсуждения темы."""
+        return f"{self.topic.get_absolute_url()}#post-{self.pk}"
 
     # Метод для получения ссылки на удаление
     def get_delete_url(self):

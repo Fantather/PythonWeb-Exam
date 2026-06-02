@@ -1,11 +1,12 @@
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render
-from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib import messages
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import FormView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import ValidationError
 
 from forum.mixins import ViewTrackerMixin
 from .managers import *
@@ -303,6 +304,7 @@ class TopicPostListView(ViewTrackerMixin, ListView):
 
         return context
 
+
 class ToggleLikeView(LoginRequiredMixin, View):
     def handle_no_permission(self):
         """
@@ -339,3 +341,38 @@ def subscribe_to_community(request, community_id, slug):  # Добавили а�
         community.subscribers.add(request.user)
 
     return redirect(community.get_absolute_url())
+
+
+class AddReplyView(LoginRequiredMixin, View):
+    """
+    Обрабатывает POST-запрос на создание нового комментария.
+    Не имеет собственного HTML-шаблона.
+    """
+    def post(self, request, pk):
+        topic = get_object_or_404(Topic, pk=pk)
+        content = request.POST.get('comment', '')
+        parent_id = request.POST.get('parent_id')
+        
+        # Если родитель не передан, то добавляется корневому посту
+        parent_post = None
+        if parent_id:
+            parent_post = get_object_or_404(Post, pk=parent_id)
+        else:
+            parent_post = Post.objects.get_topic_starter(topic.pk)
+            if not parent_post:
+                messages.error(request, "Критическая ошибка: у темы отсутствует корневой пост.")
+                return redirect(f"{topic.get_absolute_url()}#reply-form")
+
+        try:
+            new_post = PostService.create_reply(
+                topic=topic,
+                author=request.user,
+                content=content,
+                parent=parent_post
+            )
+            messages.success(request, "Комментарий добавлен.")
+            return redirect(new_post)
+            
+        except ValidationError as e:
+            messages.error(request, e.message)
+            return redirect(f"{topic.get_absolute_url()}#reply-form")

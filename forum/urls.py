@@ -27,6 +27,7 @@ urlpatterns = [
     # Новые маршруты для управления постами (будут обрабатывать AJAX-запросы):
     # path('post/<int:post_id>/update/', views.PostUpdateAjaxView.as_view(), name='post_update'),
     path('post/<int:post_id>/delete/', views.PostDeleteAjaxView.as_view(), name='post_delete'),
+    path('post/<int:pk>/reply/', views.AddReplyView.as_view(), name='add_reply'),
 
     path('communities/<int:community_id>/<slug:slug>/subscribe/', views.subscribe_to_community, name='subscribe_to_community'),
 
