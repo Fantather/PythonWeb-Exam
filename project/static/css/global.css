@@ -34,10 +34,10 @@ header, main, footer, .sidenav.sidenav-fixed {
   transition: padding-left 0.3s ease, transform 0.3s ease !important;
 }
 
-/* .sidenav.sidenav-fixed {
+.sidenav.sidenav-fixed {
   background-color: var(--primary-color-card) !important;
   color: var(--text-color) !important;
-} */
+}
 
 /* адаптация пк */
 @media only screen and (min-width : 993px) {
@@ -185,7 +185,8 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
 
 /*==Variables==*/
 :root {
-    --primary-color-card: rgb(197, 222, 255);
+    --primary-color-card: rgb(255, 255, 255);
+    --primary-color-cute-border: rgb(197, 222, 255);
     --primary-color-main-bg:  rgb(197, 222, 255);
 
 
@@ -194,11 +195,12 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
     --link-color: #90caf9; /* Светло-голубой для ссылок на темном фоне */
 
     --primary-border-color: rgba(44, 36, 36, 0.8);
-    --primary-border-color-hover: rgba(89, 98, 185, 0.8); /* Сделал границу светлее при наведении для контраста */
+    --primary-border-color-hover: rgba(89, 98, 185, 0.8); 
     --border-radius-card: 8px;
 
-    /* 1.05 может быть почти незаметно глазу, рекомендую 1.1 или 1.15 */
-    --hover-filter: brightness(1.15); 
+    /* 1.05, 1.1 или 1.15 */
+    /* --hover-filter: brightness(1.15);  */
+    --hover-filter: brightness(0.90)
 }
 
 /*==Unified Card Styles==*/
@@ -214,6 +216,17 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
     flex: 1;
 }
 
+.unified-card-no-recolor{
+    background-color: var(--primary-color-card) !important;
+    border: 1px solid var(--primary-border-color) !important;
+    border-radius: var(--border-radius-card) !important; 
+    
+    color: var(--text-color) !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; /* Легкая тень для объема */
+    
+    /* Плавная анимация изменения яркости и цвета рамки */
+    transition: filter 0.25s ease-in-out, border-color 0.25s ease-in-out !important;
+}
 
 .unified-card {
     background-color: var(--primary-color-card) !important;
@@ -226,17 +239,38 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
     /* Плавная анимация изменения яркости и цвета рамки */
     transition: filter 0.25s ease-in-out, border-color 0.25s ease-in-out !important;
 }
-
+/* 
 .unified-card:hover {
+    filter: var(--hover-filter);
+    border-color: var(--primary-border-color-hover) !important;
+} */
+
+.unified-cute-border {
+    background-color: var(--primary-color-cute-border) !important;
+    border: 1px solid var(--primary-border-color) !important;
+    border-radius: var(--border-radius-card) !important; 
+    
+    color: var(--text-color) !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; 
+        
+    box-sizing: border-box; 
+    padding: 15px; 
+    margin-bottom: 1rem;
+}
+
+.unified-card-inner {
+    margin: 0 !important; 
+    border-radius: var(--border-radius-card) !important; 
+    transition: filter 0.25s ease-in-out, border-color 0.25s ease-in-out !important;
+
+}
+
+.unified-card-inner:hover {
     filter: var(--hover-filter);
     border-color: var(--primary-border-color-hover) !important;
 }
 
-/*==Overrides for internal elements==*/
-/* Так как вы используете классы вроде 'blue-text' или 'grey-text' в HTML, 
-   они могут конфликтовать с темным фоном карточки. 
-   Переопределяем их для элементов внутри unified-card.
-*/
+
 .field-images_preview .image-preview {
     border: 1px solid var(--primary-border-color) !important;
     border-radius: var(--border-radius-card) !important;

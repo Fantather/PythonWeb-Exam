@@ -35,16 +35,20 @@
 }
 
 .community-avatar-img {
-    width: 80px !important;
-    height: 80px !important;
+    width: 10rem !important;
+    max-width: 100% !important; 
+    height: auto !important; 
+    aspect-ratio: 1 / 1; 
     border: 4px solid #ffffff !important;
     background-color: #ffffff;
     object-fit: cover;
 }
 
 .community-avatar-placeholder {
-    width: 80px;
-    height: 80px;
+    width: 10rem;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
     border: 4px solid #ffffff;
     display: flex;
     align-items: center;
