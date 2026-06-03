@@ -25,12 +25,12 @@
             {% endif %}
         {% endif %}
     </div>
-    <div class="card-action" style="border-top: none;">
-        <span class="card-action">{% include "forum/partials/_like_button.html" with post=post %}</span>
+    <div class="card-action grey-text text-darken-1" style="border-top: none;">
+        <span class="card-action">
+            {% include "forum/partials/_like_button.html" with post=post %}
+        </span>
         {% if not topic.is_closed %}
-            <a href="#reply-form"
-               class="right blue-text text-darken-2"
-               onclick="setParent({{ post.pk }})">Ответить</a>
+            {% include "forum/partials/_replay.html" %}
         {% endif %}
     </div>
 </article>
