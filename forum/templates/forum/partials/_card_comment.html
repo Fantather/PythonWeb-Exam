@@ -4,38 +4,48 @@
             {% include "forum/partials/_dropdown_menu.html" with target_id=post.dom_id delete_url=post.get_delete_url %}
         {% endif %}
 
-        <span class="card-title blue-text text-darken-2" style="font-size: 1.1rem; margin-bottom: 10px;">
-            {{ post.author.username }}
-            <span class="right grey-text" style="font-size: 0.8rem;">
+        <div class="comment-header">
+            <span class="card-title blue-text text-darken-2 comment-author">
+                {{ post.author.username }}
+            </span>
+            <span class="grey-text post-date">
                 {{ post.created_at|date:"d M Y H:i" }}
             </span>
-        </span>
+        </div>
 
         {% if post.parent_id %}
-            <blockquote class="grey lighten-4" style="border-left: 5px solid #2196f3; padding: 10px; margin-top: 0;">
-                <a href="#post-{{ post.parent_id }}" class="grey-text text-darken-1">
-                    <i class="material-icons tiny">reply</i> Ответ пользователю {{ post.parent.author.username }}
+            <blockquote class="grey lighten-4 comment-quote">
+                <a href="#post-{{ post.parent_id }}" class="grey-text text-darken-1 comment-quote-link">
+                    <i class="material-icons tiny action-btn-icon">reply</i> Ответ пользователю {{ post.parent.author.username }}
                 </a>
             </blockquote>
         {% endif %}
 
-        <div class="post-text">
+        <div class="post-text" style="margin-bottom: var(--spacing-md);">
             {{ post.content|linebreaks }}
         </div>
 
-        {% if post.image %}
-            <div class="post-image center-align" style="margin-top: 15px; width: 100%;">
-                <img class="responsive-img materialboxed" src="{{ post.image.url }}" alt="Вложение пользователя" style="margin: 0 auto; display: inline-block;">
+        {% if post.images.all %}
+            {% if post.images.all.count == 1 %}
+                <div class="center-align">
+                    <img class="responsive-img materialboxed comment-single-image" 
+                         src="{{ post.images.first.image.url }}" 
+                         alt="Вложение пользователя">
+                </div>
+            {% else %}
+                {% include "forum/partials/carousel_posts.html" %}
+            {% endif %}
+        {% endif %}
+        <div class="card-action action-bar-flex">
+            <div>
+                {% include "forum/partials/_like_button.html" with post=post %}
             </div>
-        {% endif %}
-    </div>
-    
-    <div class="card-action grey-text text-darken-1" style="border-top: none;">
-        <span class="card-action">
-            {% include "forum/partials/_like_button.html" with post=post %}
-        </span>
-        {% if not topic.is_closed %}
-            {% include "forum/partials/_replay.html" %}
-        {% endif %}
+            
+            {% if not topic.is_closed %}
+                <a href="#reply-form" class="blue-text text-darken-2 action-btn-flex" onclick="setParent({{ post.pk }})">
+                    <i class="material-icons action-btn-icon">reply</i>Ответить
+                </a>
+            {% endif %}
+        </div>
     </div>
 </div>

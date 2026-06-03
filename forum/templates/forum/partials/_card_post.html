@@ -1,36 +1,71 @@
 <article class="card flat comment-card unified-card" id="post-{{ post.pk }}">
+    
+    <div class="post-card-header">
+        <h4 class="post-card-title">{{ topic.title }}</h4>
+        
+        <div class="post-card-badges">
+            {% if topic.is_pinned %}
+                <div class="chip orange white-text">
+                    <i class="material-icons left">push_pin</i> Закреплено
+                </div>
+            {% endif %}
+            
+            <div class="meta-chip">
+                <i class="material-icons">visibility</i>
+                <span>{{ topic.views_count }}</span>
+            </div>
+            
+            {% if topic.is_closed %}
+                <div class="chip red white-text">
+                    <i class="material-icons left">lock</i> Закрыто
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="card-content">
         {% if request.user == post.author %}
             {% include "forum/partials/_dropdown_menu.html" with target_id=post.dom_id delete_url=post.get_delete_url %}
         {% endif %}
-        <div class="author-meta" style="margin-bottom: 20px;">
-            <span class="card-title" style="font-size: 1.4rem; font-weight: 500;">
-                <i class="material-icons left">account_circle</i> {{ post.author.username }}
-            </span>
-            <span class="grey-text" style="font-size: 0.9rem;">Опубликовано: {{ post.created_at|date:"d E Y в H:i" }}</span>
+
+        <div class="post-author-meta">
+            <i class="material-icons post-author-icon">account_circle</i>
+            <div class="post-author-info">
+                <span class="card-title post-author-name">
+                    {{ post.author.username }}
+                </span>
+                <span class="grey-text post-date">
+                    Опубликовано: {{ post.created_at|date:"d E Y в H:i" }}
+                </span>
+            </div>
         </div>
-        <div class="post-text" style="font-size: 1.1rem; line-height: 1.6;">{{ post.content|linebreaks }}</div>
+
+        <div class="post-text post-body-text">
+            {{ post.content|linebreaks }}
+        </div>
+
         {% if post.images.all %}
             {% if post.images.all.count == 1 %}
-                <div class="center-align" style="width: 100%;">
-                    <img class="responsive-img materialboxed"
-                         src="{{ post.images.first.image.url }}"
-                         alt="Изображение к теме"
-                         style="margin: 0 auto;
-                                display: inline-block;
-                                border-radius: 4px">
+                <div class="center-align">
+                    <img class="responsive-img materialboxed post-single-image" 
+                         src="{{ post.images.first.image.url }}" 
+                         alt="Изображение к теме">
                 </div>
             {% else %}
                 {% include "forum/partials/carousel_posts.html" %}
             {% endif %}
         {% endif %}
-    </div>
-    <div class="card-action grey-text text-darken-1" style="border-top: none;">
-        <span class="card-action">
+    </div> 
+    
+    <div class="card-action action-bar-flex">
+        <div>
             {% include "forum/partials/_like_button.html" with post=post %}
-        </span>
+        </div>
+        
         {% if not topic.is_closed %}
-            {% include "forum/partials/_replay.html" %}
+            <a href="#reply-form" class="blue-text text-darken-2 action-btn-flex" onclick="setParent({{ post.pk }})">
+                <i class="material-icons action-btn-icon">reply</i>Ответить
+            </a>
         {% endif %}
     </div>
 </article>
