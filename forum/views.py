@@ -208,12 +208,23 @@ class TopicDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         topic = self.get_object()
-        context["posts"] = Post.objects.filter(topic=topic).order_by("created_at")
+
+        root_posts = Post.objects.filter(topic=topic, parent__isnull=True).order_by(
+            "created_at"
+        )
+        paginator = Paginator(root_posts, 15)
+        page_number = self.request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+        context["nested_posts"] = page_obj.object_list
+        context["page_obj"] = page_obj
+
         return context
 
     def get_template_names(self):
+        # Если запрос пришел от HTMX, отдаем только кусок с комментариями
         if self.request.headers.get("HX-Request"):
-            return ["forum/partials/_post_loop.html"]
+            return ["forum/partials/_posts_loop.html"]
+        # Иначе отдаем страницу целиком
         return super().get_template_names()
 
 
