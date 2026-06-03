@@ -211,6 +211,12 @@ class TopicDetailView(DetailView):
         context["posts"] = Post.objects.filter(topic=topic).order_by("created_at")
         return context
 
+    def get_template_names(self):
+        if self.request.headers.get("HX-Request"):
+            return ["forum/partials/_post_loop.html"]
+        return super().get_template_names()
+
+
 class TopicCreateView(FormView):
     '''
     создание нового топика в сообществе

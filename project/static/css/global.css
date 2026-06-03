@@ -421,7 +421,7 @@ header, main, footer, .sidenav.sidenav-fixed {
 
 .post-card-title {
     margin: 0 0 15px 0;
-    font-size: 1.8rem;
+    font-size: 3rem;
     font-weight: 500;
     color: var(--text-color);
     text-align: center;

@@ -14,7 +14,7 @@
             
             {% for root_post in nested_posts %}
             <!-- Первый пост в теме - это корневой пост, остальные - ответы на него или на другие ответы -->
-                {% if forloop.first %}
+                {% if forloop.first and page_obj.number == 1 %}
                     {% include "forum/partials/_thread_node.html" with node=root_post is_main_post=True %}
                 {% else %}
                     {% include "forum/partials/_thread_node.html" with node=root_post is_main_post=False %}
@@ -24,6 +24,8 @@
                     <p class="grey-text">В данном топике пока нет сообщений.</p>
                 </div>
             {% endfor %}
+
+            
         </div>
 
         {% include "_pagination.html" with pagination_class="post-pagination" %}
