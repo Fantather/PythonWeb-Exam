@@ -202,10 +202,45 @@ header, main, footer, .sidenav.sidenav-fixed {
     margin-top: 10px;
 }
 
-/* Стиль для комментария */
-.comment-card {
-    margin-left: var(--spacing-xl);
-    border-left: 3px solid var(--border-color-comment);
+/* Стиль для комментариев */
+.comment-thread {
+    position: relative;
+    margin-top: var(--spacing-lg); /* Отступ между карточками (обычно 15px) */
+}
+
+.replies-container {
+    position: relative;
+    margin-left: 35px; /* Сдвиг ветки ответов вправо */
+    padding-left: 20px; /* Пространство для отрисовки веточек */
+}
+
+/* 1. Вертикальная соединительная линия для всех ответов */
+.replies-container > .comment-thread::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: -15px; /* Поднимаемся вверх через margin, чтобы коснуться предыдущего элемента */
+    bottom: -15px; /* Опускаемся вниз, чтобы коснуться следующего */
+    border-left: 2px solid var(--border-color-comment);
+}
+
+/* 2. Скрываем прямую линию у последнего ответа в ветке, чтобы она не пробивала закругление */
+.replies-container > .comment-thread:last-child::before {
+    display: none;
+}
+
+/* 3. Закругленный уголок для КАЖДОГО ответа */
+.replies-container > .comment-thread::after {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: -15px;
+    width: 20px;
+    height: 40px; /* Опускаемся ровно до уровня текста (15px margin + 25px внутри карточки) */
+    border-left: 2px solid var(--border-color-comment);
+    border-bottom: 2px solid var(--border-color-comment);
+    border-bottom-left-radius: 12px; /* Радиус закругления угла */
+    background: transparent;
 }
 
 .avatar_circle {
@@ -254,6 +289,7 @@ header, main, footer, .sidenav.sidenav-fixed {
     color: var(--text-color) !important;
     box-shadow: var(--box-shadow-card) !important;
     transition: filter var(--transition-speed-fast) ease-in-out, border-color var(--transition-speed-fast) ease-in-out !important;
+    /* overflow: hidden; */
 }
 
 .unified-cute-border {
@@ -333,4 +369,131 @@ header, main, footer, .sidenav.sidenav-fixed {
     height: var(--carousel-height);
     margin-bottom: var(--spacing-xxl);
     border-radius: var(--border-radius-small);
+}
+
+
+.post-author-meta {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.post-author-icon {
+    margin-right: 15px;
+    font-size: 40px;
+    color: var(--text-color-secondary);
+}
+
+.post-author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-author-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.post-date {
+    font-size: 0.85rem;
+}
+
+.post-body-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+}
+
+.post-single-image {
+    border-radius: var(--border-radius-card);
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.post-card-header {
+    padding: 15px 24px;
+    border-bottom: 1px solid var(--border-color-lighter);
+    background-color: #fafafa; /* Легкий контрастный фон для шапки */
+    border-radius: var(--border-radius-card) var(--border-radius-card) 0 0;
+}
+
+.post-card-title {
+    margin: 0 0 15px 0;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--text-color);
+    text-align: center;
+    position: relative;
+    
+}
+
+.post-card-badges {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: right;
+    flex-wrap: wrap;
+    position:absolute
+}
+
+/* Убираем лишний нижний отступ у чипов внутри шапки */
+.post-card-badges .chip, 
+.post-card-badges .meta-chip {
+    margin-bottom: 0;
+}
+
+.action-bar-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color-lighter);
+    padding: 10px 24px;
+}
+
+.action-btn-flex {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.action-btn-icon {
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+/* Специфичные стили для комментариев */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+}
+
+.comment-author {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.comment-quote {
+    border-left: 4px solid #2196f3;
+    padding: 8px 12px;
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    border-radius: 0 4px 4px 0;
+}
+
+.comment-quote-link {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.comment-single-image {
+    border-radius: var(--border-radius-card);
+    max-height: 300px;
+    object-fit: contain;
 }

@@ -1,0 +1,14 @@
+{% for community in communities %}
+    <li>
+        <a href="{{ community.get_absolute_url }}" style="display: flex; align-items: center;">
+            <i class="material-icons" style="margin-right: 15px;">forum</i>
+            <span class="truncate">{{ community.title }}</span>
+        </a>
+    </li>
+{% empty %}
+    <li>
+        <a href="#!" class="grey-text" style="pointer-events: none;">
+            Нет подписок
+        </a>
+    </li>
+{% endfor %}

@@ -4,10 +4,12 @@ from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import FormView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+
 
 from forum.mixins import ViewTrackerMixin
 from .managers import *
@@ -41,12 +43,12 @@ class ForumIndexView(ListView):
     paginate_by = 15
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["community"] = (
-            Community.get_root_nodes()
-            .filter(subscribers=self.request.user)
-            .order_by("title")
-        )
+        context = super().get_context_data(**kwargs)   
+        communities = Community.get_root_nodes().order_by("title")      
+        # if self.request.user.is_authenticated:
+        #     communities = communities.filter(subscribers=self.request.user)
+
+        context["community"] = communities
         return context
 
     def get_template_names(self):
@@ -59,8 +61,30 @@ class ForumIndexView(ListView):
         return super().get_template_names()
 
     def get_queryset(self):
-        # леша это не шарп, тут нет еще запроса. ListView видит paginate_by = 5 и будет кастрировать запрос
-        return Topic.objects.all().select_related("community", "author").order_by("-is_pinned", "-last_active")
+        topics = (
+            Topic.objects.all()
+            .select_related("community", "author")
+            .order_by("-is_pinned", "-last_active")
+        )
+        # if self.request.user.is_authenticated:
+        #     tmp_topics = topics.filter(community__subscribers=self.request.user)
+        #     if tmp_topics.count() > 0:
+        #         topics = tmp_topics
+        return topics
+
+
+@login_required
+def user_sidebar_communities_view(request):
+    """
+    Возвращает HTML-фрагмент списка сообществ,
+    на которые подписан текущий пользователь (для боковой панели).
+    """
+    communities = Community.objects.filter(subscribers=request.user).order_by("title")
+    return render(
+        request,
+        "forum/partials/_sidebar_communities.html",
+        {"communities": communities},
+    )
 
 
 ###############################Community Views ##############################

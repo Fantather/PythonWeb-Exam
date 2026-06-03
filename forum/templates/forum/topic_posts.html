@@ -7,23 +7,6 @@
 <div class="row">
     <div class="col s12 m12 ">
         <!-- Секция с заголовком топика и метаинформацией -->
-        <div class="topic-header section">
-            <h4>{{ topic.title }}</h4>
-            {% if topic.is_pinned %}
-                <div class="chip orange white-text">
-                    <i class="material-icons left">push_pin</i> Закреплено
-                </div>
-            {% endif %}
-            <div class="meta-chip">
-                <i class="material-icons">visibility</i>
-                <span>{{ topic.views_count }}</span>
-            </div>
-            {% if topic.is_closed %}
-                <div class="chip red white-text">
-                    <i class="material-icons left">lock</i> Закрыто
-                </div>
-            {% endif %}
-        </div>
 
         <!-- Секция с сообщениями -->
         
