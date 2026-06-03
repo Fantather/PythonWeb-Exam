@@ -1,113 +1,137 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'assets/emperor_sign.png' %}" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
-    <link rel="stylesheet" href="{% static 'css/global.css' %}">
-        
-    {% block extra_css %}
-    {% endblock %}
-    
-    <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
-
-<header>
-    <nav>
-        <div class="nav-wrapper blue darken-4">
-            
-            <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            
-            <ul class="left hide-on-med-and-down">
-                <li><a href="#" id="desktop-toggle"><i class="material-icons">menu_open</i></a></li>
-            </ul>
-            
-            <a href="{% url 'index' %}" class="brand-logo center">
-                <img class="logo" style="margin: 0.5rem; height: 3rem;" src="{% static 'assets/emperor_sign.png' %}" alt="Logo">
-            </a>
-            <a href="{% url 'index' %}" class="brand-logo center hide-on-small-and-down" style="font-size: 1.5rem; font-weight: 500;">
-            {% block h1_text %}
-            {% endblock h1_text %}
-            </a>
-       
-            <ul class="right hide-on-med-and-down">
-                <li><a href="{% url 'index' %}">Главная</a></li>
-                <li class="">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'logout' %}"><i class="material-icons">logout</i></a>
-                    {% else %}
-                        <a href="{% url 'login' %}"><i class="material-icons">login</i></a>
-                    {% endif %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon"
+              href="{% static 'assets/emperor_sign.png' %}"
+              type="image/x-icon">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet">
+        <link type="text/css"
+              rel="stylesheet"
+              href="{% static 'css/materialize.min.css' %}"
+              media="screen,projection" />
+        <link rel="stylesheet" href="{% static 'css/global.css' %}">
+        {% block extra_css %}
+        {% endblock extra_css %}
+        <title>
+            {% block title %}
+            {% endblock title %}
+        </title>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="nav-wrapper blue darken-4">
+                    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                    <ul class="left hide-on-med-and-down">
+                        <li>
+                            <a href="#" id="desktop-toggle"><i class="material-icons">menu_open</i></a>
+                        </li>
+                    </ul>
+                    <a href="{% url 'index' %}" class="brand-logo center">
+                        <img class="logo"
+                             style="margin: 0.5rem;
+                                    height: 3rem"
+                             src="{% static 'assets/emperor_sign.png' %}"
+                             alt="Logo">
+                    </a>
+                    <a href="{% url 'index' %}"
+                       class="brand-logo center hide-on-small-and-down"
+                       style="font-size: 1.5rem;
+                              font-weight: 500">
+                        {% block h1_text %}
+                        {% endblock h1_text %}
+                    </a>
+                    <ul class="right hide-on-med-and-down">
+                        <li>
+                            <a href="{% url 'index' %}">Главная</a>
+                        </li>
+                        <li class="">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'logout' %}"><i class="material-icons">logout</i></a>
+                            {% else %}
+                                <a href="{% url 'login' %}"><i class="material-icons">login</i></a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <ul id="slide-out" class="sidenav sidenav-fixed">
+                <li>
+                    <div class="user-view">
+                        <div class="background">
+                            <img src="{% static 'assets/background.svg' %}" alt="bg">
+                        </div>
+                    </div>
                 </li>
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'user_page' request.user.username %}"><i class="material-icons">person</i>Мой профиль</a>
+                    </li>
+                    <li>
+                        <a href="{% url "community_create" %}"><i class="material-icons">add</i>Создать сообщество</a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="#!">Second Link</a>
+                </li>
+                <li>
+                    <div class="divider"></div>
+                </li>
+                <li>
+                    <a class="subheader">Любимые посты</a>
+                </li>
+                <li>
+                    <a href="{% url "communities_list" %}"><i class="material-icons">group</i>Сообщества</a>
+                </li>
+                {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'admin:index' %}"><i class="material-icons">admin_panel_settings</i>Админка</a>
+                    </li>
+                    <li>
+                        <a href="{% url "seed_data" %}"><i class="material-icons">data_object</i>Seed Data</a>
+                    </li>
+                    <li>
+                        <a href="{% url "clear_data" %}"><i class="material-icons">delete</i>Clear Data</a>
+                    </li>
+                {% endif %}
             </ul>
-        </div>
-    </nav>
-
-    <ul id="slide-out" class="sidenav sidenav-fixed">
-        <li>
-            <div class="user-view">
-                <div class="background">
-                    <img src="{% static 'assets/background.svg' %}" alt="bg">
+        </header>
+        {% comment %} <main style="background-image: url('{% static 'assets/image.gif' %}');"> {% endcomment %}
+        <main>
+            <div class="container main-content-plaque">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </main>
+        <footer class="page-footer blue darken-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">Форум имени императора</h5>
+                        <p class="grey-text text-lighten-4">Записывайтесь в армию императора.</p>
+                    </div>
+                    <div class="col l4 offset-l2 s12"></div>
                 </div>
             </div>
-        </li>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'user_page' request.user.username %}"><i class="material-icons">person</i>Мой профиль</a></li>
-        <li><a href="{% url "community_create" %}"><i class="material-icons">add</i>Создать сообщество</a></li>
-        {% endif %}
-        <li><a href="#!">Second Link</a></li>
-        <li><div class="divider"></div></li>
-        <li><a class="subheader">Любимые посты</a></li>
-        <li><a href="{% url "communities_list" %}"><i class="material-icons">group</i>Сообщества</a></li>
-        {% if user.is_superuser %}
-        <li><a href="{% url 'admin:index' %}"><i class="material-icons">admin_panel_settings</i>Админка</a></li>
-        <li><a href="{% url "seed_data" %}"><i class="material-icons">data_object</i>Seed Data</a></li>
-        <li><a href="{% url "clear_data" %}"><i class="material-icons">delete</i>Clear Data</a></li>
-        {% endif %}
+            <div class="footer-copyright">
+                <div class="container">
+                    © {% now "Y" %} Форум имени императора. Все права защищены.
+                    <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                </div>
+            </div>
+        </footer>
+        <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+        <script src="{% static 'js/dropdown_menu.js' %}"></script>
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
         
-    </ul>
-</header>
-
-{% comment %} <main style="background-image: url('{% static 'assets/image.gif' %}');"> {% endcomment %}
-<main>
-    <div class="container main-content-plaque">
-        {% block content %}
-        {% endblock %}
-    </div>
-</main>
-
-<footer class="page-footer blue darken-4">
-    <div class="container">
-        <div class="row">
-            <div class="col l6 s12">
-                <h5 class="white-text">Форум имени императора</h5>
-                <p class="grey-text text-lighten-4">Записывайтесь в армию императора.</p>
-            </div>
-            <div class="col l4 offset-l2 s12">
-            </div>
-        </div>
-    </div>
-    <div class="footer-copyright">
-        <div class="container">
-            © {% now "Y" %} Форум имени императора. Все права защищены.
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
-        </div>
-    </div>
-</footer>
-
-<script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
-<script src="{% static 'js/dropdown_menu.js' %}"></script>
-<script src="https://unpkg.com/htmx.org@1.9.12"></script>
-
-{% csrf_token %}
-{% block extra_js %}
-    <script src="{% static 'js/likes.js' %}"></script>
-{% endblock %}
-</body>
+        {% csrf_token %}
+        {% block extra_js %}
+            <script src="{% static 'js/likes.js' %}"></script>
+        {% endblock extra_js %}
+    </body>
 </html>

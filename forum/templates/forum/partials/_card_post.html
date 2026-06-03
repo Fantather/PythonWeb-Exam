@@ -1,47 +1,36 @@
-{% comment %} {% block title %}{{ post.topic.title }}{% endblock title %} {% endcomment %}
-
 <article class="card flat comment-card unified-card" id="post-{{ post.pk }}">
     <div class="card-content">
         {% if request.user == post.author %}
             {% include "forum/partials/_dropdown_menu.html" with target_id=post.dom_id delete_url=post.get_delete_url %}
         {% endif %}
-        
         <div class="author-meta" style="margin-bottom: 20px;">
             <span class="card-title" style="font-size: 1.4rem; font-weight: 500;">
                 <i class="material-icons left">account_circle</i> {{ post.author.username }}
             </span>
-            <span class="grey-text" style="font-size: 0.9rem;">
-                Опубликовано: {{ post.created_at|date:"d E Y в H:i" }}
-            </span>
+            <span class="grey-text" style="font-size: 0.9rem;">Опубликовано: {{ post.created_at|date:"d E Y в H:i" }}</span>
         </div>
-
-        <div class="post-text" style="font-size: 1.1rem; line-height: 1.6;">
-            {{ post.content|linebreaks }}
-        </div>
-
+        <div class="post-text" style="font-size: 1.1rem; line-height: 1.6;">{{ post.content|linebreaks }}</div>
         {% if post.images.all %}
             {% if post.images.all.count == 1 %}
-                    <div class="center-align" style="width: 100%;">
-                        <img class="responsive-img materialboxed" src="{{ post.images.first.image.url }}" alt="Изображение к теме" style="margin: 0 auto; display: inline-block; border-radius: 4px;">
-                    </div>
-                {% else %}
-                    <div class="carousel carousel-slider center">
-                        {% for img_obj in post.images.all %}
-                            <a class="carousel-item" href="#!">
-                                <img src="{{ img_obj.image.url }}" alt="Вложение" style="border-radius: 4px;">
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                <div class="center-align" style="width: 100%;">
+                    <img class="responsive-img materialboxed"
+                         src="{{ post.images.first.image.url }}"
+                         alt="Изображение к теме"
+                         style="margin: 0 auto;
+                                display: inline-block;
+                                border-radius: 4px">
+                </div>
+            {% else %}
+                {% include "forum/partials/carousel_posts.html" %}
+            {% endif %}
         {% endif %}
     </div>
-    
     <div class="card-action" style="border-top: none;">
-        <span class="card-action">
-            {% include "forum/partials/_like_button.html" with post=post %}
-        </span>
+        <span class="card-action">{% include "forum/partials/_like_button.html" with post=post %}</span>
         {% if not topic.is_closed %}
-            <a href="#reply-form" class="right blue-text text-darken-2" onclick="setParent({{ post.pk }})">Ответить</a>
+            <a href="#reply-form"
+               class="right blue-text text-darken-2"
+               onclick="setParent({{ post.pk }})">Ответить</a>
         {% endif %}
     </div>
 </article>

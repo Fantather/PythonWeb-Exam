@@ -1,11 +1,11 @@
 {% extends "_layout.html" %}
 {% load static %}
 
-{% block title %}Форум имени Императора{% endblock %}
+{% block title %}Форум имени Императора{% endblock title %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
-{% endblock %}
+{% endblock extra_css %}
 
 {% block content %}
     <div class="row ">
@@ -14,14 +14,14 @@
 
     <div class="row ">
         <div class="col s12 m8">
-        {% include "partial_index/_topic_index.html" %}
+        {% include "forum/partials/_topic_loop.html" %}
         </div>
         <div class="col s12 m4">
             {% include "partial_index/_sidebar_index_create_topic.html" %}
         </div>
     </div>
-{% endblock %}
+{% endblock content %}
 
 {% block extra_js %}
 <script src="{% static 'js/carousel.js' %}"></script>
-{% endblock %}
+{% endblock extra_js %}

@@ -1,90 +1,138 @@
+:root {
+    /* Цвета */
+    --primary-color-card: rgb(255, 255, 255);
+    --primary-color-cute-border: rgb(197, 222, 255);
+    --primary-color-main-bg: rgb(197, 222, 255);
+    
+    --text-color: #000000;
+    --text-color-secondary: #6a5f9b;
+    --text-color-meta: rgba(0, 0, 0, 0.87);
+    --text-color-inverse: #ffffff;
+    --link-color: #90caf9;
+    
+    --bg-meta-chip: #e4e4e4;
+    --bg-danger: #f44336;
+    --border-color-light: #e0e0e0;
+    --border-color-lighter: #f0f0f0;
+    --border-color-comment: #eceff1;
+    
+    --primary-border-color: rgba(44, 36, 36, 0.8);
+    --primary-border-color-hover: rgba(89, 98, 185, 0.8);
+    
+    /* Границы и тени */
+    --border-radius-card: 8px;
+    --border-radius-pill: 16px;
+    --border-radius-circle: 50%;
+    --border-radius-small: 4px;
+    --box-shadow-card: 0 2px 5px rgba(0,0,0,0.2);
+    
+    /* Отступы (Margin и Padding) */
+    --spacing-xs: 5px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 15px;
+    --spacing-xl: 20px;
+    --spacing-xxl: 30px;
+    
+    /* Размеры и макет */
+    --sidebar-width: 300px;
+    --avatar-size-lg: 15rem;
+    --avatar-size-sm: 5rem;
+    --carousel-height: 250px;
+    
+    /* Типографика */
+    --font-size-xs: 0.8rem;
+    --font-size-sm: 0.85rem;
+    --font-size-md: 0.95rem;
+    --font-size-lg: 1.3rem;
+    --font-size-meta: 13px;
+    --font-size-icon: 18px;
+
+    /* Анимации и эффекты */
+    --hover-filter: brightness(0.90);
+    --transition-speed: 0.3s;
+    --transition-speed-fast: 0.25s;
+}
+
 body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
 main {
-  flex: 1 0 auto;
-  background-size: cover;
-  min-height: 100vh;
-  background-image: url('../assets/background.svg');
-  /* background-color: var(--primary-color-card) !important; */
-  /* background-image: 
-  linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-  url('../assets/image.gif'); */
-  
-  
-  
-  display: flex; 
-  flex-direction: column;
+    flex: 1 0 auto;
+    background-size: cover;
+    min-height: 100vh;
+    background-image: url('../assets/background.svg');
+    display: flex; 
+    flex-direction: column;
 }
 
 /* Адаптация для мобильных устройств */
 @media only screen and (max-width: 600px) {
     .main-content-plaque {
-        padding: 15px;
+        padding: var(--spacing-lg);
         width: 98% !important;
-        margin-top: 20px;
+        margin-top: var(--spacing-xl);
     }
 }
 
 /* анимация */
 header, main, footer, .sidenav.sidenav-fixed {
-  transition: padding-left 0.3s ease, transform 0.3s ease !important;
+    transition: padding-left var(--transition-speed) ease, transform var(--transition-speed) ease !important;
 }
 
 .sidenav.sidenav-fixed {
-  background-color: var(--primary-color-card) !important;
-  color: var(--text-color) !important;
+    background-color: var(--primary-color-card) !important;
+    color: var(--text-color) !important;
 }
 
 /* адаптация пк */
 @media only screen and (min-width : 993px) {
-  /* изначально открыта */
-  header, main, footer {
-  padding-left: 300px;
-}
+    /* изначально открыта */
+    header, main, footer {
+        padding-left: var(--sidebar-width);
+    }
 
-  /* закрыта */
-  body.sidebar-collapsed header, 
-  body.sidebar-collapsed main, 
-  body.sidebar-collapsed footer {
-  padding-left: 0;
-}
+    /* закрыта */
+    body.sidebar-collapsed header, 
+    body.sidebar-collapsed main, 
+    body.sidebar-collapsed footer {
+        padding-left: 0;
+    }
 
-/* панель налево ушла  */
-body.sidebar-collapsed .sidenav.sidenav-fixed {
-  transform: translateX(-105%) !important;
-}
+    /* панель налево ушла  */
+    body.sidebar-collapsed .sidenav.sidenav-fixed {
+        transform: translateX(-105%) !important;
+    }
 }
 
 /* без дефолтной кнопки */
 @media only screen and (min-width: 993px) {
-  .sidenav-trigger {
-  display: none;
+    .sidenav-trigger {
+        display: none;
+    }
 }
-}
-
 
 /* Что бы выровнять иконки  */
 /* Кастомный бейдж для метаданных форума (просмотры, лайки, статус) */
 .meta-chip {
     display: inline-flex;
     align-items: center;
-    background-color: #e4e4e4;
-    border-radius: 16px;
-    padding: 0 12px;
+    background-color: var(--bg-meta-chip);
+    border-radius: var(--border-radius-pill);
+    padding: 0 var(--spacing-md);
     height: 32px;
-    font-size: 13px;
-    color: rgba(0, 0, 0, 0.87);
+    font-size: var(--font-size-meta);
+    color: var(--text-color-meta);
     white-space: nowrap;
     width: fit-content;
 }
 
 /* Изолируем иконку от глобальных стилей Materialize */
 .meta-chip .material-icons {
-    font-size: 18px;
+    font-size: var(--font-size-icon);
     margin-right: 6px;
     line-height: 1;
     float: none;
@@ -92,40 +140,39 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
 
 /* Модификатор для красного бейджа (например, для "Закрыто") */
 .meta-chip.danger {
-    background-color: #f44336;
-    color: white;
+    background-color: var(--bg-danger);
+    color: var(--text-color-inverse);
 }
 
 .backgroung-card-forum {
-    /* background-color: rgba(255, 255, 255); */
-    border-radius: 8px;
-    padding: 20px;
-    color: #ffffff;
+    border-radius: var(--border-radius-card);
+    padding: var(--spacing-xl);
+    color: var(--text-color-inverse);
 }
 
 /* Стили карточек топиков (обсуждений) */
 .topic-card {
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color-light);
     box-shadow: none;
-    margin-bottom: 12px;
+    margin-bottom: var(--spacing-md);
 }
 
 .topic-pinned-chip {
     height: 22px;
     line-height: 22px;
-    font-size: 0.8rem;
-    padding: 0 8px;
+    font-size: var(--font-size-xs);
+    padding: 0 var(--spacing-sm);
 }
 
 .topic-community-name {
-    font-size: 0.85rem;
+    font-size: var(--font-size-sm);
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: var(--spacing-xs);
 }
 
 .topic-title-wrapper {
-    margin-bottom: 5px;
-    font-size: 1.3rem;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-lg);
 }
 
 .topic-title-link {
@@ -133,21 +180,21 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
 }
 
 .topic-activity-text {
-    font-size: 0.85rem;
+    font-size: var(--font-size-sm);
 }
 
 .topic-meta-action {
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--border-color-lighter);
     background: transparent;
 }
 
 /* Стили элементов управления и боковой панели */
 .topic-pagination {
-    margin-top: 30px;
+    margin-top: var(--spacing-xxl);
 }
 
 .create-discussion-text {
-    font-size: 0.95rem;
+    font-size: var(--font-size-md);
 }
 
 .create-discussion-btn {
@@ -157,112 +204,73 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
 
 /* Стиль для комментария */
 .comment-card {
-    margin-left: 20px;
-    border-left: 3px solid #eceff1;
+    margin-left: var(--spacing-xl);
+    border-left: 3px solid var(--border-color-comment);
 }
 
 .avatar_circle {
-    width: 15rem;
-    height: 15rem;
-    border-radius: 50%;
+    width: var(--avatar-size-lg);
+    height: var(--avatar-size-lg);
+    border-radius: var(--border-radius-circle);
     object-fit: cover;
     display: inline-block;
 }
 
-.card-cat{
+.card-cat {
     box-sizing: border-box;
-    padding:1rem;
+    padding: 1rem;
 }
+
 .comm-card-avatar {
-    width: 5rem;
-    height: 5rem;
-    border-radius: 50%;
+    width: var(--avatar-size-sm);
+    height: var(--avatar-size-sm);
+    border-radius: var(--border-radius-circle);
     object-fit: cover;
     display: inline-block;
-}
-
-/*----------Reworker, move to another file later------------*/
-
-/*==Variables==*/
-:root {
-    --primary-color-card: rgb(255, 255, 255);
-    --primary-color-cute-border: rgb(197, 222, 255);
-    --primary-color-main-bg:  rgb(197, 222, 255);
-
-
-    --text-color: #000000;
-    --text-color-secondary: #6a5f9b; /* Светло-коричневый/серый для дат и мелкого текста */
-    --link-color: #90caf9; /* Светло-голубой для ссылок на темном фоне */
-
-    --primary-border-color: rgba(44, 36, 36, 0.8);
-    --primary-border-color-hover: rgba(89, 98, 185, 0.8); 
-    --border-radius-card: 8px;
-
-    /* 1.05, 1.1 или 1.15 */
-    /* --hover-filter: brightness(1.15);  */
-    --hover-filter: brightness(0.90)
 }
 
 /*==Unified Card Styles==*/
 
 .main-content-plaque {
-    padding: 30px;  
-
-    /* background-color: var(--primary-color-main-bg) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6); */
-
+    padding: var(--spacing-xxl);  
     width: 95% !important;
     max-width: 1400px !important;
     flex: 1;
 }
 
-.unified-card-no-recolor{
+.unified-card-no-recolor {
     background-color: var(--primary-color-card) !important;
     border: 1px solid var(--primary-border-color) !important;
     border-radius: var(--border-radius-card) !important; 
-    
     color: var(--text-color) !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; /* Легкая тень для объема */
-    
-    /* Плавная анимация изменения яркости и цвета рамки */
-    transition: filter 0.25s ease-in-out, border-color 0.25s ease-in-out !important;
+    box-shadow: var(--box-shadow-card) !important;
+    transition: filter var(--transition-speed-fast) ease-in-out, border-color var(--transition-speed-fast) ease-in-out !important;
 }
 
 .unified-card {
     background-color: var(--primary-color-card) !important;
     border: 1px solid var(--primary-border-color) !important;
     border-radius: var(--border-radius-card) !important; 
-    
     color: var(--text-color) !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; /* Легкая тень для объема */
-    
-    /* Плавная анимация изменения яркости и цвета рамки */
-    transition: filter 0.25s ease-in-out, border-color 0.25s ease-in-out !important;
+    box-shadow: var(--box-shadow-card) !important;
+    transition: filter var(--transition-speed-fast) ease-in-out, border-color var(--transition-speed-fast) ease-in-out !important;
 }
-/* 
-.unified-card:hover {
-    filter: var(--hover-filter);
-    border-color: var(--primary-border-color-hover) !important;
-} */
 
 .unified-cute-border {
     background-color: var(--primary-color-cute-border) !important;
     border: 1px solid var(--primary-border-color) !important;
     border-radius: var(--border-radius-card) !important; 
-    
     color: var(--text-color) !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; 
-        
+    box-shadow: var(--box-shadow-card) !important; 
     box-sizing: border-box; 
-    padding: 15px; 
+    padding: var(--spacing-lg); 
     margin-bottom: 1rem;
 }
 
 .unified-card-inner {
     margin: 0 !important; 
     border-radius: var(--border-radius-card) !important; 
-    transition: filter 0.25s ease-in-out, border-color 0.25s ease-in-out !important;
-
+    transition: filter var(--transition-speed-fast) ease-in-out, border-color var(--transition-speed-fast) ease-in-out !important;
 }
 
 .unified-card-inner:hover {
@@ -270,12 +278,9 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
     border-color: var(--primary-border-color-hover) !important;
 }
 
-
 .field-images_preview .image-preview {
     border: 1px solid var(--primary-border-color) !important;
     border-radius: var(--border-radius-card) !important;
-
-
 }
 
 .unified-card .card-title,
@@ -293,25 +298,39 @@ body.sidebar-collapsed .sidenav.sidenav-fixed {
     color: var(--link-color) !important;
 }
 
+/* Стили для страницы создания поста */
+.topic-form-wrapper {
+    min-height: 80vh;
+}
 
-  /* Визуальная линия (полочка) ответа */
-/* .replies::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background-color: #cbd5e1;
-  } */
+.topic-form-row {
+    width: 100%;
+}
 
-  /* Уголок (ответ на конкретный пост) */
-/* .replies > .replies-container::before {
-    content: "";
-    position: absolute;
-    left: -20px;
-    top: 20px;
-    width: 20px;
-    height: 2px;
-    background-color: #cbd5e1;
-  } */
+.topic-form-title {
+    margin-bottom: var(--spacing-xl);
+}
+
+.topic-form-tabs {
+    background-color: transparent;
+}
+
+.image-upload-wrapper {
+    margin-top: var(--spacing-xxl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.file-upload-label {
+    cursor: pointer;
+    user-select: none;
+}
+
+.file-input-container {
+    margin-top: var(--spacing-xl);
+}
+
+.preview-carousel {
+    height: var(--carousel-height);
+    margin-bottom: var(--spacing-xxl);
+    border-radius: var(--border-radius-small);
+}
