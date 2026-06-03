@@ -5,26 +5,43 @@ from django.db.models import F
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
+from django.core.files.base import File
 
 User = get_user_model()
 
 class CommunityService:
-    @staticmethod
-    def create_root_community(title: str, owner: User, slug: str = "", description: str = "", icon: str = None) -> Community:
-        """Создаёт корневой узел."""
+    @classmethod
+    @transaction.atomic
+    def create_root_community(
+        cls, 
+        title: str, 
+        owner: 'User', 
+        slug: str | None = None, 
+        description: str = "", 
+        icon: str | File | None = None
+    ) -> 'Community':
+        """
+        Атомарно создаёт корневое сообщество и подписывает на него создателя.
+        """
+        if not title.strip():
+            raise ValidationError("Название сообщества не может быть пустым.")
 
-        community = Community.add_root(
-            title=title,
-            slug=slug,
-            description=description,
-            owner=owner,
-            icon=icon,
-        )
+        node_kwargs = {
+            "title": title.strip(),
+            "description": description.strip(),
+            "owner": owner,
+            "icon": icon,
+        }
+        
+        if slug:
+            node_kwargs["slug"] = slug.strip()
 
+        community = Community.add_root(**node_kwargs)
         community.subscribers.add(owner) 
 
         return community
 
+    # Не трогай только
     @staticmethod
     def create_subcommunity(parent: Community, title: str, owner: User, slug: str = "", description: str = "", icon: str = None) -> Community:
         """Добавляет дочерний узел к существующему сообществу."""
@@ -55,8 +72,8 @@ class TopicService:
         """
         if not title.strip():
             raise ValidationError("Заголовок темы не может быть пустым.")
-        if not content.strip():
-            raise ValidationError("Текст первого сообщения не может быть пустым.")
+        if not content.strip() and not images:
+            raise ValidationError("Тема должна содержать текст первого сообщения или изображение.")
         
         topic = Topic.objects.create(
             community=community,
@@ -98,8 +115,8 @@ class PostService:
         """
         Создает новый пост-ответ в теме и атомарно обновляет метрики темы.
         """
-        if not content.strip():
-            raise ValidationError("Сообщение не может быть пустым.")
+        if not content.strip() and not images:
+            raise ValidationError("Сообщение не может быть пустым. Добавьте текст или изображение.")
         if topic.is_closed:
             raise ValidationError("Нельзя писать в закрытую тему.")
         

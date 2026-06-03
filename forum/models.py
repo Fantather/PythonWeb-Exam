@@ -203,6 +203,7 @@ class Post(TimeStampedModel):
         verbose_name=_("Parent post")
     )
     content = models.TextField(
+        blank=True,
         verbose_name=_("Content")
     )
     liked_by = models.ManyToManyField(
