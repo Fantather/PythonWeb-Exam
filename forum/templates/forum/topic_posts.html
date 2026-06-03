@@ -50,19 +50,5 @@
         </div> {% endcomment %}
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
-{{ block.super }}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var elems = document.querySelectorAll('.materialboxed');
-        M.Materialbox.init(elems);
-    });
-
-    // Установка ID родительского поста в скрытое поле формы ответа
-    function setParent(postId) {
-        // Нужно будет сделать форму для отправки сообщения
-    }
-</script>
-{% endblock %}
+{% endblock %}{% block extra_js %}
+{{ block.super }}{% endblock %}

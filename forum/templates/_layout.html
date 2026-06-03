@@ -107,13 +107,6 @@
 
 {% csrf_token %}
 {% block extra_js %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.materialboxed');
-            M.Materialbox.init(elems);
-        });
-    </script>
-    
     <script src="{% static 'js/likes.js' %}"></script>
 {% endblock %}
 </body>
