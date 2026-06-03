@@ -1,6 +1,6 @@
 {% extends "_layout.html" %}
-
-{% block title %}{{ topic.title }} - {{ topic.community.title }}{% endblock %}
+{% load static %}
+{% block title %}{{ topic.title }} - {{ topic.community.title }}{% endblock title %}
 {% block content %}
 
 <!-- Я разделю все на секции что б понять что тут-->
@@ -8,7 +8,7 @@
     <div class="col s12 m12 ">
         <!-- Секция с заголовком топика и метаинформацией -->
         <div class="topic-header section">
-            <h4 class="">{{ topic.title }}</h4>
+            <h4>{{ topic.title }}</h4>
             {% if topic.is_pinned %}
                 <div class="chip orange white-text">
                     <i class="material-icons left">push_pin</i> Закреплено
@@ -50,7 +50,7 @@
         </div> {% endcomment %}
 </div>
 
-{% endblock %}
+{% endblock content %}
 
 {% block extra_js %}
 {{ block.super }}
@@ -64,5 +64,8 @@
     function setParent(postId) {
         // Нужно будет сделать форму для отправки сообщения
     }
+    
 </script>
-{% endblock %}
+
+<script src="{% static  'js/carousel_post.js' %}"></script>
+{% endblock extra_js %}

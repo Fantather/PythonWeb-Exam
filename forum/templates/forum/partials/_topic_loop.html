@@ -1,5 +1,5 @@
 {% for topic in topics %}
-    <div class="card flat unified-card  hoverable {% if topic.is_pinned %}pinned-topic grey lighten-5{% endif %}">
+    <div class="card flat unified-card hoverable {% if topic.is_pinned %}pinned-topic grey lighten-5{% endif %}">
         <div class="card-content">
             {% if topic.is_pinned %}
                 <span class="chip orange white-text topic-pinned-chip">
@@ -17,12 +17,10 @@
                 </a>
             </span>
             
-            
             <p class="grey-text topic-activity-text">
                 Активность: {{ topic.last_active|timesince }} назад
             </p>
         </div>
-        
         
         <div class="card-action topic-meta-icons grey-text text-darken-1 topic-meta-action">
             <span><i class="material-icons meta-chip">visibility</i>{{ topic.views_count }}</span>
@@ -37,10 +35,12 @@
     </div>
 {% empty %}
     <div class="card-panel center-align grey lighten-4">
-        <p class="grey-text">В этой секции еще нет тем для обсуждения</p>
+        <p class="grey-text">Подпишитесь на сообщества и мы вам покажем темы :З</p>
     </div>
 {% endfor %}
-
-{% include "_pagination.html" with pagination_class="topic-pagination" %}
-
-  
+         
+{% if forloop.last and page_obj.has_next %}
+    hx-get="?page={{ page_obj.next_page_number }}"
+    hx-trigger="revealed"
+    hx-swap="afterend"
+{% endif %}

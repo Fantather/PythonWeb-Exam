@@ -7,6 +7,7 @@ from django.views.generic import FormView, ListView, DetailView, CreateView, Upd
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
 
 from forum.mixins import ViewTrackerMixin
 from .managers import *
@@ -37,15 +38,28 @@ class ForumIndexView(ListView):
     model = Topic
     template_name = "index.html"
     context_object_name = "topics"
-    paginate_by = 5
+    paginate_by = 15
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["community"] = Community.get_root_nodes().order_by("title")
+        context["community"] = (
+            Community.get_root_nodes()
+            .filter(subscribers=self.request.user)
+            .order_by("title")
+        )
         return context
-    
+
+    def get_template_names(self):
+        """
+        Когда пользователь докручивает вниз, срабатывает HTMX. Он делает запрос на тот же URL, но добавляет заголовок HX-Request: true. Django видит это и отдает только фрагмент с новыми записями, экономя ресурсы сервера и трафик.
+        """
+
+        if self.request.headers.get("HX-Request"):
+            return["forum/partials/_topic_loop.html"]
+        return super().get_template_names()
+
     def get_queryset(self):
-        #леша это не шарп, тут нет еще запроса. ListView видит paginate_by = 5 и будет кастрировать запрос
+        # леша это не шарп, тут нет еще запроса. ListView видит paginate_by = 5 и будет кастрировать запрос
         return Topic.objects.all().select_related("community", "author").order_by("-is_pinned", "-last_active")
 
 
@@ -58,7 +72,7 @@ class CommunityListView(ListView):
     model = Community
     template_name = "community_list.html"
     context_object_name = "community"
-    paginate_by = 5
+    paginate_by = 15
     search_fields = ["title", "slug"]
 
     def get_queryset(self):
@@ -125,8 +139,22 @@ class CommunityDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         community = self.get_object()
-        context["topics"] = Topic.objects.filter(community=community).order_by("-is_pinned", "-last_active")
+        topic_list = Topic.objects.filter(community=community).order_by("-is_pinned", "-last_active")
+
+        paginator = Paginator(topic_list, 5)
+        page_number = self.request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+
+        context["page_obj"] = page_obj
+        context["topics"] = (
+            page_obj)
+
         return context
+
+    def get_template_names(self):
+        if self.request.headers.get("HX-Request"):
+            return ["forum/partials/_topic_loop.html"]
+        return super().get_template_names()
 
 
 ##############################Topic Views ##############################
@@ -273,6 +301,12 @@ class TopicPostListView(ViewTrackerMixin, ListView):
         """
         self.topic_id = self.kwargs.get("topic_id")
         return Post.objects.thread(self.topic_id)
+
+    def get_template_names(self):
+        """Перехват запроса для HTMX"""
+        if self.request.headers.get('HX-Request'):
+            return ["forum/partials/_posts_loop.html"]
+        return super().get_template_names()
 
     def get_context_data(self, **kwargs):
         """
