@@ -37,16 +37,16 @@
             {% endif %}
         {% endif %}
         
-        <div class="card-action action-bar-flex">
-            <div>
+        <div class="card-action position-relative-action">
+            {% if not topic.is_closed %}
+                <div class="reply-container">
+                    {% include "forum/partials/_replay.html" with post=post topic=topic %}
+                </div>
+            {% endif %}
+            
+            <div class="like-container-absolute">
                 {% include "forum/partials/_like_button.html" with post=post %}
             </div>
         </div>
-        
-        {% if not topic.is_closed %}
-            {% if not topic.is_closed %}
-                {% include "forum/partials/_replay.html" with post=post topic=topic %}
-            {% endif %}
-        {% endif %}
     </div>
 </div>
