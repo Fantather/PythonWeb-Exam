@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Инициализация всех Dropdown меню на странице
+    // Инициализация всех Dropdown меню на странице
     var dropdowns = document.querySelectorAll('.dropdown-trigger');
     M.Dropdown.init(dropdowns, {
         alignment: 'right', // Меню будет открываться влево от кнопки
