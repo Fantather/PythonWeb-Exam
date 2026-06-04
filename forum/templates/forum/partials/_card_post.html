@@ -1,8 +1,8 @@
 <article class="card flat comment-card unified-card" id="post-{{ post.pk }}">
     
     <div class="post-card-header">
-        <h4 class="post-card-title">{{ topic.title }}</h4>
-        
+                <a href="{% url 'community_detail' topic.community.id topic.community.slug %}">
+            <h4 class="post-card-title">{{ topic.title }}</h4></a>        
         <div class="post-card-badges">
             {% if topic.is_pinned %}
                 <div class="chip orange white-text">
