@@ -497,3 +497,10 @@ header, main, footer, .sidenav.sidenav-fixed {
     max-height: 300px;
     object-fit: contain;
 }
+
+
+/* Этот класс нужен что бы текст, обозначающий иконку не менял шрифт */
+.custom-reply-header .material-icons {
+    text-transform: none !important;
+    margin: 0;                  
+}

@@ -36,16 +36,17 @@
                 {% include "forum/partials/carousel_posts.html" %}
             {% endif %}
         {% endif %}
+        
         <div class="card-action action-bar-flex">
             <div>
                 {% include "forum/partials/_like_button.html" with post=post %}
             </div>
-            
-            {% if not topic.is_closed %}
-                <a href="#reply-form" class="blue-text text-darken-2 action-btn-flex" onclick="setParent({{ post.pk }})">
-                    <i class="material-icons action-btn-icon">reply</i>Ответить
-                </a>
-            {% endif %}
         </div>
+        
+        {% if not topic.is_closed %}
+            {% if not topic.is_closed %}
+                {% include "forum/partials/_replay.html" with post=post topic=topic %}
+            {% endif %}
+        {% endif %}
     </div>
 </div>

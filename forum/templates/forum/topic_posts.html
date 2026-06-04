@@ -6,19 +6,13 @@
 <!-- Я разделю все на секции что б понять что тут-->
 <div class="row">
     <div class="col s12 m12 ">
-        <!-- Секция с заголовком топика и метаинформацией -->
-        <!-- я перенесла ее в карточку поста. ей тут не место -->
         <!-- Секция с сообщениями -->
-        
         <div class="posts-collection" id="posts-list-container">
         {% include "forum/partials/_posts_loop.html" %}
         </div>
 
         {% include "_pagination.html" with pagination_class="post-pagination" %}
     </div>
-
-    {% comment %} <div class="col s12 m4">
-        </div> {% endcomment %}
 </div>
 
 {% endblock content %}
