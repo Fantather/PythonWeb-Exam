@@ -36,3 +36,4 @@ function setupImagePreview(inputId, previewContainerSelector, imageClass = '') {
         });
     }
 }
+

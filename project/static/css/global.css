@@ -498,7 +498,10 @@ header, main, footer, .sidenav.sidenav-fixed {
     object-fit: contain;
 }
 
-
+.form-center-container {
+    min-height: 80vh;
+    width: 100%;
+}
 /* Этот класс нужен что бы текст, обозначающий иконку не менял шрифт */
 .custom-reply-header .material-icons {
     text-transform: none !important;
@@ -520,4 +523,61 @@ header, main, footer, .sidenav.sidenav-fixed {
     display: flex;
     align-items: center;
     height: 24px;
+}
+.form-page-wrapper {
+    margin-top: 4rem;
+}
+
+.form-card-title {
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: 0;
+    text-align: center;
+}
+
+.file-input-spacing {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.error-text-block {
+    display: block;
+    margin-top: 8px;
+}
+
+.submit-row {
+    margin-bottom: 0; /* Убирает лишний отступ внизу карточки */
+}
+
+/* Фиксируем высоту всей карточки */
+.category-card {
+    height: 220px; 
+    display: flex;
+}
+
+/* Фиксируем ширину левого блока с картинкой */
+.category-card .card-image {
+    width: 220px; 
+    min-width: 220px; /* Запрещаем блоку сужаться */
+    flex-shrink: 0;
+}
+
+/* Заставляем картинку заполнить отведенный блок */
+.category-card .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Картинка заполнит блок, излишки обрежутся */
+}
+
+/* Скрываем текст, если описание слишком длинное для фиксированной карточки */
+.category-card .card-content {
+    overflow: hidden;
+}
+
+.community-creation-img {
+    width: 15rem;
+    height: 15rem;
+    overflow: hidden;
+    object-fit: contain;
+    background-color: var(--primary-border-color);
 }
