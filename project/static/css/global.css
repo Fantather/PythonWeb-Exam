@@ -504,3 +504,20 @@ header, main, footer, .sidenav.sidenav-fixed {
     text-transform: none !important;
     margin: 0;                  
 }
+
+
+.position-relative-action {
+    position: relative;
+    display: block;
+    min-height: 100px;  /* Что бы блок не схлопывался, если кнопки Ответить не будет */
+}
+
+.like-container-absolute {
+    position: absolute;
+    top: 40px;   
+    right: 24px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    height: 24px;
+}
