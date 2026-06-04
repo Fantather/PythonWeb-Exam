@@ -1,52 +1,90 @@
 {% extends "_layout.html" %}
 {% load static %}
-
-{% block title %}{% if object %}Редактировать сообщество{% else %}Добавить сообщество{% endif %}{% endblock %}
-
+{% block title %}
+    {% if object %}
+        Редактировать сообщество
+    {% else %}
+        Добавить сообщество
+    {% endif %}
+{% endblock title %}
 {% block content %}
-<div class="row" style="margin-top: 4rem;">
-    <h4 class="center-align">
-        {% if object %}Редактирование: {{ object.title }}{% else %}Добавление нового сообщества{% endif %}
-    </h4>
-    
-    <form class="col s12 m8 offset-m2" method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
-        
-        <div class="row">
-            {% include "_inputs.html" with field=form.title grid_class="col s12" %}
-            {% include "_inputs.html" with field=form.description grid_class="col s12" %}
-        </div>
-            
-        <div class="row">
-            <div class="file-field input-field col s12" style="margin-top: 1rem; margin-bottom: 2rem;">
-                <div class="btn blue darken-2">
-                    <span>Иконка</span>
-                    {{ form.icon }}
+    <div class="row valign-wrapper form-center-container"
+         style="margin-top: 4rem">
+        <div class="col s12 m10 offset-m1 l8 offset-l2">
+            <div class="card flat unified-card">
+                <div class="card-content grey lighten-5">
+                    <h4 class="card-title form-card-title">
+                        {% if object %}
+                            Редактирование: {{ object.title }}
+                        {% else %}
+                            Добавление нового сообщества
+                        {% endif %}
+                    </h4>
                 </div>
-                <div class="file-path-wrapper">
-                    {{ form.icon.value|default_if_none:"" }}
+                <div class="divider"></div>
+                <div class="card-content">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            {% include "_inputs.html" with field=form.title grid_class="col s12" %}
+                            {% include "_inputs.html" with field=form.description grid_class="col s12" %}
+                        </div>
+                        <div class="row">
+                            <div class="col s12 center-align field-icon_preview">
+                                {% if object and object.icon %}
+                                    <img src="{{ object.icon.url }}"
+                                         alt="Текущая иконка"
+                                         style="max-width: 150px;
+                                                height: 150px;
+                                                object-fit: cover;
+                                                margin-top: 15px;
+                                                border-radius: 50%">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="file-field input-field col s12 file-input-spacing">
+                                <div class="btn blue darken-2">
+                                    <span>Иконка</span>
+                                    {{ form.icon }}
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate"
+                                           type="text"
+                                           placeholder="Загрузите изображение"
+                                           value="{{ form.icon.value|default_if_none:'' }}">
+                                </div>
+                                {% if form.icon.errors %}
+                                    <span class="helper-text red-text error-text-block">{{ form.icon.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row submit-row">
+                            <div class="col s12 center-align">
+                                <button class="btn btn-large waves-effect waves-light blue darken-2"
+                                        type="submit"
+                                        name="action">
+                                    {% if object %}
+                                        Сохранить изменения
+                                    {% else %}
+                                        Создать сообщество
+                                    {% endif %}
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                {% if form.icon.errors %}
-                    <span class="helper-text red-text" style="display: block; margin-top: 8px;">{{ form.icon.errors.0 }}</span>
-                {% endif %}
             </div>
         </div>
-
-        <div class="row">
-            <div class="col s12">
-                <button class="btn waves-effect waves-light blue darken-2" type="submit" name="action">
-                    {% if object %}Сохранить изменения{% else %}Добавить сообщество{% endif %}
-                    <i class="material-icons right">send</i>
-                </button>
-            </div>
-        </div>
-
-    </form>
-</div>
-
-
-{% endblock %}
-
+    </div>
+{% endblock content %}
 {% block extra_js %}
-<script src="{% static 'js/field_init.js' %}"></script>
+    <script src="{% static 'js/field_init.js' %}"></script>
+    <script src="{% static 'js/image_preview_new.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setupImagePreview('id_icon', '.field-icon_preview', 'community-creation-img');
+    });
+    </script>
 {% endblock extra_js %}
