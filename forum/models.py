@@ -82,8 +82,6 @@ class Community(MP_Node, TimeStampedModel):
         })
 
 
-
-
 class Topic(TimeStampedModel):
     """
     Топик - главная тема для обсуждения, которая может содержать в себе посты (сообщения)
@@ -226,11 +224,11 @@ class Post(TimeStampedModel):
         indexes = [
             models.Index(fields=["topic", "parent", "created_at"]),
         ]
-    
+
     def __str__(self) -> str:
-        return f"Post {self.pk} in Topic {self.topic_id}"
-    
-    
+        text_preview = self.content[:30] + "..." if self.content else "Без текста"
+        return f"Post {self.pk} in Topic {self.topic_id},{self.topic.title} , with text {text_preview}"
+
     def get_absolute_url(self) -> str:
         """Возвращает прямую ссылку на пост внутри ветки обсуждения темы."""
         return f"{self.topic.get_absolute_url()}#post-{self.pk}"
@@ -247,7 +245,6 @@ class Post(TimeStampedModel):
     @property
     def dom_id(self):
         return f"post-{self.pk}"
-
 
     def clean(self) -> None:
         """Валидация на уровне доменной модели."""

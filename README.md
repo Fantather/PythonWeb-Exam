@@ -125,6 +125,7 @@ django-treebeard - для построения эффективных вложе
 админ
         "username": "Confessor_Makarov",
         "email": "priest@ecclesiarchy.local",
+        "password": "for_emperor_40k",
 
 пользователь1
         "username": "Guardsman_Kael",
