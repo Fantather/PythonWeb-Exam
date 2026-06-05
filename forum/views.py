@@ -276,8 +276,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     '''
     model = Post
     template_name = "post_form.html"
-    # Убрали 'image', так как его нет в модели. 
-    # Оставили content и parent (если это ответ на другой комментарий)
     fields = ["content", "parent"] 
 
     def form_valid(self, form):
