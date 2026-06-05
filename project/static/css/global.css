@@ -409,9 +409,11 @@ header, main, footer, .sidenav.sidenav-fixed {
 .post-single-image {
     border-radius: var(--border-radius-card);
     max-height: 400px;
-    object-fit: contain;
+    width: auto;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
 }
-
 .post-card-header {
     padding: 15px 24px;
     border-bottom: 1px solid var(--border-color-lighter);
